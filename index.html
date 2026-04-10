@@ -52,7 +52,7 @@ header{margin-bottom:22px;}
 .field input[type="file"]{cursor:pointer;padding:8px 12px;font-size:11px;}
 .btn{background:var(--accent);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;padding:10px 22px;border-radius:4px;cursor:pointer;transition:background .2s,transform .1s;white-space:nowrap;}
 .btn:hover{background:#81d4fa;transform:translateY(-1px);}
-.horizon-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:12px;}
+.ufuk-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:12px;}
 .section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:10px;}
 canvas{width:100%;display:block;border-radius:3px;}
 .stats-bar{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
@@ -110,20 +110,20 @@ tbody tr:last-child td{border-bottom:none;}
     <div class="subtitle">Astrofotoğraf Gece Planı — Antalya · v0.4.1</div>
   </header>
   <div class="setup-bar">
-    <label>Teleskop / Setup:</label>
-    <select class="setup-select" id="setupSelect"><option value="">— Setup seçin —</option></select>
-    <button class="btn-sm" onclick="openSetupManager()">⚙ Setup Yönet</button>
+    <label>Teleskop / Kurulum:</label>
+    <select class="setup-select" id="setupSelect"><option value="">— Kurulum seçin —</option></select>
+    <button class="btn-sm" onclick="openSetupManager()">⚙ Kurulum Yönet</button>
   </div>
   <div class="controls">
     <div class="field"><label>Tarih</label><input type="date" id="dateInput"></div>
     <div class="field"><label>Gözlem Başlangıcı</label><input type="time" id="startTime" value="21:00"></div>
-    <div class="field"><label>Horizon Dosyası (.hrz) <span style="color:var(--accent3);font-weight:400">— opsiyonel</span></label><input type="file" id="hznFile" accept=".hrz,.hzn,.txt"></div>
+    <div class="field"><label>Ufuk Dosyası (.hrz) <span style="color:var(--accent3);font-weight:400">— opsiyonel</span></label><input type="file" id="hznFile" accept=".hrz,.hzn,.txt"></div>
     <button class="btn" onclick="calculate()">▶ HESAPLA</button>
   </div>
   <div id="msgArea"></div>
-  <div class="horizon-wrap" id="horizonWrap" style="display:none">
+  <div class="ufuk-wrap" id="ufukWrap" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div class="section-label" style="margin:0">Horizon Profili — Obje Konumları</div>
+      <div class="section-label" style="margin:0">Ufuk Profili — Obje Konumları</div>
       <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text2)">
         <span>Saat:</span>
         <input type="range" id="timeSlider" min="0" max="420" value="0" step="10" style="width:160px" oninput="onTimeSlider(this.value)">
@@ -131,16 +131,16 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
     </div>
     <div style="position:relative">
-      <canvas id="horizonCanvas" height="220"></canvas>
-      <div id="objTooltip" style="display:none;position:absolute;background:#131628;border:1px solid #4fc3f7;border-radius:4px;padding:6px 10px;font-size:11px;font-family:'Space Mono',monospace;pointer-events:none;z-index:10;white-space:nowrap"></div>
+      <canvas id="ufukCanvas" height="220"></canvas>
+      <div id="objIpucu" style="display:none;position:absolute;background:#131628;border:1px solid #4fc3f7;border-radius:4px;padding:6px 10px;font-size:11px;font-family:'Space Mono',monospace;pointer-events:none;z-index:10;white-space:nowrap"></div>
     </div>
     <div style="display:flex;gap:16px;margin-top:8px;font-size:10px;color:var(--text2);flex-wrap:wrap">
       <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c792ea;margin-right:4px"></span>Gökada</span>
       <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#89ddff;margin-right:4px"></span>Bulutsu</span>
       <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f78c6c;margin-right:4px"></span>Açık Küme</span>
       <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffd700;margin-right:4px"></span>Küresel</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffcb6b;margin-right:4px;outline:1px solid #ffcb6b"></span>Horizon'a yakın</span>
-      <span style="color:#ff5370">✕ Horizon arkasında</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffcb6b;margin-right:4px;outline:1px solid #ffcb6b"></span>Ufka yakın</span>
+      <span style="color:#ff5370">✕ Ufuk arkasında</span>
     </div>
   </div>
   <div id="moonBar" style="display:none" class="moon-bar"></div>
@@ -160,26 +160,26 @@ tbody tr:last-child td{border-bottom:none;}
         <th style="width:28px">★</th>
         <th onclick="sortBy('name')">Obje ↕</th>
         <th onclick="sortBy('type')">Tür</th>
-        <th onclick="sortBy('peak')">Tepe ↕</th>
-        <th onclick="sortBy('maxAlt')">Maks Alt ↕</th>
+        <th onclick="sortBy('peak')">En Yüksek ↕</th>
+        <th onclick="sortBy('maxAlt')">Maks. Yükseklik ↕</th>
         <th onclick="sortBy('window')">Pencere ↕</th>
         <th onclick="sortBy('moonDist')">Ay Mes. ↕</th>
         <th>Filtre Önerisi</th>
         <th onclick="sortBy('score')">Skor ↕</th>
       </tr></thead>
-      <tbody id="tableBody"><tr><td colspan="9"><div class="empty-state"><div class="icon">🔭</div><p>Setup seç, tarih belirle ve Hesapla'ya bas.<br>Horizon dosyası opsiyoneldir.</p></div></td></tr></tbody>
+      <tbody id="tableBody"><tr><td colspan="9"><div class="empty-state"><div class="icon">🔭</div><p>Kurulum seç, tarih belirle ve Hesapla'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.</p></div></td></tr></tbody>
     </table>
   </div>
 </div>
 
 <div class="modal-overlay" id="setupModal">
   <div class="modal">
-    <h3>⚙ Setup Yöneticisi</h3>
+    <h3>⚙ Kurulum Yöneticisi</h3>
     <div class="setup-list" id="setupList"></div>
-    <button class="btn-sm" onclick="openAddSetup()" style="margin-bottom:12px">+ Yeni Setup Ekle</button>
+    <button class="btn-sm" onclick="openAddSetup()" style="margin-bottom:12px">+ Yeni Kurulum Ekle</button>
     <div id="setupForm" style="display:none">
       <hr style="border-color:var(--border);margin-bottom:12px">
-      <div class="form-row"><label>Setup Adı</label><input type="text" id="sfName" placeholder="örn: EdgeHD 8 f/7"></div>
+      <div class="form-row"><label>Kurulum Adı</label><input type="text" id="sfName" placeholder="örn: EdgeHD 8 f/7"></div>
       <div class="form-row"><label>Odak Oranı (f/)</label><input type="number" id="sfFratio" placeholder="örn: 7" step="0.1" min="1" max="30"></div>
       <div class="form-row"><label>Kamera</label><input type="text" id="sfCamera" placeholder="örn: ASI2600MM Pro"></div>
       <div class="form-row">
@@ -242,7 +242,7 @@ const CAT=[
   ["M15","","Globular",21.500,12.17,18,6.2],["M22","","Globular",18.607,-23.90,24,5.1],["M92","","Globular",17.286,43.14,14,6.4],
 ];
 
-let horizonData=null,results=[],filtered=[],activeType='ALL',sortCol='score',sortDir=-1;
+let ufukData=null,results=[],filtered=[],activeType='ALL',sortCol='score',sortDir=-1;
 let currentDateUTC0h=null,currentObsStartUTC=0,selectedObj=null;
 function loadFavs(){try{return new Set(JSON.parse(localStorage.getItem('astro_favs')||'[]'));}catch(e){return new Set();}}
 function saveFavs(s){try{localStorage.setItem('astro_favs',JSON.stringify([...s]));}catch(e){}}
@@ -259,7 +259,7 @@ function loadSetups(){try{const s=JSON.parse(localStorage.getItem('astro_setups'
 function saveSetups(a){try{localStorage.setItem('astro_setups',JSON.stringify(a));}catch(e){}}
 let setups=loadSetups();
 
-function renderSetupSelect(){const sel=document.getElementById('setupSelect');const cur=sel.value;sel.innerHTML='<option value="">— Setup seçin —</option>';setups.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name+' ('+s.camera+')';sel.appendChild(o);});if(cur)sel.value=cur;}
+function renderSetupSelect(){const sel=document.getElementById('setupSelect');const cur=sel.value;sel.innerHTML='<option value="">— Kurulum seçin —</option>';setups.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name+' ('+s.camera+')';sel.appendChild(o);});if(cur)sel.value=cur;}
 function getSetup(){const id=document.getElementById('setupSelect').value;return setups.find(s=>s.id===id)||null;}
 function openSetupManager(){renderSetupList();document.getElementById('setupForm').style.display='none';document.getElementById('setupModalClose').style.display='flex';document.getElementById('setupModal').classList.add('open');}
 function closeSetupManager(){document.getElementById('setupModal').classList.remove('open');renderSetupSelect();}
@@ -273,7 +273,7 @@ function saveSetup(){const name=document.getElementById('sfName').value.trim();c
 
 function bExp(fr){return Math.round(300*(fr*fr)/49/30)*30;}
 function fRec(type,moon,setup){
-  if(!setup)return{t:'— setup seçin',c:'fw'};
+  if(!setup)return{t:'— kurulum seçin',c:'fw'};
   const has=f=>setup.filters.includes(f);
   const hasL=has('L'),hasR=has('R'),hasG=has('G'),hasB=has('B');
   const lrgb=hasL&&hasR&&hasG&&hasB,ha=has('Ha'),oiii=has('OIII'),sii=has('SII');
@@ -331,18 +331,18 @@ function gst(j){const T=(j-2451545)/36525;let g=280.46061837+360.98564736629*(j-
 function lst(j,lon){return(gst(j)+lon+360)%360;}
 function aa(ra,dec,j,lat,lon){const ld=lst(j,lon),ha=R(ld-ra*15),d=R(dec),l=R(lat);const sa=Math.sin(d)*Math.sin(l)+Math.cos(d)*Math.cos(l)*Math.cos(ha);const alt=D(Math.asin(Math.max(-1,Math.min(1,sa))));const ca=(Math.sin(d)-Math.sin(l)*sa)/(Math.cos(l)*Math.cos(R(alt)));let az=D(Math.acos(Math.max(-1,Math.min(1,ca))));if(Math.sin(ha)>0)az=360-az;return{alt,az};}
 function merUTC(ra,d0){const j0=jd(d0),l0=lst(j0,LON),rd=ra*15;let diff=rd-l0;diff=((diff%360)+360)%360;return diff/360.985647*24;}
-function hAlt(az){if(!horizonData||horizonData.length<2)return 0;const n=horizonData.length;let lo=horizonData[n-1],hi=horizonData[0];for(let i=0;i<n-1;i++){if(horizonData[i].az<=az&&horizonData[i+1].az>az){lo=horizonData[i];hi=horizonData[i+1];break;}}if(lo.az===hi.az)return lo.alt;let t=(az-lo.az)/(hi.az-lo.az);if(hi.az<lo.az){const sp=(360-lo.az)+hi.az;const dd=az>=lo.az?az-lo.az:360-lo.az+az;t=dd/sp;}return lo.alt+t*(hi.alt-lo.alt);}
+function hAlt(az){if(!ufukData||ufukData.length<2)return 0;const n=ufukData.length;let lo=ufukData[n-1],hi=ufukData[0];for(let i=0;i<n-1;i++){if(ufukData[i].az<=az&&ufukData[i+1].az>az){lo=ufukData[i];hi=ufukData[i+1];break;}}if(lo.az===hi.az)return lo.alt;let t=(az-lo.az)/(hi.az-lo.az);if(hi.az<lo.az){const sp=(360-lo.az)+hi.az;const dd=az>=lo.az?az-lo.az:360-lo.az+az;t=dd/sp;}return lo.alt+t*(hi.alt-lo.alt);}
 function mPhase(j){const k=(j-2451550.1)/29.530588;return((k%1)+1)%1;}
 function mPos(j){const L=(218.316+13.176396*86400*(j-2451545)/86400)%360,M=R((134.963+13.064993*86400*(j-2451545)/86400)%360),lon=R(L+6.289*Math.sin(M)),ob=R(23.439);const ra=D(Math.atan2(Math.sin(lon)*Math.cos(ob),Math.cos(lon))),dec=D(Math.asin(Math.sin(ob)*Math.sin(lon)));return{ra:((ra/15)+24)%24,dec};}
 function mRise(d0,mp){let prev=null,r=null;for(let t=0;t<=24;t+=10/60){const p=aa(mp.ra,mp.dec,jd(d0)+t/24,LAT,LON);if(prev!==null&&prev<0&&p.alt>=0){r=t;break;}prev=p.alt;}return r;}
 function angD(r1,d1,r2,d2){return D(Math.acos(Math.max(-1,Math.min(1,Math.sin(R(d1))*Math.sin(R(d2))+Math.cos(R(d1))*Math.cos(R(d2))*Math.cos(R((r1-r2)*15))))));}
 function pEmoji(p){return['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'][Math.round(p*8)%8];}
 function pText(p){if(p<0.03||p>0.97)return'Yeni Ay';if(p<0.22)return'Hilal';if(p<0.28)return'İlk Çeyrek';if(p<0.47)return'Büyüyen';if(p<0.53)return'Dolunay';if(p<0.72)return'Küçülen';if(p<0.78)return'Son Çeyrek';return'Azalan Hilal';}
-function parseHZN(txt){const pts=[];for(const ln of txt.split('\n')){const t=ln.trim();if(!t||t.startsWith('#')||t.startsWith('[')||/^[lL]/.test(t))continue;const p=t.split(/[\s,]+/);if(p.length>=2){const az=parseFloat(p[0]),al=parseFloat(p[1]);if(!isNaN(az)&&!isNaN(al))pts.push({az,alt:al});}}return pts.sort((a,b)=>a.az-b.az);}
+function parseUFUK(txt){const pts=[];for(const ln of txt.split('\n')){const t=ln.trim();if(!t||t.startsWith('#')||t.startsWith('[')||/^[lL]/.test(t))continue;const p=t.split(/[\s,]+/);if(p.length>=2){const az=parseFloat(p[0]),al=parseFloat(p[1]);if(!isNaN(az)&&!isNaN(al))pts.push({az,alt:al});}}return pts.sort((a,b)=>a.az-b.az);}
 
 function calculate(){
   const dv=document.getElementById('dateInput').value;if(!dv){showMsg('Tarih seçilmedi.','warn');return;}
-  const setup=getSetup();if(!setup){showMsg('Lütfen bir teleskop/setup seçin.','warn');return;}
+  const setup=getSetup();if(!setup){showMsg('Lütfen bir teleskop/kurulum seçin.','warn');return;}
   const[sh,sm]=document.getElementById('startTime').value.split(':').map(Number);
   const obsS=sh-TZ+sm/60,obsE=obsS+7;
   const d0=new Date(dv+'T00:00:00Z');
@@ -366,7 +366,7 @@ function calculate(){
     const[name,common,type,ra,dec,size,mag]=o;if(dec<-50)continue;
     let mx=-90,vm=0,pl=null;
     for(let t=obsS;t<=obsE;t+=10/60){
-      const j2=jd(d0)+t/24,pos=aa(ra,dec,j2,LAT,LON),ha2=horizonData?hAlt(pos.az):0;
+      const j2=jd(d0)+t/24,pos=aa(ra,dec,j2,LAT,LON),ha2=ufukData?hAlt(pos.az):0;
       let ha=lst(j2,LON)-ra*15;ha=((ha%360)+360)%360;if(ha>180)ha-=360;if(ha>30)continue;
       if(pos.alt>ha2+10){vm+=10;if(pos.alt>mx){mx=pos.alt;pl=((t+TZ)%24+24)%24;}}
     }
@@ -378,9 +378,9 @@ function calculate(){
   }
   const seen=new Set();results=results.filter(r=>{if(seen.has(r.name))return false;seen.add(r.name);return true;});
   document.getElementById('statsBar').style.display='flex';document.getElementById('filterRow').style.display='flex';
-  document.getElementById('horizonWrap').style.display='block';
+  document.getElementById('ufukWrap').style.display='block';
   clearMsg();showMsg(results.length+' obje listelendi — '+setup.name+' · f/'+setup.fratio,'info');
-  applySort();drawHorizon();
+  applySort();drawUfuk();
 }
 
 function setFilter(btn,type){activeType=type;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applySort();}
@@ -411,9 +411,9 @@ function renderTable(){
     +'<td><div class="score-bar-wrap"><div class="score-bar"><div class="score-fill" style="width:'+r.score+'%"></div></div><span style="font-size:12px;color:var(--text)">'+r.score+'</span></div></td>'
     +'</tr>').join('');
 }
-function drawHorizon(){
-  const wrap=document.getElementById('horizonWrap');
-  if(!horizonData&&results.length===0){wrap.style.display='none';return;}
+function drawUfuk(){
+  const wrap=document.getElementById('ufukWrap');
+  if(!ufukData&&results.length===0){wrap.style.display='none';return;}
   wrap.style.display='block';
   drawFrame(currentObsStartUTC);
   setupCanvasInteraction();
@@ -423,7 +423,7 @@ function canvasAltY(alt,H){return H-10-(alt/65)*(H-20);}
 function canvasAzX(az,W){return 62+(az/360)*(W-70);}
 
 function drawFrame(utcHour){
-  const cv=document.getElementById('horizonCanvas');
+  const cv=document.getElementById('ufukCanvas');
   const W=cv.parentElement.clientWidth-4;
   const H=220;
   cv.width=W;cv.height=H;
@@ -442,13 +442,13 @@ function drawFrame(utcHour){
   }
 
   // Horizon profile
-  if(horizonData&&horizonData.length>1){
+  if(ufukData&&ufukData.length>1){
     ctx.beginPath();ctx.strokeStyle='#4fc3f7';ctx.lineWidth=1.5;
-    horizonData.forEach((p,i)=>{
+    ufukData.forEach((p,i)=>{
       const x=canvasAzX(p.az,W),y=canvasAltY(p.alt,H);
       if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
     });
-    const last=horizonData[horizonData.length-1];
+    const last=ufukData[ufukData.length-1];
     ctx.lineTo(canvasAzX(last.az,W),canvasAltY(last.alt,H));
     ctx.stroke();
     // Fill below
@@ -525,8 +525,8 @@ function onTimeSlider(val){
 let _canvasSetup=false;
 function setupCanvasInteraction(){
   if(_canvasSetup)return;_canvasSetup=true;
-  const cv=document.getElementById('horizonCanvas');
-  const tip=document.getElementById('objTooltip');
+  const cv=document.getElementById('ufukCanvas');
+  const tip=document.getElementById('objIpucu');
   const typeColor={Galaxy:'#c792ea',Nebula:'#89ddff',Cluster:'#f78c6c',Globular:'#ffd700'};
 
   cv.addEventListener('mousemove',function(e){
@@ -552,7 +552,7 @@ function setupCanvasInteraction(){
     });
     if(hit){
       const color=typeColor[hit.type]||'#fff';
-      const status=hit._margin<0?'<span style="color:#ff5370">Horizon arkasında</span>':hit._margin<10?'<span style="color:#ffcb6b">Horizon\'a yakın ('+hit._margin.toFixed(1)+'°)</span>':'<span style="color:#89ddff">+'+hit._margin.toFixed(1)+'° horizon üstü</span>';
+      const status=hit._margin<0?'<span style="color:#ff5370">Ufuk arkasında</span>':hit._margin<10?'<span style="color:#ffcb6b">Ufka yakın ('+hit._margin.toFixed(1)+'°)</span>':'<span style="color:#89ddff">+'+hit._margin.toFixed(1)+'° ufuk üstü</span>';
       tip.innerHTML='<span style="color:'+color+';font-weight:700">'+hit.name+'</span>'+(hit.common?' <span style="color:#6b75a8">'+hit.common+'</span>':'')+'<br>Az: '+hit._pos.az.toFixed(1)+'°  Alt: '+hit._pos.alt.toFixed(1)+'°<br>'+status;
       const bRect=cv.getBoundingClientRect();
       let tx=e.clientX-bRect.left+12,ty=e.clientY-bRect.top-10;
@@ -602,7 +602,7 @@ function setupCanvasInteraction(){
     }
   });
 }
-document.getElementById('hznFile').addEventListener('change',function(e){const file=e.target.files[0];if(!file)return;const rd=new FileReader();rd.onload=ev=>{const d=parseHZN(ev.target.result);if(d.length<3){showMsg('Geçerli horizon verisi okunamadı.','warn');horizonData=null;}else{horizonData=d;showMsg('Horizon yüklendi: '+d.length+' nokta.','info');drawHorizon();}};rd.readAsText(file);});
+document.getElementById('hznFile').addEventListener('change',function(e){const file=e.target.files[0];if(!file)return;const rd=new FileReader();rd.onload=ev=>{const d=parseUFUK(ev.target.result);if(d.length<3){showMsg('Geçerli ufuk verisi okunamadı.','warn');ufukData=null;}else{ufukData=d;showMsg('Ufuk yüklendi: '+d.length+' nokta.','info');drawUfuk();}};rd.readAsText(file);});
 function selectObjFromTable(name){
   selectedObj=(selectedObj===name)?null:name;
   const slVal=parseInt(document.getElementById('timeSlider').value);
@@ -613,7 +613,7 @@ function selectObjFromTable(name){
 }
 function showMsg(t,type){document.getElementById('msgArea').innerHTML='<div class="msg msg-'+(type==='warn'?'warn':'info')+'">'+t+'</div>';}
 function clearMsg(){document.getElementById('msgArea').innerHTML='';}
-(function(){const today=new Date(),y=today.getFullYear(),m=String(today.getMonth()+1).padStart(2,'0'),d=String(today.getDate()).padStart(2,'0');document.getElementById('dateInput').value=y+'-'+m+'-'+d;renderSetupSelect();showMsg('Setup seçin, tarih belirleyin ve Hesapla\'ya basın. Horizon dosyası (.hrz) opsiyoneldir.','info');if(favorites.size>0){activeType='FAV';document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type==='FAV')b.classList.add('active');});}})();
+(function(){const today=new Date(),y=today.getFullYear(),m=String(today.getMonth()+1).padStart(2,'0'),d=String(today.getDate()).padStart(2,'0');document.getElementById('dateInput').value=y+'-'+m+'-'+d;renderSetupSelect();showMsg('Kurulum seçin, tarih belirleyin ve Hesapla\'ya basın. Horizon dosyası (.hrz) opsiyoneldir.','info');if(favorites.size>0){activeType='FAV';document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type==='FAV')b.classList.add('active');});}})();
 </script>
 </body>
 </html>
