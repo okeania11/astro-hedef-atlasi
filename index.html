@@ -90,8 +90,8 @@ tbody tr:last-child td{border-bottom:none;}
 .score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));}
 .moon-cell{font-size:12px;}.moon-ok{color:#89ddff;}.moon-warn{color:var(--warning);}.moon-bad{color:var(--danger);}
 .window-cell{color:var(--accent3);font-size:12px;}.peak-cell{color:var(--text);font-size:12px;}.alt-cell{color:var(--accent);font-size:12px;}
-.fav-star{background:none;border:none;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;transition:transform .15s;opacity:.35;}
-.fav-star:hover{transform:scale(1.3);opacity:1;}.fav-star.active{opacity:1;}
+.fav-star{background:none;border:none;cursor:pointer;font-size:16px;padding:0 2px;line-height:1;transition:transform .15s,color .15s;color:#3a4060;}
+.fav-star:hover{transform:scale(1.3);color:#aab0d0;}.fav-star.active{color:var(--gold);text-shadow:0 0 8px rgba(255,215,0,.5);}
 .empty-state{text-align:center;padding:50px 20px;color:var(--text2);}
 .empty-state .icon{font-size:44px;margin-bottom:12px;opacity:.5;}
 .empty-state p{font-size:12px;line-height:1.8;}
@@ -105,7 +105,7 @@ tbody tr:last-child td{border-bottom:none;}
 <div class="container">
   <header>
     <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-    <div class="subtitle">Astrofotoğraf Gece Planı — Antalya · v0.4</div>
+    <div class="subtitle">Astrofotoğraf Gece Planı — Antalya · v0.4.1</div>
   </header>
   <div class="setup-bar">
     <label>Teleskop / Setup:</label>
@@ -251,27 +251,51 @@ function bExp(fr){return Math.round(300*(fr*fr)/49/30)*30;}
 function fRec(type,moon,setup){
   if(!setup)return{t:'— setup seçin',c:'fw'};
   const has=f=>setup.filters.includes(f);
-  const lrgb=has('L')&&has('R')&&has('G')&&has('B'),ha=has('Ha'),oiii=has('OIII'),sii=has('SII');
-  const exp=bExp(setup.fratio),bb=Math.round(exp*0.6/30)*30;
+  const hasL=has('L'),hasR=has('R'),hasG=has('G'),hasB=has('B');
+  const lrgb=hasL&&hasR&&hasG&&hasB,ha=has('Ha'),oiii=has('OIII'),sii=has('SII');
+  const exp=bExp(setup.fratio);
+  // L kısa, RGB daha uzun
+  const lExp=Math.round(exp*0.4/30)*30||30;
+  const rgbExp=exp;
+  const bbExp=Math.round(exp*0.6/30)*30;
   const dark=moon<=25,bright=moon>60;
+
   if(type==='Galaxy'){
-    if(bright){if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Parlak ay'};return{t:'⚠ Önerilmez',c:'fn',d:''};}
-    if(lrgb)return{t:'LRGB '+bb+'s',c:'fl',d:dark?'İdeal':'Kısa poz'};
+    if(bright){
+      if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Parlak ay — sadece Ha'};
+      return{t:'⚠ Önerilmez',c:'fn',d:'Ay çok parlak'};
+    }
+    if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:dark?'İdeal koşul':'Kısa poz önerilir'};
+    if(hasL)return{t:'L '+lExp+'s',c:'fl',d:'RGB filtre eksik'};
     return{t:'— Filtre yok',c:'fw',d:''};
   }
+
   if(type==='Nebula'){
-    if(bright){if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Ha zorunlu'};return{t:'⚠ Ha gerek',c:'fn',d:''};}
-    if(!bright&&!dark){if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Ha öncelikli'};if(lrgb)return{t:'LRGB '+bb+'s',c:'fl',d:''};return{t:'— Filtre yok',c:'fw',d:''};}
-    if(ha&&oiii&&sii)return{t:'SHO '+exp+'s',c:'fs',d:'İdeal'};
-    if(ha&&oiii)return{t:'Ha+OIII '+exp+'s',c:'fs',d:''};
-    if(ha)return{t:'Ha '+exp+'s',c:'fh',d:''};
-    if(lrgb)return{t:'LRGB '+bb+'s',c:'fl',d:''};
+    if(bright){
+      if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Parlak ay — Ha zorunlu'};
+      return{t:'⚠ Ha gerek',c:'fn',d:'Narrowband olmadan zor'};
+    }
+    if(!bright&&!dark){
+      // Orta ay
+      if(ha&&oiii&&sii)return{t:'Ha '+exp+'s · SHO',c:'fs',d:'Ha önce, OIII/SII ay azalınca'};
+      if(ha&&oiii)return{t:'Ha '+exp+'s · HOO',c:'fs',d:'Ha önce'};
+      if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Ha öncelikli'};
+      if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:'Narrowband yoksa LRGB'};
+      return{t:'— Filtre yok',c:'fw',d:''};
+    }
+    // Karanlık gece
+    if(ha&&oiii&&sii)return{t:'SHO '+exp+'s/kanal',c:'fs',d:'İdeal — tam SHO paleti'};
+    if(ha&&oiii)return{t:'HOO '+exp+'s/kanal',c:'fs',d:'Ha+OIII kombinasyon'};
+    if(ha&&lrgb)return{t:'Ha '+exp+'s · L '+lExp+'s · RGB '+rgbExp+'s',c:'fh',d:'Ha+LRGB karma'};
+    if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Sadece Ha mevcut'};
+    if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:'Geniş bant'};
     return{t:'— Filtre yok',c:'fw',d:''};
   }
+
   if(type==='Cluster'||type==='Globular'){
-    if(bright)return{t:'⚠ Önerilmez',c:'fn',d:''};
-    if(lrgb)return{t:'LRGB '+bb+'s',c:'fl',d:''};
-    if(has('L'))return{t:'L '+bb+'s',c:'fl',d:''};
+    if(bright)return{t:'⚠ Önerilmez',c:'fn',d:'Ay çok parlak'};
+    if(lrgb)return{t:'L '+lExp+'s · RGB '+bbExp+'s',c:'fl',d:''};
+    if(hasL)return{t:'L '+lExp+'s',c:'fl',d:''};
     return{t:'— Filtre yok',c:'fw',d:''};
   }
   return{t:'—',c:'',d:''};
