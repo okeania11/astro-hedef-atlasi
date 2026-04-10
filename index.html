@@ -121,7 +121,28 @@ tbody tr:last-child td{border-bottom:none;}
     <button class="btn" onclick="calculate()">▶ HESAPLA</button>
   </div>
   <div id="msgArea"></div>
-  <div class="horizon-wrap" id="horizonWrap" style="display:none"><div class="section-label">Horizon Profili</div><canvas id="horizonCanvas" height="100"></canvas></div>
+  <div class="horizon-wrap" id="horizonWrap" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="section-label" style="margin:0">Horizon Profili — Obje Konumları</div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text2)">
+        <span>Saat:</span>
+        <input type="range" id="timeSlider" min="0" max="420" value="0" step="10" style="width:160px" oninput="onTimeSlider(this.value)">
+        <span id="timeSliderLabel" style="font-family:'Space Mono',monospace;color:var(--accent);min-width:42px">—</span>
+      </div>
+    </div>
+    <div style="position:relative">
+      <canvas id="horizonCanvas" height="220"></canvas>
+      <div id="objTooltip" style="display:none;position:absolute;background:#131628;border:1px solid #4fc3f7;border-radius:4px;padding:6px 10px;font-size:11px;font-family:'Space Mono',monospace;pointer-events:none;z-index:10;white-space:nowrap"></div>
+    </div>
+    <div style="display:flex;gap:16px;margin-top:8px;font-size:10px;color:var(--text2);flex-wrap:wrap">
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c792ea;margin-right:4px"></span>Gökada</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#89ddff;margin-right:4px"></span>Bulutsu</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f78c6c;margin-right:4px"></span>Açık Küme</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffd700;margin-right:4px"></span>Küresel</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffcb6b;margin-right:4px;outline:1px solid #ffcb6b"></span>Horizon'a yakın</span>
+      <span style="color:#ff5370">✕ Horizon arkasında</span>
+    </div>
+  </div>
   <div id="moonBar" style="display:none" class="moon-bar"></div>
   <div id="statsBar" class="stats-bar" style="display:none"></div>
   <div id="filterRow" class="filter-row" style="display:none">
@@ -222,6 +243,7 @@ const CAT=[
 ];
 
 let horizonData=null,results=[],filtered=[],activeType='ALL',sortCol='score',sortDir=-1;
+let currentDateUTC0h=null,currentObsStartUTC=0,selectedObj=null;
 function loadFavs(){try{return new Set(JSON.parse(localStorage.getItem('astro_favs')||'[]'));}catch(e){return new Set();}}
 function saveFavs(s){try{localStorage.setItem('astro_favs',JSON.stringify([...s]));}catch(e){}}
 let favorites=loadFavs();
@@ -324,6 +346,10 @@ function calculate(){
   const[sh,sm]=document.getElementById('startTime').value.split(':').map(Number);
   const obsS=sh-TZ+sm/60,obsE=obsS+7;
   const d0=new Date(dv+'T00:00:00Z');
+  currentDateUTC0h=d0; currentObsStartUTC=obsS; selectedObj=null; _canvasSetup=false;
+  // Reset slider
+  const sl=document.getElementById('timeSlider');sl.value=0;
+  document.getElementById('timeSliderLabel').textContent=fmtH(((obsS+TZ)%24+24)%24);
   const jdn=jd(d0)+0.5,jdm=jd(d0)+(obsS+3.5)/24;
   const mpv=mPhase(jdn),mp=mPos(jdn);
   const mi=Math.round((1-Math.cos(2*Math.PI*mpv))/2*100);
@@ -352,6 +378,7 @@ function calculate(){
   }
   const seen=new Set();results=results.filter(r=>{if(seen.has(r.name))return false;seen.add(r.name);return true;});
   document.getElementById('statsBar').style.display='flex';document.getElementById('filterRow').style.display='flex';
+  document.getElementById('horizonWrap').style.display='block';
   clearMsg();showMsg(results.length+' obje listelendi — '+setup.name+' · f/'+setup.fratio,'info');
   applySort();drawHorizon();
 }
@@ -372,20 +399,218 @@ function renderTable(){
   const tb=document.getElementById('tableBody');
   if(!filtered.length){const msg=activeType==='FAV'?'Henüz favori obje seçmediniz — tablodaki ★ ikonuna tıklayın.':'Bu gece bu kriterlerde görüntülenebilir obje yok.';tb.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
   const tC={Galaxy:'tg',Nebula:'tn',Cluster:'tc',Globular:'tgl'},tL={Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL'};
-  tb.innerHTML=filtered.map(r=>'<tr><td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td><td class="name-cell">'+r.name+(r.common?'<span class="common">'+r.common+'</span>':'')+'</td><td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td><td class="peak-cell">'+fmtH(r.peak)+'</td><td class="alt-cell">'+r.maxAlt+'°</td><td class="window-cell">'+r.window+'s</td><td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td><td><span class="filter-rec '+r.fr.c+'" title="'+(r.fr.d||'')+'">'+r.fr.t+'</span></td><td><div class="score-bar-wrap"><div class="score-bar"><div class="score-fill" style="width:'+r.score+'%"></div></div><span style="font-size:12px;color:var(--text)">'+r.score+'</span></div></td></tr>').join('');
+  tb.innerHTML=filtered.map(r=>'<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
+    +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
+    +'<td class="name-cell">'+r.name+(r.common?'<span class="common">'+r.common+'</span>':'')+'</td>'
+    +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
+    +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
+    +'<td class="alt-cell">'+r.maxAlt+'°</td>'
+    +'<td class="window-cell">'+r.window+'s</td>'
+    +'<td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td>'
+    +'<td><span class="filter-rec '+r.fr.c+'" title="'+(r.fr.d||'')+'">'+r.fr.t+'</span></td>'
+    +'<td><div class="score-bar-wrap"><div class="score-bar"><div class="score-fill" style="width:'+r.score+'%"></div></div><span style="font-size:12px;color:var(--text)">'+r.score+'</span></div></td>'
+    +'</tr>').join('');
 }
 function drawHorizon(){
-  if(!horizonData){document.getElementById('horizonWrap').style.display='none';return;}
-  document.getElementById('horizonWrap').style.display='block';
-  const cv=document.getElementById('horizonCanvas'),W=cv.parentElement.clientWidth-32;cv.width=W;cv.height=120;
-  const ctx=cv.getContext('2d');ctx.fillStyle='#0a0c1a';ctx.fillRect(0,0,W,120);
-  ctx.strokeStyle='#1e2240';ctx.lineWidth=1;for(let a=0;a<=60;a+=10){const y=120-(a/60)*110-5;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();ctx.fillStyle='#3a4070';ctx.font='9px Space Mono';ctx.fillText(a+'°',2,y-2);}
-  ctx.beginPath();ctx.strokeStyle='#4fc3f7';ctx.lineWidth=1.5;horizonData.forEach((p,i)=>{const x=(p.az/360)*W,y=120-(p.alt/60)*110-5;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});
-  if(horizonData.length)ctx.lineTo(W,120-(horizonData[horizonData.length-1].alt/60)*110-5);
-  ctx.stroke();ctx.lineTo(W,120);ctx.lineTo(0,120);ctx.closePath();ctx.fillStyle='rgba(79,195,247,0.07)';ctx.fill();
-  ctx.fillStyle='#6b75a8';ctx.font='10px Space Mono';['K','D','G','B'].forEach((l,i)=>ctx.fillText(l,(i*90/360)*W+2,112));
+  const wrap=document.getElementById('horizonWrap');
+  if(!horizonData&&results.length===0){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  drawFrame(currentObsStartUTC);
+  setupCanvasInteraction();
+}
+
+function canvasAltY(alt,H){return H-10-(alt/65)*(H-20);}
+function canvasAzX(az,W){return 62+(az/360)*(W-70);}
+
+function drawFrame(utcHour){
+  const cv=document.getElementById('horizonCanvas');
+  const W=cv.parentElement.clientWidth-4;
+  const H=220;
+  cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');
+
+  // Background
+  ctx.fillStyle='#0a0c1a';ctx.fillRect(0,0,W,H);
+
+  // Grid lines & alt labels
+  ctx.strokeStyle='#1e2240';ctx.lineWidth=0.5;
+  ctx.font='9px monospace';ctx.fillStyle='#3a4070';
+  for(let a=0;a<=60;a+=10){
+    const y=canvasAltY(a,H);
+    ctx.beginPath();ctx.moveTo(62,y);ctx.lineTo(W,y);ctx.stroke();
+    ctx.fillText(a+'°',2,y+3);
+  }
+
+  // Horizon profile
+  if(horizonData&&horizonData.length>1){
+    ctx.beginPath();ctx.strokeStyle='#4fc3f7';ctx.lineWidth=1.5;
+    horizonData.forEach((p,i)=>{
+      const x=canvasAzX(p.az,W),y=canvasAltY(p.alt,H);
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    });
+    const last=horizonData[horizonData.length-1];
+    ctx.lineTo(canvasAzX(last.az,W),canvasAltY(last.alt,H));
+    ctx.stroke();
+    // Fill below
+    ctx.lineTo(W,H);ctx.lineTo(62,H);ctx.closePath();
+    ctx.fillStyle='rgba(79,195,247,0.06)';ctx.fill();
+  } else {
+    // Flat horizon line
+    const y=canvasAltY(0,H);
+    ctx.beginPath();ctx.strokeStyle='rgba(79,195,247,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    ctx.moveTo(62,y);ctx.lineTo(W,y);ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // Cardinal labels
+  ctx.fillStyle='#6b75a8';ctx.font='10px monospace';
+  ['K','KD','D','GD','G','GB','B','KB'].forEach((l,i)=>{
+    const x=canvasAzX(i*45,W);ctx.fillText(l,x-4,H-2);
+  });
+
+  // Object dots
+  const typeColor={Galaxy:'#c792ea',Nebula:'#89ddff',Cluster:'#f78c6c',Globular:'#ffd700'};
+  if(!currentDateUTC0h)return;
+  const j2=jd(currentDateUTC0h)+utcHour/24;
+
+  results.forEach(r=>{
+    const pos=aa(r.ra,r.dec,j2,LAT,LON);
+    const horiAlt=hAlt(pos.az);
+    const x=canvasAzX(pos.az,W);
+    const objAlt=pos.alt;
+    const color=typeColor[r.type]||'#ffffff';
+    const isSelected=(selectedObj===r.name);
+    const margin=objAlt-horiAlt;
+
+    if(margin<0){
+      // Below horizon — red X
+      const y=canvasAltY(Math.max(horiAlt+3,2),H);
+      ctx.strokeStyle='#ff5370';ctx.lineWidth=isSelected?2:1.5;ctx.globalAlpha=0.7;
+      ctx.beginPath();ctx.moveTo(x-4,y-4);ctx.lineTo(x+4,y+4);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x+4,y-4);ctx.lineTo(x-4,y+4);ctx.stroke();
+      ctx.globalAlpha=1;
+    } else {
+      const y=canvasAltY(objAlt,H);
+      const dotColor=margin<10?'#ffcb6b':color;
+      const r2=isSelected?7:5;
+      // Dashed line from dot to horizon
+      ctx.strokeStyle=dotColor;ctx.lineWidth=0.5;ctx.setLineDash([2,3]);ctx.globalAlpha=0.35;
+      const yH=canvasAltY(horiAlt,H);
+      ctx.beginPath();ctx.moveTo(x,y+r2);ctx.lineTo(x,yH);ctx.stroke();
+      ctx.setLineDash([]);ctx.globalAlpha=1;
+      // Selection ring
+      if(isSelected){
+        ctx.beginPath();ctx.arc(x,y,r2+4,0,Math.PI*2);
+        ctx.strokeStyle=dotColor;ctx.lineWidth=1.5;ctx.stroke();
+      }
+      // Dot
+      ctx.beginPath();ctx.arc(x,y,r2,0,Math.PI*2);
+      ctx.fillStyle=dotColor;ctx.fill();
+      // Label for selected or favorites
+      if(isSelected||favorites.has(r.name)){
+        ctx.font='bold 10px monospace';ctx.fillStyle='#ffffff';
+        ctx.fillText(r.name,x+r2+3,y+3);
+      }
+    }
+  });
+}
+
+function onTimeSlider(val){
+  if(!currentDateUTC0h)return;
+  const utcH=currentObsStartUTC+parseInt(val)/60;
+  const localH=((utcH+TZ)%24+24)%24;
+  document.getElementById('timeSliderLabel').textContent=fmtH(localH);
+  drawFrame(utcH);
+}
+
+let _canvasSetup=false;
+function setupCanvasInteraction(){
+  if(_canvasSetup)return;_canvasSetup=true;
+  const cv=document.getElementById('horizonCanvas');
+  const tip=document.getElementById('objTooltip');
+  const typeColor={Galaxy:'#c792ea',Nebula:'#89ddff',Cluster:'#f78c6c',Globular:'#ffd700'};
+
+  cv.addEventListener('mousemove',function(e){
+    if(!currentDateUTC0h||!results.length){tip.style.display='none';return;}
+    const rect=cv.getBoundingClientRect();
+    const scaleX=cv.width/rect.width;
+    const mx=(e.clientX-rect.left)*scaleX;
+    const my=(e.clientY-rect.top)*(cv.height/rect.height);
+    const slVal=parseInt(document.getElementById('timeSlider').value);
+    const utcH=currentObsStartUTC+slVal/60;
+    const j2=jd(currentDateUTC0h)+utcH/24;
+    const W=cv.width,H=cv.height;
+    let hit=null,minDist=999;
+    results.forEach(r=>{
+      const pos=aa(r.ra,r.dec,j2,LAT,LON);
+      const horiAlt=hAlt(pos.az);
+      const margin=pos.alt-horiAlt;
+      const x=canvasAzX(pos.az,W);
+      const y=margin<0?canvasAltY(Math.max(horiAlt+3,2),H):canvasAltY(pos.alt,H);
+      const d=Math.sqrt((mx-x)**2+(my-y)**2);
+      if(d<14&&d<minDist){minDist=d;hit=r;
+        hit._pos=pos;hit._margin=margin;}
+    });
+    if(hit){
+      const color=typeColor[hit.type]||'#fff';
+      const status=hit._margin<0?'<span style="color:#ff5370">Horizon arkasında</span>':hit._margin<10?'<span style="color:#ffcb6b">Horizon\'a yakın ('+hit._margin.toFixed(1)+'°)</span>':'<span style="color:#89ddff">+'+hit._margin.toFixed(1)+'° horizon üstü</span>';
+      tip.innerHTML='<span style="color:'+color+';font-weight:700">'+hit.name+'</span>'+(hit.common?' <span style="color:#6b75a8">'+hit.common+'</span>':'')+'<br>Az: '+hit._pos.az.toFixed(1)+'°  Alt: '+hit._pos.alt.toFixed(1)+'°<br>'+status;
+      const bRect=cv.getBoundingClientRect();
+      let tx=e.clientX-bRect.left+12,ty=e.clientY-bRect.top-10;
+      if(tx+150>bRect.width)tx=e.clientX-bRect.left-160;
+      tip.style.left=tx+'px';tip.style.top=ty+'px';
+      tip.style.display='block';
+      cv.style.cursor='pointer';
+    } else {
+      tip.style.display='none';cv.style.cursor='default';
+    }
+  });
+
+  cv.addEventListener('mouseleave',()=>{tip.style.display='none';});
+
+  cv.addEventListener('click',function(e){
+    if(!currentDateUTC0h||!results.length)return;
+    const rect=cv.getBoundingClientRect();
+    const scaleX=cv.width/rect.width;
+    const mx=(e.clientX-rect.left)*scaleX;
+    const my=(e.clientY-rect.top)*(cv.height/rect.height);
+    const slVal=parseInt(document.getElementById('timeSlider').value);
+    const utcH=currentObsStartUTC+slVal/60;
+    const j2=jd(currentDateUTC0h)+utcH/24;
+    const W=cv.width,H=cv.height;
+    let hit=null,minDist=999;
+    results.forEach(r=>{
+      const pos=aa(r.ra,r.dec,j2,LAT,LON);
+      const horiAlt=hAlt(pos.az);
+      const x=canvasAzX(pos.az,W);
+      const y=(pos.alt-horiAlt)<0?canvasAltY(Math.max(horiAlt+3,2),H):canvasAltY(pos.alt,H);
+      const d=Math.sqrt((mx-x)**2+(my-y)**2);
+      if(d<14&&d<minDist){minDist=d;hit=r;}
+    });
+    if(hit){
+      selectedObj=(selectedObj===hit.name)?null:hit.name;
+      const slVal2=parseInt(document.getElementById('timeSlider').value);
+      drawFrame(currentObsStartUTC+slVal2/60);
+      // Scroll table to row
+      const rows=document.querySelectorAll('#tableBody tr');
+      rows.forEach(row=>{
+        row.style.background='';
+        if(row.dataset.objname===selectedObj){
+          row.style.background='rgba(79,195,247,0.12)';
+          row.scrollIntoView({behavior:'smooth',block:'nearest'});
+        }
+      });
+    }
+  });
 }
 document.getElementById('hznFile').addEventListener('change',function(e){const file=e.target.files[0];if(!file)return;const rd=new FileReader();rd.onload=ev=>{const d=parseHZN(ev.target.result);if(d.length<3){showMsg('Geçerli horizon verisi okunamadı.','warn');horizonData=null;}else{horizonData=d;showMsg('Horizon yüklendi: '+d.length+' nokta.','info');drawHorizon();}};rd.readAsText(file);});
+function selectObjFromTable(name){
+  selectedObj=(selectedObj===name)?null:name;
+  const slVal=parseInt(document.getElementById('timeSlider').value);
+  drawFrame(currentObsStartUTC+slVal/60);
+  document.querySelectorAll('#tableBody tr').forEach(row=>{
+    row.style.background=row.dataset.objname===selectedObj?'rgba(79,195,247,0.12)':'';
+  });
+}
 function showMsg(t,type){document.getElementById('msgArea').innerHTML='<div class="msg msg-'+(type==='warn'?'warn':'info')+'">'+t+'</div>';}
 function clearMsg(){document.getElementById('msgArea').innerHTML='';}
 (function(){const today=new Date(),y=today.getFullYear(),m=String(today.getMonth()+1).padStart(2,'0'),d=String(today.getDate()).padStart(2,'0');document.getElementById('dateInput').value=y+'-'+m+'-'+d;renderSetupSelect();showMsg('Setup seçin, tarih belirleyin ve Hesapla\'ya basın. Horizon dosyası (.hrz) opsiyoneldir.','info');if(favorites.size>0){activeType='FAV';document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type==='FAV')b.classList.add('active');});}})();
