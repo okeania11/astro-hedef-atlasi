@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gece Planı — Horizon Planner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg: #07080f;
+    --bg2: #0d0f1c;
+    --bg3: #131628;
+    --border: #1e2240;
+    --accent: #4fc3f7;
+    --accent2: #c792ea;
+    --accent3: #f78c6c;
+    --gold: #ffd700;
+    --green: #89ddff;
+    --text: #cdd3f5;
+    --text2: #6b75a8;
+    --danger: #ff5370;
+    --warning: #ffcb6b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+  }
+
+  /* Starfield */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 60%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 78% 75%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 33% 90%, rgba(200,220,255,0.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 66% 5%, rgba(200,220,255,0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  header {
+    margin-bottom: 36px;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .subtitle {
+    color: var(--text2);
+    margin-top: 4px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Control panel */
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-items: end;
+  }
+
+  .field label {
+    display: block;
+    color: var(--text2);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+  }
+
+  .field input[type="file"] {
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .btn {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 10px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn:hover { background: #81d4fa; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  /* Horizon canvas */
+  .horizon-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 10px;
+  }
+
+  canvas {
+    width: 100%;
+    display: block;
+    border-radius: 3px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 16px;
+  }
+
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .stat-lbl {
+    font-size: 10px;
+    color: var(--text2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Moon info */
+  .moon-bar {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .moon-phase {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .moon-info { font-size: 12px; }
+  .moon-info strong { color: var(--gold); }
+
+  /* Filters */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  /* Table */
+  .table-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text2);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  th:hover { color: var(--accent); }
+
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(30,34,64,0.6);
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    transition: background 0.1s;
+  }
+
+  tbody tr:hover {
+    background: rgba(79,195,247,0.05);
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  .name-cell {
+    font-weight: 700;
+    color: #fff;
+    font-size: 13px;
+  }
+
+  .name-cell .common {
+    font-size: 10px;
+    color: var(--text2);
+    font-weight: 400;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+
+  .type-galaxy   { background: rgba(199,146,234,0.2); color: var(--accent2); border: 1px solid rgba(199,146,234,0.3); }
+  .type-nebula   { background: rgba(137,221,255,0.2); color: var(--green);   border: 1px solid rgba(137,221,255,0.3); }
+  .type-cluster  { background: rgba(247,140,108,0.2); color: var(--accent3); border: 1px solid rgba(247,140,108,0.3); }
+  .type-other    { background: rgba(107,117,168,0.2); color: var(--text2);   border: 1px solid rgba(107,117,168,0.3); }
+
+  .score-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .score-bar {
+    width: 60px;
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+  }
+
+  .moon-cell { font-size: 12px; }
+  .moon-ok   { color: #89ddff; }
+  .moon-warn { color: var(--warning); }
+  .moon-bad  { color: var(--danger); }
+
+  .window-cell { color: var(--accent3); font-size: 12px; }
+  .peak-cell   { color: var(--text); font-size: 12px; }
+  .alt-cell    { color: var(--accent); font-size: 12px; }
+  .size-cell   { color: var(--text2); font-size: 12px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text2);
+  }
+
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+  .empty-state p { font-size: 12px; line-height: 1.8; }
+
+  .msg { padding: 12px 16px; font-size: 12px; border-radius: 4px; margin-bottom: 16px; }
+  .msg-warn { background: rgba(255,203,107,0.1); border: 1px solid rgba(255,203,107,0.3); color: var(--warning); }
+  .msg-info { background: rgba(79,195,247,0.1); border: 1px solid rgba(79,195,247,0.3); color: var(--accent); }
+
+  @media (max-width: 700px) {
+    .controls { grid-template-columns: 1fr 1fr; }
+    .controls .btn { grid-column: 1/-1; }
+    td:nth-child(6), th:nth-child(6) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo">HORIZON <span>PLANNER</span></div>
+    <div class="subtitle">Astrofotoğraf Gece Planı &mdash; Antalya</div>
+  </header>
+
+  <div class="controls">
+    <div class="field">
+      <label>Tarih</label>
+      <input type="date" id="dateInput">
+    </div>
+    <div class="field">
+      <label>Gözlem Başlangıcı</label>
+      <input type="time" id="startTime" value="21:00">
+    </div>
+    <div class="field">
+      <label>Horizon Dosyası (.hrz)</label>
+      <input type="file" id="hznFile" accept=".hrz,.hzn,.txt">
+    </div>
+    <button class="btn" onclick="calculate()">▶ HESAPLA</button>
+  </div>
+
+  <div id="msgArea"></div>
+
+  <div class="horizon-wrap" id="horizonWrap" style="display:none">
+    <div class="section-label">Horizon Profili</div>
+    <canvas id="horizonCanvas" height="100"></canvas>
+  </div>
+
+  <div id="moonBar" style="display:none" class="moon-bar"></div>
+
+  <div id="statsBar" class="stats-bar" style="display:none"></div>
+
+  <div id="filterRow" class="filter-row" style="display:none">
+    <span style="color:var(--text2);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-right:4px;">Tür:</span>
+    <button class="filter-btn active" data-type="ALL" onclick="setFilter(this,'ALL')">Tümü</button>
+    <button class="filter-btn" data-type="Galaxy" onclick="setFilter(this,'Galaxy')">Galaksi</button>
+    <button class="filter-btn" data-type="Nebula" onclick="setFilter(this,'Nebula')">Nebula</button>
+    <button class="filter-btn" data-type="Cluster" onclick="setFilter(this,'Cluster')">Küme</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('name')">Obje ↕</th>
+          <th onclick="sortBy('type')">Tür</th>
+          <th onclick="sortBy('peak')">Tepe Saati ↕</th>
+          <th onclick="sortBy('maxAlt')">Maks Alt ↕</th>
+          <th onclick="sortBy('window')">Pencere ↕</th>
+          <th onclick="sortBy('moonDist')">Ay Mesafesi ↕</th>
+          <th onclick="sortBy('score')">Skor ↕</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="7">
+          <div class="empty-state">
+            <div class="icon">🔭</div>
+            <p>Tarih seç, horizon dosyanı yükle (isteğe bağlı)<br>ve Hesapla'ya bas.</p>
+          </div>
+        </td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+// ── Koordinatlar ──────────────────────────────────────────────────────────────
+const LAT = 36.8969;   // Antalya
+const LON = 30.7133;
+const TZ  = 3;         // UTC+3
+
+// ── Katalog (Messier + seçkin NGC) ────────────────────────────────────────────
+// [name, commonName, type, ra_h, dec_deg, size_arcmin, magnitude]
+const CATALOG = [
+  // GALAXIES
+  ["M31","Andromeda Gal.","Galaxy",0.712,41.27,178,3.4],
+  ["M32","","Galaxy",0.712,40.87,8,8.7],
+  ["M33","Üçgen Gal.","Galaxy",1.564,30.66,63,5.7],
+  ["M51","Girdap Gal.","Galaxy",13.496,47.20,11,8.4],
+  ["M63","Ayçiçeği Gal.","Galaxy",13.264,42.03,12,8.6],
+  ["M64","Kara Göz Gal.","Galaxy",12.943,21.68,9,8.5],
+  ["M74","","Galaxy",1.612,15.78,10,9.4],
+  ["M77","","Galaxy",2.712,-0.01,7,8.9],
+  ["M81","Bode Gal.","Galaxy",9.928,69.07,21,6.9],
+  ["M82","Puro Gal.","Galaxy",9.931,69.68,11,8.4],
+  ["M83","Güney Rüzgargülü","Galaxy",13.617,-29.87,13,7.5],
+  ["M84","","Galaxy",12.418,12.89,5,9.1],
+  ["M85","","Galaxy",12.423,18.19,7,9.2],
+  ["M86","","Galaxy",12.436,12.95,7,8.9],
+  ["M87","Virgo A","Galaxy",12.514,12.39,7,8.6],
+  ["M88","","Galaxy",12.532,14.42,7,9.6],
+  ["M90","","Galaxy",12.615,13.16,10,9.5],
+  ["M94","","Galaxy",12.851,41.12,11,8.2],
+  ["M95","","Galaxy",10.703,11.70,7,9.7],
+  ["M96","","Galaxy",10.747,11.82,7,9.2],
+  ["M97","Baykuş Neb.","Nebula",11.248,55.02,3.4,9.9],
+  ["M98","","Galaxy",12.229,14.90,10,10.1],
+  ["M99","","Galaxy",12.315,14.42,5,9.9],
+  ["M100","","Galaxy",12.382,15.82,7,9.3],
+  ["M101","Rüzgargülü Gal.","Galaxy",14.054,54.35,22,7.9],
+  ["M104","Sombrero","Galaxy",12.666,-11.62,9,8.0],
+  ["M106","","Galaxy",12.316,47.30,19,8.4],
+  ["M108","","Galaxy",11.189,55.67,8,10.0],
+  ["M109","","Galaxy",11.962,53.37,8,9.8],
+  ["M110","","Galaxy",0.673,41.69,17,8.5],
+  ["NGC 891","","Galaxy",2.382,42.35,14,9.9],
+  ["NGC 1023","","Galaxy",2.673,39.07,8,9.5],
+  ["NGC 2683","","Galaxy",8.879,33.43,9,9.7],
+  ["NGC 3628","","Galaxy",11.340,13.59,14,9.5],
+  ["NGC 4565","Iğne Gal.","Galaxy",12.609,25.99,16,9.6],
+  ["NGC 4631","Ringa Gal.","Galaxy",12.702,32.54,15,9.2],
+  ["NGC 5128","Centaurus A","Galaxy",13.426,-43.02,18,6.8],
+  ["NGC 7331","","Galaxy",22.618,34.42,11,9.5],
+  ["NGC 7479","","Galaxy",23.079,12.32,4,11.0],
+  ["NGC 7814","","Galaxy",0.052,16.15,6,10.5],
+  ["NGC 2903","","Galaxy",9.524,21.50,13,9.0],
+  ["NGC 3521","","Galaxy",11.107,-0.04,11,8.9],
+  ["NGC 4038","Anten Gal.","Galaxy",12.016,-18.87,3,10.3],
+  ["NGC 4236","","Galaxy",12.284,69.47,22,9.7],
+  ["NGC 4244","","Galaxy",12.296,37.81,16,10.2],
+  ["NGC 4631","Ringa Gal.","Galaxy",12.702,32.54,15,9.2],
+  ["NGC 5907","","Galaxy",15.279,56.33,13,10.4],
+  ["NGC 6946","Havai Fişek","Galaxy",20.577,60.15,11,8.9],
+  ["NGC 7000","K. Amerika Neb.","Nebula",20.979,44.53,120,4.0],
+  // NEBULAE
+  ["M1","Yengeç Neb.","Nebula",5.578,22.02,6,8.4],
+  ["M8","Göl Neb.","Nebula",18.064,-24.38,45,5.8],
+  ["M16","Kartal Neb.","Nebula",18.314,-13.79,35,6.4],
+  ["M17","Omega Neb.","Nebula",18.346,-16.18,11,6.0],
+  ["M20","Üç Dilimli Neb.","Nebula",18.045,-22.97,28,6.3],
+  ["M27","Dumbbell Neb.","Nebula",19.993,22.72,8,7.4],
+  ["M42","Orion Neb.","Nebula",5.588,-5.39,40,4.0],
+  ["M43","","Nebula",5.592,-5.27,20,9.0],
+  ["M57","Yüzük Neb.","Nebula",18.893,33.03,1.4,8.8],
+  ["M76","Küçük Dumbbell","Nebula",1.704,51.58,2.7,10.1],
+  ["M78","","Nebula",5.779,0.07,8,8.3],
+  ["NGC 281","Pacman Neb.","Nebula",0.878,56.62,35,7.4],
+  ["NGC 891","","Galaxy",2.382,42.35,14,9.9],
+  ["NGC 1499","Californiya Neb.","Nebula",4.055,36.42,160,5.0],
+  ["NGC 1502","","Cluster",4.113,62.33,20,5.7],
+  ["NGC 1977","Koşan Adam Neb.","Nebula",5.598,-4.83,40,7.0],
+  ["NGC 2170","","Nebula",6.101,-6.40,10,11.0],
+  ["NGC 2244","Gül Neb.","Nebula",6.533,4.95,80,4.8],
+  ["NGC 2359","Thor Miğferi","Nebula",7.283,-13.22,8,11.5],
+  ["NGC 2392","Eskimo Neb.","Nebula",7.490,20.92,0.7,9.2],
+  ["NGC 3372","Eta Carinae","Nebula",10.745,-59.87,120,3.0],
+  ["NGC 6188","","Nebula",16.540,-48.63,15,8.0],
+  ["NGC 6302","Bug Neb.","Nebula",17.134,-37.10,0.8,9.6],
+  ["NGC 6357","Istakoz Neb.","Nebula",17.457,-34.20,50,8.0],
+  ["NGC 6523","Göl Neb. (NGC)","Nebula",18.064,-24.38,45,5.8],
+  ["NGC 6618","Omega (NGC)","Nebula",18.346,-16.18,11,6.0],
+  ["NGC 6820","","Nebula",19.724,23.13,40,8.5],
+  ["NGC 7293","Heliks Neb.","Nebula",22.494,-20.84,16,7.3],
+  ["NGC 7380","Büyücü Neb.","Nebula",22.778,58.10,25,7.2],
+  ["NGC 7635","Kabarcık Neb.","Nebula",23.341,61.20,15,10.0],
+  ["IC 434","At Başı Neb.","Nebula",5.688,-2.45,60,6.8],
+  ["IC 1805","Kalp Neb.","Nebula",2.542,61.45,60,6.5],
+  ["IC 1848","Ruh Neb.","Nebula",2.852,60.42,100,6.5],
+  ["IC 2177","Deniz Martısı","Nebula",7.050,-10.67,120,7.0],
+  ["IC 5070","Pelikan Neb.","Nebula",20.928,44.37,60,8.0],
+  ["IC 5146","Koza Neb.","Nebula",21.887,47.27,12,7.2],
+  ["Sh2-308","","Nebula",6.888,-23.93,40,11.0],
+  // CLUSTERS
+  ["M2","","Cluster",21.558,-0.82,13,6.5],
+  ["M3","","Cluster",13.703,28.37,18,6.2],
+  ["M4","","Cluster",16.393,-26.53,26,5.6],
+  ["M5","","Cluster",15.309,2.08,20,5.6],
+  ["M6","Kelebek Küm.","Cluster",17.667,-32.22,20,4.2],
+  ["M7","Ptolemy Küm.","Cluster",17.898,-34.82,80,3.3],
+  ["M11","Yaban Ördek Küm.","Cluster",18.851,-6.27,14,5.8],
+  ["M12","","Cluster",16.786,-1.95,16,6.7],
+  ["M13","Herkül Küm.","Cluster",16.695,36.46,20,5.8],
+  ["M15","","Cluster",21.500,12.17,18,6.2],
+  ["M22","","Cluster",18.607,-23.90,24,5.1],
+  ["M35","","Cluster",6.153,24.33,28,5.1],
+  ["M36","","Cluster",5.601,34.13,12,6.0],
+  ["M37","","Cluster",5.873,32.55,24,5.6],
+  ["M38","","Cluster",5.479,35.85,21,6.4],
+  ["M41","","Cluster",6.767,-20.73,38,4.5],
+  ["M44","Yengeç Küm.","Cluster",8.673,19.98,95,3.7],
+  ["M45","Ülker","Cluster",3.787,24.12,110,1.2],
+  ["M46","","Cluster",7.697,-14.82,27,6.0],
+  ["M47","","Cluster",7.612,-14.50,30,4.4],
+  ["M48","","Cluster",8.227,-5.80,54,5.5],
+  ["M67","","Cluster",8.850,11.82,25,6.9],
+  ["M92","","Cluster",17.286,43.14,14,6.4],
+  ["NGC 869","h Per","Cluster",2.320,57.13,30,4.3],
+  ["NGC 884","χ Per","Cluster",2.377,57.12,30,4.4],
+  ["NGC 1502","","Cluster",4.113,62.33,20,5.7],
+  ["NGC 752","","Cluster",1.958,37.68,50,5.7],
+  ["NGC 6939","","Cluster",20.533,60.65,7,7.8],
+  ["NGC 7789","Karolina Gülü","Cluster",23.957,56.72,25,6.7],
+];
+
+// ── Durum ────────────────────────────────────────────────────────────────────
+let horizonData = null;   // [{az, alt}]
+let results = [];
+let filtered = [];
+let activeType = 'ALL';
+let sortCol = 'score';
+let sortDir = -1;
+
+// ── Yardımcı: Derece ↔ Radyan ─────────────────────────────────────────────
+const rad = d => d * Math.PI / 180;
+const deg = r => r * 180 / Math.PI;
+
+// ── Julian Tarihi ─────────────────────────────────────────────────────────
+function julianDay(date) {
+  const y = date.getUTCFullYear();
+  const m = date.getUTCMonth() + 1;
+  const d = date.getUTCDate();
+  const h = date.getUTCHours() + date.getUTCMinutes()/60 + date.getUTCSeconds()/3600;
+  let Y = y, M = m;
+  if (M <= 2) { Y--; M += 12; }
+  const A = Math.floor(Y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + d + h/24 + B - 1524.5;
+}
+
+// ── GST / LST ─────────────────────────────────────────────────────────────
+function gst(jd) {
+  const T = (jd - 2451545.0) / 36525.0;
+  let g = 280.46061837 + 360.98564736629*(jd - 2451545.0)
+          + 0.000387933*T*T - T*T*T/38710000;
+  return ((g % 360) + 360) % 360;
+}
+
+function lst(jd, lonDeg) {
+  return (gst(jd) + lonDeg + 360) % 360;
+}
+
+// ── RA/Dec → Alt/Az ──────────────────────────────────────────────────────
+function radec2altaz(ra_h, dec_deg, jd, lat, lon) {
+  const lstDeg = lst(jd, lon);
+  const ha = rad(lstDeg - ra_h * 15);
+  const d  = rad(dec_deg);
+  const l  = rad(lat);
+  const sinAlt = Math.sin(d)*Math.sin(l) + Math.cos(d)*Math.cos(l)*Math.cos(ha);
+  const alt = deg(Math.asin(Math.max(-1, Math.min(1, sinAlt))));
+  const cosAz = (Math.sin(d) - Math.sin(l)*sinAlt) / (Math.cos(l)*Math.cos(rad(alt)));
+  let az = deg(Math.acos(Math.max(-1, Math.min(1, cosAz))));
+  if (Math.sin(ha) > 0) az = 360 - az;
+  return { alt, az };
+}
+
+// ── Meridian Saati ────────────────────────────────────────────────────────
+// Obje meridiani geçtiğinde LMST = RA × 15
+// Geri dönüş: UTC saat olarak o günün meridian zamanı
+function meridianTimeUTC(ra_h, dateUTC0h) {
+  const jd0 = julianDay(dateUTC0h);
+  // LMST at jd0 (midnight UTC)
+  const lstAt0 = lst(jd0, LON); // degrees
+  const raDeg = ra_h * 15;
+  let diff = raDeg - lstAt0;
+  diff = ((diff % 360) + 360) % 360; // 0..360
+  // LST advances 360.985647° per 24h sidereal, ≈ 24h 3m 56s
+  const hrsUTC = diff / 360.985647 * 24; // approximate
+  return hrsUTC; // UTC hours (0..24)
+}
+
+// ── Horizon interpolasyonu ────────────────────────────────────────────────
+function horizonAltAt(az) {
+  if (!horizonData || horizonData.length < 2) return 0;
+  const n = horizonData.length;
+  // Sıralı varsayıyoruz (az artan)
+  let lo = horizonData[n - 1], hi = horizonData[0];
+  for (let i = 0; i < n - 1; i++) {
+    if (horizonData[i].az <= az && horizonData[i + 1].az > az) {
+      lo = horizonData[i]; hi = horizonData[i + 1]; break;
+    }
+  }
+  if (lo.az === hi.az) return lo.alt;
+  let t = (az - lo.az) / (hi.az - lo.az);
+  if (hi.az < lo.az) { // 360 wrap
+    let span = (360 - lo.az) + hi.az;
+    let d = az >= lo.az ? az - lo.az : 360 - lo.az + az;
+    t = d / span;
+  }
+  return lo.alt + t * (hi.alt - lo.alt);
+}
+
+// ── Ay hesabı (basit) ──────────────────────────────────────────────────────
+function moonPhase(jd) {
+  const k = (jd - 2451550.1) / 29.530588;
+  const phase = ((k % 1) + 1) % 1; // 0..1
+  return phase;
+}
+
+function moonRA_Dec(jd) {
+  // Yaklaşık hesap (±2°)
+  const T = (jd - 2451545.0) / 36525.0;
+  const L = (218.316 + 13.176396*86400*(jd-2451545)/86400) % 360;
+  // Simplified: just return RA near ecliptic
+  const M = rad((134.963 + 13.064993*86400*(jd-2451545)/86400) % 360);
+  const lonMoon = rad(L + 6.289*Math.sin(M));
+  const lat = 0;
+  const obliq = rad(23.439);
+  const ra = deg(Math.atan2(Math.sin(lonMoon)*Math.cos(obliq), Math.cos(lonMoon)));
+  const dec = deg(Math.asin(Math.sin(obliq)*Math.sin(lonMoon)));
+  return { ra: ((ra/15) + 24) % 24, dec };
+}
+
+function angularDistance(ra1, dec1, ra2, dec2) {
+  const d = deg(Math.acos(Math.max(-1, Math.min(1,
+    Math.sin(rad(dec1))*Math.sin(rad(dec2)) +
+    Math.cos(rad(dec1))*Math.cos(rad(dec2))*Math.cos(rad((ra1 - ra2)*15))
+  ))));
+  return d;
+}
+
+function phaseEmoji(phase) {
+  const icons = ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+  return icons[Math.round(phase * 8) % 8];
+}
+
+function phaseText(phase) {
+  if (phase < 0.03 || phase > 0.97) return 'Yeni Ay';
+  if (phase < 0.22) return 'Hilal';
+  if (phase < 0.28) return 'İlk Çeyrek';
+  if (phase < 0.47) return 'Büyüyen';
+  if (phase < 0.53) return 'Dolunay';
+  if (phase < 0.72) return 'Küçülen';
+  if (phase < 0.78) return 'Son Çeyrek';
+  return 'Azalan Hilal';
+}
+
+// ── .hzn Dosya Okuyucu ────────────────────────────────────────────────────
+function parseHZN(text) {
+  const lines = text.split('\n');
+  const points = [];
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t || t.startsWith('#') || t.startsWith('[') || t.startsWith('L') || t.startsWith('l')) continue;
+    const parts = t.split(/[\s,]+/);
+    if (parts.length >= 2) {
+      const az  = parseFloat(parts[0]);
+      const alt = parseFloat(parts[1]);
+      if (!isNaN(az) && !isNaN(alt)) points.push({ az, alt });
+    }
+  }
+  // Sırala
+  points.sort((a, b) => a.az - b.az);
+  return points;
+}
+
+// ── Ana Hesaplama ─────────────────────────────────────────────────────────
+function calculate() {
+  const dateVal = document.getElementById('dateInput').value;
+  if (!dateVal) { showMsg('Tarih seçilmedi.', 'warn'); return; }
+
+  const startHHMM = document.getElementById('startTime').value || '21:00';
+  const [startH, startM] = startHHMM.split(':').map(Number);
+  const obsStartUTC = startH - TZ + startM/60; // UTC saat
+
+  const dateUTC0h = new Date(dateVal + 'T00:00:00Z');
+  const jdNoon = julianDay(dateUTC0h) + 0.5; // yaklaşık gece ortası JD
+
+  // Gözlem penceresi: obsStartUTC → +7 saat (ertesi sabaha kadar)
+  const obsEndUTC = obsStartUTC + 7;
+
+  // Ay
+  const moonPhaseVal = moonPhase(jdNoon);
+  const moonPos = moonRA_Dec(jdNoon);
+  const moonIllum = Math.round((1 - Math.cos(2 * Math.PI * moonPhaseVal)) / 2 * 100);
+  const jdMidnight = julianDay(dateUTC0h) + (obsStartUTC + 3.5) / 24;
+  const moonAltAz = radec2altaz(moonPos.ra, moonPos.dec, jdMidnight, LAT, LON);
+
+  document.getElementById('moonBar').style.display = 'flex';
+  document.getElementById('moonBar').innerHTML = `
+    <div class="moon-phase">${phaseEmoji(moonPhaseVal)}</div>
+    <div class="moon-info">
+      <strong>${phaseText(moonPhaseVal)}</strong> — %${moonIllum} aydınlık<br>
+      Gece ortası yüksekliği: <strong>${moonAltAz.alt.toFixed(1)}°</strong>
+      ${moonIllum > 50 ? ' ⚠ Dolunaya yakın — geniş açılı Ha önerilir' : ''}
+    </div>
+  `;
+
+  // Objeleri hesapla
+  results = [];
+  const STEP_MIN = 10; // 10 dakika adım
+
+  for (const obj of CATALOG) {
+    const [name, common, type, ra, dec, size, mag] = obj;
+    if (dec < -50) continue; // Antalya'dan gözlenemiyor
+
+    // Meridian zamanı (UTC)
+    const merUTC = meridianTimeUTC(ra, dateUTC0h);
+    // Meridian sonrası 30° için maksimum HA ~2h, yani meridian +2h sonrasına kadar izin ver
+    const meridianLocalH = ((merUTC + TZ) % 24 + 24) % 24;
+
+    // Pencere boyunca örnekle
+    let maxAlt = -90;
+    let visibleMinutes = 0;
+    let peakTime = null;
+    let peakTimeLocal = null;
+
+    for (let t = obsStartUTC; t <= obsEndUTC; t += STEP_MIN/60) {
+      const jd = julianDay(dateUTC0h) + t / 24;
+      const pos = radec2altaz(ra, dec, jd, LAT, LON);
+      const hAlt = horizonAltAt(pos.az);
+
+      // HA hesabı (meridian kontrolü)
+      const lstNow = lst(jd, LON);
+      let ha = lstNow - ra * 15;
+      ha = ((ha % 360) + 360) % 360;
+      if (ha > 180) ha -= 360; // -180..+180
+      // +30° geçince (doğuya yakın = negatif HA, batı = pozitif)
+      // meridian W geçişi: ha > 30 → elensin
+      if (ha > 30) continue;
+
+      if (pos.alt > hAlt + 10) { // en az 10° horizon üstü
+        visibleMinutes += STEP_MIN;
+        if (pos.alt > maxAlt) {
+          maxAlt = pos.alt;
+          peakTime = t;
+          const localT = ((t + TZ) % 24 + 24) % 24;
+          peakTimeLocal = localT;
+        }
+      }
+    }
+
+    if (visibleMinutes < 30) continue; // en az 30 dk görünür olsun
+
+    // Ay mesafesi
+    const moonDist = angularDistance(ra, dec, moonPos.ra, moonPos.dec);
+
+    // Skor hesabı (0-100)
+    const altScore  = Math.min(maxAlt / 70, 1) * 35;
+    const winScore  = Math.min(visibleMinutes / 240, 1) * 30;
+    const moonScore = Math.min(moonDist / 90, 1) * 20;
+    const magScore  = Math.max(0, (11 - mag) / 11) * 15;
+    const score = Math.round(altScore + winScore + moonScore + magScore);
+
+    let moonClass = 'moon-ok';
+    if (moonDist < 30) moonClass = 'moon-bad';
+    else if (moonDist < 60) moonClass = 'moon-warn';
+
+    results.push({
+      name, common, type, ra, dec, size, mag,
+      maxAlt: Math.round(maxAlt),
+      window: Math.round(visibleMinutes / 60 * 10) / 10,
+      peak: peakTimeLocal != null ? peakTimeLocal : 0,
+      moonDist: Math.round(moonDist),
+      moonClass, score,
+      meridianLocal: meridianLocalH
+    });
+  }
+
+  // Duplicate temizle (bazı objeler 2x var katalogda)
+  const seen = new Set();
+  results = results.filter(r => { if (seen.has(r.name)) return false; seen.add(r.name); return true; });
+
+  document.getElementById('statsBar').style.display = 'flex';
+  document.getElementById('filterRow').style.display = 'flex';
+
+  clearMsg();
+  showMsg(`${results.length} obje ${horizonData ? 'horizon filtresinden' : 'varsayılan ufuktan'} geçti — ${CATALOG.length} obje katalogda.`, 'info');
+
+  applyFilterAndSort();
+  drawHorizon();
+}
+
+// ── Sıralama & Filtreleme ─────────────────────────────────────────────────
+function setFilter(btn, type) {
+  activeType = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilterAndSort();
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = -1; }
+  applyFilterAndSort();
+}
+
+function applyFilterAndSort() {
+  filtered = activeType === 'ALL' ? [...results] : results.filter(r => r.type === activeType);
+  filtered.sort((a, b) => {
+    let va = a[sortCol], vb = b[sortCol];
+    if (typeof va === 'string') return va.localeCompare(vb) * sortDir;
+    return (va - vb) * sortDir;
+  });
+
+  // Stats
+  const gal = filtered.filter(r => r.type === 'Galaxy').length;
+  const neb = filtered.filter(r => r.type === 'Nebula').length;
+  const clu = filtered.filter(r => r.type === 'Cluster').length;
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat"><div class="stat-val">${filtered.length}</div><div class="stat-lbl">Toplam</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--accent2)">${gal}</div><div class="stat-lbl">Galaksi</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--green)">${neb}</div><div class="stat-lbl">Nebula</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--accent3)">${clu}</div><div class="stat-lbl">Küme</div></div>
+  `;
+
+  renderTable();
+}
+
+function fmtHour(h) {
+  const hh = Math.floor(((h % 24) + 24) % 24);
+  const mm = Math.round((h % 1) * 60);
+  return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">🌙</div><p>Bu gece bu kriterlerde görüntülenebilir obje yok.</p></div></td></tr>`;
+    return;
+  }
+  const typeClass = { Galaxy: 'type-galaxy', Nebula: 'type-nebula', Cluster: 'type-cluster' };
+  const typeLabel = { Galaxy: 'GALAKSİ', Nebula: 'NEBULA', Cluster: 'KÜME' };
+
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td class="name-cell">${r.name}${r.common ? `<span class="common">${r.common}</span>` : ''}</td>
+      <td><span class="type-badge ${typeClass[r.type] || 'type-other'}">${typeLabel[r.type] || r.type}</span></td>
+      <td class="peak-cell">${fmtHour(r.peak)}</td>
+      <td class="alt-cell">${r.maxAlt}°</td>
+      <td class="window-cell">${r.window}s</td>
+      <td class="moon-cell ${r.moonClass}">${r.moonDist}° ${r.moonDist < 30 ? '⚠' : r.moonDist < 60 ? '~' : '✓'}</td>
+      <td>
+        <div class="score-bar-wrap">
+          <div class="score-bar"><div class="score-fill" style="width:${r.score}%"></div></div>
+          <span style="font-size:12px;color:var(--text)">${r.score}</span>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ── Horizon Çizimi ─────────────────────────────────────────────────────────
+function drawHorizon() {
+  if (!horizonData) { document.getElementById('horizonWrap').style.display = 'none'; return; }
+  document.getElementById('horizonWrap').style.display = 'block';
+  const canvas = document.getElementById('horizonCanvas');
+  const W = canvas.parentElement.clientWidth - 32;
+  canvas.width = W;
+  canvas.height = 120;
+  const ctx = canvas.getContext('2d');
+
+  ctx.clearRect(0, 0, W, 120);
+  ctx.fillStyle = '#0a0c1a';
+  ctx.fillRect(0, 0, W, 120);
+
+  // Grid
+  ctx.strokeStyle = '#1e2240';
+  ctx.lineWidth = 1;
+  for (let alt = 0; alt <= 60; alt += 10) {
+    const y = 120 - (alt / 60) * 110 - 5;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    ctx.fillStyle = '#3a4070';
+    ctx.font = '9px Space Mono';
+    ctx.fillText(alt + '°', 2, y - 2);
+  }
+
+  // Horizon
+  ctx.beginPath();
+  ctx.strokeStyle = '#4fc3f7';
+  ctx.lineWidth = 1.5;
+  for (let i = 0; i < horizonData.length; i++) {
+    const x = (horizonData[i].az / 360) * W;
+    const y = 120 - (horizonData[i].alt / 60) * 110 - 5;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  // Close wrap
+  if (horizonData.length > 0) {
+    ctx.lineTo(W, 120 - (horizonData[horizonData.length-1].alt / 60)*110 - 5);
+  }
+  ctx.stroke();
+
+  // Fill
+  ctx.lineTo(W, 120); ctx.lineTo(0, 120);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(79,195,247,0.07)';
+  ctx.fill();
+
+  // N/E/S/W etiketleri
+  ctx.fillStyle = '#6b75a8';
+  ctx.font = '10px Space Mono';
+  ['K','D','G','B'].forEach((l, i) => {
+    const x = (i * 90 / 360) * W;
+    ctx.fillText(l, x + 2, 112);
+  });
+}
+
+// ── Dosya Yükleme ─────────────────────────────────────────────────────────
+document.getElementById('hznFile').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const data = parseHZN(ev.target.result);
+    if (data.length < 3) {
+      showMsg('Geçerli horizon verisi okunamadı. Dosya formatını kontrol et.', 'warn');
+      horizonData = null;
+    } else {
+      horizonData = data;
+      showMsg(`Horizon yüklendi: ${data.length} nokta.`, 'info');
+      drawHorizon();
+    }
+  };
+  reader.readAsText(file);
+});
+
+// ── Mesaj ─────────────────────────────────────────────────────────────────
+function showMsg(text, type) {
+  document.getElementById('msgArea').innerHTML =
+    `<div class="msg msg-${type === 'warn' ? 'warn' : 'info'}">${text}</div>`;
+}
+function clearMsg() { document.getElementById('msgArea').innerHTML = ''; }
+
+// ── Init: bugünün tarihi ──────────────────────────────────────────────────
+(function() {
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = String(today.getMonth()+1).padStart(2,'0');
+  const d = String(today.getDate()).padStart(2,'0');
+  document.getElementById('dateInput').value = `${y}-${m}-${d}`;
+})();
+</script>
+</body>
+</html>
