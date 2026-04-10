@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
 <title>Astro Hedef Atlası — Astro Target Planner</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
@@ -90,8 +92,8 @@ tbody tr:last-child td{border-bottom:none;}
 .score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));}
 .moon-cell{font-size:12px;}.moon-ok{color:#89ddff;}.moon-warn{color:var(--warning);}.moon-bad{color:var(--danger);}
 .window-cell{color:var(--accent3);font-size:12px;}.peak-cell{color:var(--text);font-size:12px;}.alt-cell{color:var(--accent);font-size:12px;}
-.fav-star{background:none;border:none;cursor:pointer;font-size:16px;padding:0 2px;line-height:1;transition:transform .15s,color .15s;color:#3a4060;}
-.fav-star:hover{transform:scale(1.3);color:#aab0d0;}.fav-star.active{color:var(--gold);text-shadow:0 0 8px rgba(255,215,0,.5);}
+.fav-star{background:none !important;border:none;cursor:pointer;font-size:16px;padding:0 4px;line-height:1;transition:transform .15s,color .15s;color:#7a84a8 !important;-webkit-appearance:none;}
+.fav-star:hover{transform:scale(1.3);color:#c0c8e8 !important;}.fav-star.active{color:#ffd700 !important;text-shadow:0 0 8px rgba(255,215,0,.5);}
 .empty-state{text-align:center;padding:50px 20px;color:var(--text2);}
 .empty-state .icon{font-size:44px;margin-bottom:12px;opacity:.5;}
 .empty-state p{font-size:12px;line-height:1.8;}
