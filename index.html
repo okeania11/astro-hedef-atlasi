@@ -4,20 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
-<meta name="supported-color-schemes" content="dark">
 <title>Astro Hedef Atlası — Astro Target Planner</title>
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
 :root{--bg:#07080f;--bg2:#0d0f1c;--bg3:#131628;--border:#1e2240;--accent:#4fc3f7;--accent2:#c792ea;--accent3:#f78c6c;--gold:#ffd700;--green:#89ddff;--text:#cdd3f5;--text2:#6b75a8;--danger:#ff5370;--warning:#ffcb6b;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:13px;min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 70%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 50% 15%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 70% 50%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 90% 80%,rgba(255,255,255,0.3) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 20% 90%,rgba(200,220,255,0.5) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 80% 10%,rgba(200,220,255,0.4) 0%,transparent 100%);}
-.container{position:relative;z-index:1;max-width:1150px;margin:0 auto;padding:28px 20px 60px;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 70%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 50% 15%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 70% 50%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 20% 90%,rgba(200,220,255,0.5) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 80% 10%,rgba(200,220,255,0.4) 0%,transparent 100%);}
+.container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:28px 20px 60px;}
 .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff;letter-spacing:-0.5px;}
 .logo span{color:var(--accent);}
 .subtitle{color:var(--text2);margin-top:4px;font-size:11px;letter-spacing:2px;text-transform:uppercase;}
-header{margin-bottom:22px;}
-.setup-bar{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+header{margin-bottom:20px;}
+.topbar{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.topbar label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);white-space:nowrap;}
+.topbar select,.topbar input[type=number]{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:5px 8px;border-radius:4px;outline:none;}
+.topbar select:focus,.topbar input:focus{border-color:var(--accent);}
+.bortle-wrap{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.bortle-val{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--accent);min-width:16px;}
+.bortle-desc{font-size:10px;color:var(--text2);min-width:180px;}
+.custom-coords{display:none;gap:6px;align-items:center;}
+.custom-coords input{width:90px;}
+.setup-bar{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 .setup-bar label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);white-space:nowrap;}
 .setup-select{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:7px 10px;border-radius:4px;outline:none;flex:1;min-width:180px;}
 .setup-select:focus{border-color:var(--accent);}
@@ -31,6 +40,7 @@ header{margin-bottom:22px;}
 .form-row label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:4px;}
 .form-row input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:13px;padding:8px 12px;border-radius:4px;outline:none;}
 .form-row input:focus{border-color:var(--accent);}
+.form-row .frow2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .filter-checks{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px;}
 .fcheck{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:5px 10px;cursor:pointer;font-size:12px;transition:all .15s;user-select:none;}
 .fcheck input{width:auto;padding:0;background:none;border:none;}
@@ -45,88 +55,141 @@ header{margin-bottom:22px;}
 .sitem-name{font-size:13px;color:#fff;}
 .sitem-detail{font-size:10px;color:var(--text2);margin-top:2px;}
 .sitem-actions{display:flex;gap:6px;}
-.controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;margin-bottom:12px;align-items:end;}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;margin-bottom:10px;align-items:end;}
 .field label{display:block;color:var(--text2);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
 .field input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:13px;padding:10px 12px;border-radius:4px;outline:none;transition:border-color .2s;}
 .field input:focus{border-color:var(--accent);}
 .field input[type="file"]{cursor:pointer;padding:8px 12px;font-size:11px;}
 .btn{background:var(--accent);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;padding:10px 22px;border-radius:4px;cursor:pointer;transition:background .2s,transform .1s;white-space:nowrap;}
 .btn:hover{background:#81d4fa;transform:translateY(-1px);}
-.ufuk-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:12px;}
-.section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:10px;}
+.ufuk-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:10px;}
+.section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:8px;}
 canvas{width:100%;display:block;border-radius:3px;}
-.stats-bar{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
-.stat{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:8px 14px;}
-.stat-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--accent);}
+.stats-bar{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:7px 12px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--accent);}
 .stat-lbl{font-size:10px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;}
-.moon-bar{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:12px 16px;margin-bottom:12px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;}
-.moon-phase{font-size:28px;line-height:1;}
+.moon-bar{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:10px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
+.moon-phase{font-size:26px;line-height:1;}
 .moon-info,.moon-rise{font-size:12px;line-height:1.8;}
 .moon-info strong{color:var(--gold);}
-.moon-rise{border-left:1px solid var(--border);padding-left:22px;}
+.moon-rise{border-left:1px solid var(--border);padding-left:20px;}
 .moon-rise strong{color:var(--accent);}
-.filter-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
-.filter-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:20px;cursor:pointer;transition:all .15s;}
+.filter-row{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
+.filter-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 11px;border-radius:20px;cursor:pointer;transition:all .15s;}
 .filter-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent);}
 .filter-btn.fav-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);}
 .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;overflow-x:auto;}
-table{width:100%;border-collapse:collapse;min-width:820px;}
+table{width:100%;border-collapse:collapse;min-width:960px;}
 thead tr{background:var(--bg3);border-bottom:1px solid var(--border);}
-th{padding:10px 12px;text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);white-space:nowrap;cursor:pointer;user-select:none;}
+th{padding:9px 10px;text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);white-space:nowrap;cursor:pointer;user-select:none;}
 th:hover{color:var(--accent);}
-td{padding:8px 12px;border-bottom:1px solid rgba(30,34,64,.6);vertical-align:middle;}
-tbody tr{transition:background .1s;}
+td{padding:7px 10px;border-bottom:1px solid rgba(30,34,64,.6);vertical-align:middle;}
+tbody tr{transition:background .1s;cursor:pointer;}
 tbody tr:hover{background:rgba(79,195,247,.04);}
 tbody tr:last-child td{border-bottom:none;}
 .name-cell{font-weight:700;color:#fff;font-size:13px;}
-.name-cell .common{font-size:10px;color:var(--text2);font-weight:400;display:block;margin-top:2px;}
-.type-badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;letter-spacing:.5px;font-weight:700;white-space:nowrap;}
+.name-cell .common{font-size:10px;color:var(--text2);font-weight:400;display:block;margin-top:1px;}
+.type-badge{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;letter-spacing:.5px;font-weight:700;white-space:nowrap;}
 .tg{background:rgba(199,146,234,.2);color:var(--accent2);border:1px solid rgba(199,146,234,.3);}
 .tn{background:rgba(137,221,255,.2);color:var(--green);border:1px solid rgba(137,221,255,.3);}
 .tc{background:rgba(247,140,108,.2);color:var(--accent3);border:1px solid rgba(247,140,108,.3);}
 .tgl{background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3);}
+.tpn{background:rgba(255,154,108,.2);color:#ff9a6c;border:1px solid rgba(255,154,108,.3);}
+.tpl{background:rgba(255,215,0,.25);color:#ffe566;border:1px solid rgba(255,215,0,.4);}
+.size-cell{font-size:11px;}
+.size-bar-bg{height:3px;background:var(--bg3);border-radius:2px;width:60px;margin:3px 0;}
+.size-bar-fill{height:100%;border-radius:2px;background:var(--accent2);}
+.size-m51{font-size:9px;color:var(--text2);}
+.fov-ok{color:var(--green);font-size:9px;}
+.fov-warn{color:var(--warning);font-size:9px;}
+.fov-mosaic{color:var(--accent3);font-size:9px;}
+.bortle-warn{color:var(--warning);font-size:9px;}
 .filter-rec{font-size:11px;font-weight:700;white-space:nowrap;}
 .fl{color:var(--accent);}.fh{color:#ff9a6c;}.fs{color:var(--accent2);}.fw{color:var(--warning);}.fn{color:var(--danger);}
-.score-bar-wrap{display:flex;align-items:center;gap:8px;}
-.score-bar{width:50px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.score-bar-wrap{display:flex;align-items:center;gap:7px;}
+.score-bar{width:44px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
 .score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));}
 .moon-cell{font-size:12px;}.moon-ok{color:#89ddff;}.moon-warn{color:var(--warning);}.moon-bad{color:var(--danger);}
 .window-cell{color:var(--accent3);font-size:12px;}.peak-cell{color:var(--text);font-size:12px;}.alt-cell{color:var(--accent);font-size:12px;}
-.fav-star{background:none !important;border:none;cursor:pointer;font-size:16px;padding:0 4px;line-height:1;transition:transform .15s,color .15s;color:#7a84a8 !important;-webkit-appearance:none;}
-.fav-star:hover{transform:scale(1.3);color:#c0c8e8 !important;}.fav-star.active{color:#ffd700 !important;text-shadow:0 0 8px rgba(255,215,0,.5);}
-.empty-state{text-align:center;padding:50px 20px;color:var(--text2);}
-.empty-state .icon{font-size:44px;margin-bottom:12px;opacity:.5;}
+.fav-star{background:none!important;border:none;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;transition:transform .15s,color .15s;color:#7a84a8!important;-webkit-appearance:none;}
+.fav-star:hover{transform:scale(1.3);color:#c0c8e8!important;}
+.fav-star.active{color:#ffd700!important;text-shadow:0 0 8px rgba(255,215,0,.5);}
+.note-btn{background:none!important;border:none;cursor:pointer;font-size:13px;padding:0 2px;color:#3a4060!important;-webkit-appearance:none;transition:color .15s;}
+.note-btn:hover{color:#6b75a8!important;}
+.note-btn.has-note{color:#4fc3f7!important;}
+.empty-state{text-align:center;padding:44px 20px;color:var(--text2);}
+.empty-state .icon{font-size:40px;margin-bottom:10px;opacity:.5;}
 .empty-state p{font-size:12px;line-height:1.8;}
-.msg{padding:10px 14px;font-size:12px;border-radius:4px;margin-bottom:12px;}
+.msg{padding:9px 13px;font-size:12px;border-radius:4px;margin-bottom:10px;}
 .msg-warn{background:rgba(255,203,107,.1);border:1px solid rgba(255,203,107,.3);color:var(--warning);}
 .msg-info{background:rgba(79,195,247,.1);border:1px solid rgba(79,195,247,.3);color:var(--accent);}
+.note-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:10px;border-radius:4px;resize:vertical;outline:none;min-height:100px;}
+.note-textarea:focus{border-color:var(--accent);}
 @media(max-width:700px){.controls{grid-template-columns:1fr 1fr;}.controls .btn{grid-column:1/-1;}}
+
 </style>
 </head>
 <body>
+
 <div class="container">
   <header>
     <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-    <div class="subtitle">Astrofotoğraf Gece Planı — Antalya · v0.4.1</div>
+    <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6</div>
   </header>
+
+  <!-- Konum & Bortle -->
+  <div class="topbar">
+    <label>Konum:</label>
+    <select id="locationSelect" onchange="onLocationChange(this.value)">
+      <option value="Antalya">Antalya</option>
+      <option value="İstanbul">İstanbul</option>
+      <option value="Ankara">Ankara</option>
+      <option value="İzmir">İzmir</option>
+      <option value="Bursa">Bursa</option>
+      <option value="Konya">Konya</option>
+      <option value="Adana">Adana</option>
+      <option value="Trabzon">Trabzon</option>
+      <option value="Erzurum">Erzurum</option>
+      <option value="Özel">✏ Özel Koordinat</option>
+    </select>
+    <div class="custom-coords" id="customCoords">
+      <input type="number" id="customLat" placeholder="Enlem" step="0.01" min="-90" max="90" style="width:90px">
+      <input type="number" id="customLon" placeholder="Boylam" step="0.01" min="-180" max="180" style="width:90px">
+      <button class="btn-sm" onclick="applyCustomCoords()">Uygula</button>
+    </div>
+    <div class="bortle-wrap">
+      <label>Bortle:</label>
+      <input type="range" id="bortleSlider" min="1" max="9" value="7" style="width:100px" oninput="onBortleChange(this.value)">
+      <span class="bortle-val" id="bortleVal">7</span>
+      <span class="bortle-desc" id="bortleDesc">Kırsal/kentsel geçiş</span>
+    </div>
+  </div>
+
+  <!-- Kurulum -->
   <div class="setup-bar">
     <label>Teleskop / Kurulum:</label>
     <select class="setup-select" id="setupSelect"><option value="">— Kurulum seçin —</option></select>
     <button class="btn-sm" onclick="openSetupManager()">⚙ Kurulum Yönet</button>
   </div>
+
+  <!-- Kontroller -->
   <div class="controls">
     <div class="field"><label>Tarih</label><input type="date" id="dateInput"></div>
     <div class="field"><label>Gözlem Başlangıcı</label><input type="time" id="startTime" value="21:00"></div>
     <div class="field"><label>Ufuk Dosyası (.hrz) <span style="color:var(--accent3);font-weight:400">— opsiyonel</span></label><input type="file" id="hznFile" accept=".hrz,.hzn,.txt"></div>
     <button class="btn" onclick="calculate()">▶ HESAPLA</button>
   </div>
+
   <div id="msgArea"></div>
+
+  <!-- Ufuk Canvas -->
   <div class="ufuk-wrap" id="ufukWrap" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <div class="section-label" style="margin:0">Ufuk Profili — Obje Konumları</div>
       <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text2)">
         <span>Saat:</span>
-        <input type="range" id="timeSlider" min="0" max="420" value="0" step="10" style="width:160px" oninput="onTimeSlider(this.value)">
+        <input type="range" id="timeSlider" min="0" max="420" value="0" step="10" style="width:140px" oninput="onTimeSlider(this.value)">
         <span id="timeSliderLabel" style="font-family:'Space Mono',monospace;color:var(--accent);min-width:42px">—</span>
       </div>
     </div>
@@ -134,44 +197,55 @@ tbody tr:last-child td{border-bottom:none;}
       <canvas id="ufukCanvas" height="220"></canvas>
       <div id="objIpucu" style="display:none;position:absolute;background:#131628;border:1px solid #4fc3f7;border-radius:4px;padding:6px 10px;font-size:11px;font-family:'Space Mono',monospace;pointer-events:none;z-index:10;white-space:nowrap"></div>
     </div>
-    <div style="display:flex;gap:16px;margin-top:8px;font-size:10px;color:var(--text2);flex-wrap:wrap">
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c792ea;margin-right:4px"></span>Gökada</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#89ddff;margin-right:4px"></span>Bulutsu</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f78c6c;margin-right:4px"></span>Açık Küme</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffd700;margin-right:4px"></span>Küresel</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffcb6b;margin-right:4px;outline:1px solid #ffcb6b"></span>Ufka yakın</span>
-      <span style="color:#ff5370">✕ Ufuk arkasında</span>
+    <div style="display:flex;gap:14px;margin-top:7px;font-size:10px;color:var(--text2);flex-wrap:wrap">
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c792ea;margin-right:3px"></span>Gökada</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#89ddff;margin-right:3px"></span>Bulutsu</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff9a6c;margin-right:3px"></span>Gezegen Bulutsusü</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f78c6c;margin-right:3px"></span>Açık Küme</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffd700;margin-right:3px"></span>Küresel / Gezegen</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffcb6b;margin-right:3px;outline:1px solid #ffcb6b"></span>Ufka yakın</span>
+      <span style="color:#ff5370">✕ Ufkun altında</span>
     </div>
   </div>
+
   <div id="moonBar" style="display:none" class="moon-bar"></div>
   <div id="statsBar" class="stats-bar" style="display:none"></div>
+
   <div id="filterRow" class="filter-row" style="display:none">
     <span style="color:var(--text2);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-right:4px;">Filtre:</span>
     <button class="filter-btn fav-btn" data-type="FAV" onclick="setFilter(this,'FAV')">★ Favoriler</button>
     <button class="filter-btn active" data-type="ALL" onclick="setFilter(this,'ALL')">Tümü</button>
     <button class="filter-btn" data-type="Galaxy" onclick="setFilter(this,'Galaxy')">Gökada</button>
     <button class="filter-btn" data-type="Nebula" onclick="setFilter(this,'Nebula')">Bulutsu</button>
+    <button class="filter-btn" data-type="PN" onclick="setFilter(this,'PN')">Gezegen Bulutsusü</button>
     <button class="filter-btn" data-type="Cluster" onclick="setFilter(this,'Cluster')">Açık Küme</button>
     <button class="filter-btn" data-type="Globular" onclick="setFilter(this,'Globular')">Küresel Küme</button>
+    <button class="filter-btn" data-type="Gezegen" onclick="setFilter(this,'Gezegen')">Gezegen</button>
   </div>
+
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th style="width:28px">★</th>
+        <th style="width:24px">★</th>
+        <th style="width:24px">📝</th>
         <th onclick="sortBy('name')">Obje ↕</th>
         <th onclick="sortBy('type')">Tür</th>
-        <th onclick="sortBy('peak')">En Yüksek ↕</th>
+        <th onclick="sortBy('size')">Boyut ↕</th>
+        <th onclick="sortBy('peak')">En Yüksek Saat ↕</th>
         <th onclick="sortBy('maxAlt')">Maks. Yükseklik ↕</th>
         <th onclick="sortBy('window')">Pencere ↕</th>
         <th onclick="sortBy('moonDist')">Ay Mes. ↕</th>
         <th>Filtre Önerisi</th>
-        <th onclick="sortBy('score')">Skor ↕</th>
+        <th onclick="sortBy('score')">Puan ↕</th>
       </tr></thead>
-      <tbody id="tableBody"><tr><td colspan="9"><div class="empty-state"><div class="icon">🔭</div><p>Kurulum seç, tarih belirle ve Hesapla'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.</p></div></td></tr></tbody>
+      <tbody id="tableBody"><tr><td colspan="11">
+        <div class="empty-state"><div class="icon">🔭</div><p>Kurulum ve tarih seçip Hesapla'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.</p></div>
+      </td></tr></tbody>
     </table>
   </div>
 </div>
 
+<!-- Kurulum Modalı -->
 <div class="modal-overlay" id="setupModal">
   <div class="modal">
     <h3>⚙ Kurulum Yöneticisi</h3>
@@ -179,8 +253,16 @@ tbody tr:last-child td{border-bottom:none;}
     <button class="btn-sm" onclick="openAddSetup()" style="margin-bottom:12px">+ Yeni Kurulum Ekle</button>
     <div id="setupForm" style="display:none">
       <hr style="border-color:var(--border);margin-bottom:12px">
-      <div class="form-row"><label>Kurulum Adı</label><input type="text" id="sfName" placeholder="örn: EdgeHD 8 f/7"></div>
+      <div class="form-row"><label>Kurulum Adı</label><input type="text" id="sfName" placeholder='örn: EdgeHD 8" f/7'></div>
       <div class="form-row"><label>Odak Oranı (f/)</label><input type="number" id="sfFratio" placeholder="örn: 7" step="0.1" min="1" max="30"></div>
+      <div class="form-row"><label>Odak Uzunluğu (mm)</label><input type="number" id="sfFocal" placeholder="örn: 1422" step="1" min="50" max="5000"></div>
+      <div class="form-row">
+        <label>Sensör Boyutu (mm)</label>
+        <div class="frow2">
+          <input type="number" id="sfSensorW" placeholder="Genişlik örn: 23.5" step="0.1" min="1" max="100">
+          <input type="number" id="sfSensorH" placeholder="Yükseklik örn: 15.7" step="0.1" min="1" max="100">
+        </div>
+      </div>
       <div class="form-row"><label>Kamera</label><input type="text" id="sfCamera" placeholder="örn: ASI2600MM Pro"></div>
       <div class="form-row">
         <label>Mevcut Filtreler</label>
@@ -202,75 +284,183 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- Not Modalı -->
+<div class="modal-overlay" id="noteModal">
+  <div class="modal" style="max-width:420px">
+    <h3>📝 <span id="noteObjName"></span></h3>
+    <textarea class="note-textarea" id="noteText" placeholder="Bu obje için notlarınız..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeNoteModal()">İptal</button>
+      <button class="btn-primary" onclick="saveNoteAndClose()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid #1a1e36;margin-top:4px;">
+  <div style="font-family:'Syne',sans-serif;font-size:11px;color:#2e3455;letter-spacing:2px;text-transform:uppercase">
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6
+  </div>
+  <div style="font-size:11px;color:#2a3050;margin-top:5px;font-family:'Space Mono',monospace;">
+    Tasarım &amp; konsept: <span style="color:#3d4870">Okan Doğu</span> &nbsp;·&nbsp; Antalya, Türkiye
+  </div>
+  <div style="font-size:10px;color:#1c2238;margin-top:3px;font-family:'Space Mono',monospace;">
+    Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır &nbsp;·&nbsp; Sunucu veya internet bağlantısı gerekmez
+  </div>
+</footer>
+
 <script>
-const LAT=36.8969,LON=30.7133,TZ=3;
+
+// ─── Sabitler & Durum ─────────────────────────────────────────────────────────
+const TZ=3;
+let OBS_LAT=36.8969,OBS_LON=30.7133,OBS_NAME='Antalya';
+let OBS_BORTLE=7;
+let ufukData=null,results=[],filtered=[],activeType='ALL',sortCol='score',sortDir=-1;
+let currentDateUTC0h=null,currentObsStartUTC=0,selectedObj=null,_canvasSetup=false;
+
+// ─── Katalog ──────────────────────────────────────────────────────────────────
+// [isim, yaygınIsim, tür, ra_s, dec_d, boyut_açıkdak, büyüklük]
 const CAT=[
-  ["M31","Andromeda","Galaxy",0.712,41.27,178,3.4],["M32","","Galaxy",0.712,40.87,8,8.7],["M33","Üçgen Gal.","Galaxy",1.564,30.66,63,5.7],
-  ["M51","Girdap Gal.","Galaxy",13.496,47.20,11,8.4],["M63","Ayçiçeği Gal.","Galaxy",13.264,42.03,12,8.6],["M64","Kara Göz Gal.","Galaxy",12.943,21.68,9,8.5],
-  ["M74","","Galaxy",1.612,15.78,10,9.4],["M77","","Galaxy",2.712,-0.01,7,8.9],["M81","Bode Gal.","Galaxy",9.928,69.07,21,6.9],
-  ["M82","Puro Gal.","Galaxy",9.931,69.68,11,8.4],["M83","Güney Rüzgargülü","Galaxy",13.617,-29.87,13,7.5],["M84","","Galaxy",12.418,12.89,5,9.1],
-  ["M85","","Galaxy",12.423,18.19,7,9.2],["M86","","Galaxy",12.436,12.95,7,8.9],["M87","Virgo A","Galaxy",12.514,12.39,7,8.6],
-  ["M88","","Galaxy",12.532,14.42,7,9.6],["M90","","Galaxy",12.615,13.16,10,9.5],["M94","","Galaxy",12.851,41.12,11,8.2],
-  ["M95","","Galaxy",10.703,11.70,7,9.7],["M96","","Galaxy",10.747,11.82,7,9.2],["M98","","Galaxy",12.229,14.90,10,10.1],
-  ["M99","","Galaxy",12.315,14.42,5,9.9],["M100","","Galaxy",12.382,15.82,7,9.3],["M101","Rüzgargülü Gal.","Galaxy",14.054,54.35,22,7.9],
-  ["M104","Sombrero","Galaxy",12.666,-11.62,9,8.0],["M106","","Galaxy",12.316,47.30,19,8.4],["M108","","Galaxy",11.189,55.67,8,10.0],
-  ["M109","","Galaxy",11.962,53.37,8,9.8],["M110","","Galaxy",0.673,41.69,17,8.5],["NGC 891","","Galaxy",2.382,42.35,14,9.9],
-  ["NGC 1023","","Galaxy",2.673,39.07,8,9.5],["NGC 2683","","Galaxy",8.879,33.43,9,9.7],["NGC 2903","","Galaxy",9.524,21.50,13,9.0],
-  ["NGC 3521","","Galaxy",11.107,-0.04,11,8.9],["NGC 3628","","Galaxy",11.340,13.59,14,9.5],["NGC 4038","Anten Gal.","Galaxy",12.016,-18.87,3,10.3],
-  ["NGC 4236","","Galaxy",12.284,69.47,22,9.7],["NGC 4244","","Galaxy",12.296,37.81,16,10.2],["NGC 4565","Iğne Gal.","Galaxy",12.609,25.99,16,9.6],
-  ["NGC 4631","Ringa Gal.","Galaxy",12.702,32.54,15,9.2],["NGC 5128","Centaurus A","Galaxy",13.426,-43.02,18,6.8],["NGC 5907","","Galaxy",15.279,56.33,13,10.4],
-  ["NGC 6946","Havai Fişek","Galaxy",20.577,60.15,11,8.9],["NGC 7331","","Galaxy",22.618,34.42,11,9.5],["NGC 7479","","Galaxy",23.079,12.32,4,11.0],["NGC 7814","","Galaxy",0.052,16.15,6,10.5],
-  ["M1","Yengeç Neb.","Nebula",5.578,22.02,6,8.4],["M8","Göl Neb.","Nebula",18.064,-24.38,45,5.8],["M16","Kartal Neb.","Nebula",18.314,-13.79,35,6.4],
-  ["M17","Omega Neb.","Nebula",18.346,-16.18,11,6.0],["M20","Üç Dilimli","Nebula",18.045,-22.97,28,6.3],["M27","Dumbbell Neb.","Nebula",19.993,22.72,8,7.4],
-  ["M42","Orion Neb.","Nebula",5.588,-5.39,40,4.0],["M43","","Nebula",5.592,-5.27,20,9.0],["M57","Yüzük Neb.","Nebula",18.893,33.03,1.4,8.8],
-  ["M76","Küçük Dumbbell","Nebula",1.704,51.58,2.7,10.1],["M78","","Nebula",5.779,0.07,8,8.3],["M97","Baykuş Neb.","Nebula",11.248,55.02,3.4,9.9],
-  ["NGC 281","Pacman Neb.","Nebula",0.878,56.62,35,7.4],["NGC 1499","Californiya Neb.","Nebula",4.055,36.42,160,5.0],["NGC 1977","Koşan Adam","Nebula",5.598,-4.83,40,7.0],
-  ["NGC 2244","Gül Neb.","Nebula",6.533,4.95,80,4.8],["NGC 2359","Thor Miğferi","Nebula",7.283,-13.22,8,11.5],["NGC 2392","Eskimo Neb.","Nebula",7.490,20.92,0.7,9.2],
-  ["NGC 6302","Bug Neb.","Nebula",17.134,-37.10,0.8,9.6],["NGC 6357","Istakoz Neb.","Nebula",17.457,-34.20,50,8.0],["NGC 6820","","Nebula",19.724,23.13,40,8.5],
-  ["NGC 7293","Heliks Neb.","Nebula",22.494,-20.84,16,7.3],["NGC 7380","Büyücü Neb.","Nebula",22.778,58.10,25,7.2],["NGC 7635","Kabarcık Neb.","Nebula",23.341,61.20,15,10.0],
-  ["IC 434","At Başı Neb.","Nebula",5.688,-2.45,60,6.8],["IC 1805","Kalp Neb.","Nebula",2.542,61.45,60,6.5],["IC 1848","Ruh Neb.","Nebula",2.852,60.42,100,6.5],
-  ["IC 2177","Deniz Martısı","Nebula",7.050,-10.67,120,7.0],["IC 5070","Pelikan Neb.","Nebula",20.928,44.37,60,8.0],["IC 5146","Koza Neb.","Nebula",21.887,47.27,12,7.2],
-  ["NGC 7000","K. Amerika Neb.","Nebula",20.979,44.53,120,4.0],["Sh2-308","","Nebula",6.888,-23.93,40,11.0],
-  ["M6","Kelebek Küm.","Cluster",17.667,-32.22,20,4.2],["M7","Ptolemy Küm.","Cluster",17.898,-34.82,80,3.3],["M11","Yaban Ördek","Cluster",18.851,-6.27,14,5.8],
-  ["M35","","Cluster",6.153,24.33,28,5.1],["M36","","Cluster",5.601,34.13,12,6.0],["M37","","Cluster",5.873,32.55,24,5.6],["M38","","Cluster",5.479,35.85,21,6.4],
-  ["M41","","Cluster",6.767,-20.73,38,4.5],["M44","Yengeç Küm.","Cluster",8.673,19.98,95,3.7],["M45","Ülker","Cluster",3.787,24.12,110,1.2],
-  ["M46","","Cluster",7.697,-14.82,27,6.0],["M47","","Cluster",7.612,-14.50,30,4.4],["M48","","Cluster",8.227,-5.80,54,5.5],["M67","","Cluster",8.850,11.82,25,6.9],
-  ["NGC 869","h Per","Cluster",2.320,57.13,30,4.3],["NGC 884","χ Per","Cluster",2.377,57.12,30,4.4],["NGC 752","","Cluster",1.958,37.68,50,5.7],
-  ["NGC 1502","","Cluster",4.113,62.33,20,5.7],["NGC 6939","","Cluster",20.533,60.65,7,7.8],["NGC 7789","Karolina Gülü","Cluster",23.957,56.72,25,6.7],
-  ["M2","","Globular",21.558,-0.82,13,6.5],["M3","","Globular",13.703,28.37,18,6.2],["M4","","Globular",16.393,-26.53,26,5.6],
-  ["M5","","Globular",15.309,2.08,20,5.6],["M12","","Globular",16.786,-1.95,16,6.7],["M13","Herkül Küm.","Globular",16.695,36.46,20,5.8],
-  ["M15","","Globular",21.500,12.17,18,6.2],["M22","","Globular",18.607,-23.90,24,5.1],["M92","","Globular",17.286,43.14,14,6.4],
+  // GÖKADALAR
+  ["M31","Andromeda","Galaxy",0.712,41.27,178,3.4],["M32","","Galaxy",0.712,40.87,8,8.7],
+  ["M33","Üçgen Gal.","Galaxy",1.564,30.66,63,5.7],["M51","Girdap Gal.","Galaxy",13.496,47.20,11,8.4],
+  ["M63","Ayçiçeği Gal.","Galaxy",13.264,42.03,12,8.6],["M64","Kara Göz Gal.","Galaxy",12.943,21.68,9,8.5],
+  ["M74","","Galaxy",1.612,15.78,10,9.4],["M77","","Galaxy",2.712,-0.01,7,8.9],
+  ["M81","Bode Gal.","Galaxy",9.928,69.07,21,6.9],["M82","Puro Gal.","Galaxy",9.931,69.68,11,8.4],
+  ["M83","Güney Rüzgargülü","Galaxy",13.617,-29.87,13,7.5],["M84","","Galaxy",12.418,12.89,5,9.1],
+  ["M85","","Galaxy",12.423,18.19,7,9.2],["M86","","Galaxy",12.436,12.95,7,8.9],
+  ["M87","Virgo A","Galaxy",12.514,12.39,7,8.6],["M88","","Galaxy",12.532,14.42,7,9.6],
+  ["M90","","Galaxy",12.615,13.16,10,9.5],["M94","","Galaxy",12.851,41.12,11,8.2],
+  ["M95","","Galaxy",10.703,11.70,7,9.7],["M96","","Galaxy",10.747,11.82,7,9.2],
+  ["M98","","Galaxy",12.229,14.90,10,10.1],["M99","","Galaxy",12.315,14.42,5,9.9],
+  ["M100","","Galaxy",12.382,15.82,7,9.3],["M101","Rüzgargülü Gal.","Galaxy",14.054,54.35,22,7.9],
+  ["M104","Sombrero","Galaxy",12.666,-11.62,9,8.0],["M106","","Galaxy",12.316,47.30,19,8.4],
+  ["M108","","Galaxy",11.189,55.67,8,10.0],["M109","","Galaxy",11.962,53.37,8,9.8],
+  ["M110","","Galaxy",0.673,41.69,17,8.5],["NGC 891","","Galaxy",2.382,42.35,14,9.9],
+  ["NGC 1023","","Galaxy",2.673,39.07,8,9.5],["NGC 2683","","Galaxy",8.879,33.43,9,9.7],
+  ["NGC 2903","","Galaxy",9.524,21.50,13,9.0],["NGC 3521","","Galaxy",11.107,-0.04,11,8.9],
+  ["NGC 3628","","Galaxy",11.340,13.59,14,9.5],["NGC 4038","Anten Gal.","Galaxy",12.016,-18.87,3,10.3],
+  ["NGC 4236","","Galaxy",12.284,69.47,22,9.7],["NGC 4244","","Galaxy",12.296,37.81,16,10.2],
+  ["NGC 4565","Iğne Gal.","Galaxy",12.609,25.99,16,9.6],["NGC 4631","Ringa Gal.","Galaxy",12.702,32.54,15,9.2],
+  ["NGC 5128","Centaurus A","Galaxy",13.426,-43.02,18,6.8],["NGC 5907","","Galaxy",15.279,56.33,13,10.4],
+  ["NGC 6946","Havai Fişek","Galaxy",20.577,60.15,11,8.9],["NGC 7331","","Galaxy",22.618,34.42,11,9.5],
+  ["NGC 7814","","Galaxy",0.052,16.15,6,10.5],["IC 342","","Galaxy",3.767,68.08,21,9.1],
+  // BULUTSULAR
+  ["M1","Yengeç Neb.","Nebula",5.578,22.02,6,8.4],["M8","Göl Neb.","Nebula",18.064,-24.38,45,5.8],
+  ["M16","Kartal Neb.","Nebula",18.314,-13.79,35,6.4],["M17","Omega Neb.","Nebula",18.346,-16.18,11,6.0],
+  ["M20","Üç Dilimli","Nebula",18.045,-22.97,28,6.3],["M42","Orion Neb.","Nebula",5.588,-5.39,40,4.0],
+  ["M43","","Nebula",5.592,-5.27,20,9.0],["M78","","Nebula",5.779,0.07,8,8.3],
+  ["NGC 281","Pacman Neb.","Nebula",0.878,56.62,35,7.4],["NGC 1499","Californiya Neb.","Nebula",4.055,36.42,160,5.0],
+  ["NGC 1977","Koşan Adam","Nebula",5.598,-4.83,40,7.0],["NGC 2244","Gül Neb.","Nebula",6.533,4.95,80,4.8],
+  ["NGC 6357","Istakoz Neb.","Nebula",17.457,-34.20,50,8.0],["NGC 6820","","Nebula",19.724,23.13,40,8.5],
+  ["NGC 7380","Büyücü Neb.","Nebula",22.778,58.10,25,7.2],["NGC 7635","Kabarcık Neb.","Nebula",23.341,61.20,15,10.0],
+  ["IC 434","At Başı Neb.","Nebula",5.688,-2.45,60,6.8],["IC 405","Alev Yıldızı Neb.","Nebula",5.267,34.27,30,10.0],
+  ["IC 410","Iribaş Neb.","Nebula",5.367,33.40,40,10.0],["IC 443","Denizanası Neb.","Nebula",6.283,22.78,50,12.0],
+  ["IC 1805","Kalp Neb.","Nebula",2.542,61.45,60,6.5],["IC 1848","Ruh Neb.","Nebula",2.852,60.42,100,6.5],
+  ["IC 1318","Kelebek Neb.","Nebula",20.367,40.25,80,8.0],["IC 2177","Deniz Martısı","Nebula",7.050,-10.67,120,7.0],
+  ["IC 5070","Pelikan Neb.","Nebula",20.928,44.37,60,8.0],["IC 5146","Koza Neb.","Nebula",21.887,47.27,12,7.2],
+  ["NGC 7000","K. Amerika Neb.","Nebula",20.979,44.53,120,4.0],["Sh2-132","Aslan Neb.","Nebula",22.600,56.05,50,11.0],
+  ["Sh2-155","Mağara Neb.","Nebula",22.950,62.62,40,10.0],["Sh2-157","","Nebula",23.267,60.50,60,11.0],
+  ["Sh2-240","Makarna Neb.","Nebula",5.683,27.95,180,12.0],["Sh2-261","Lower Neb.","Nebula",6.150,15.90,60,11.0],
+  ["LBN 777","Kartal Yavrusu Neb.","Nebula",4.000,25.60,20,11.0],
+  // GEZEGEN BULUTSUSU (PN)
+  ["M27","Dambıl Neb.","PN",19.993,22.72,8,7.4],["M57","Yüzük Neb.","PN",18.893,33.03,1.4,8.8],
+  ["M76","Küçük Dambıl","PN",1.704,51.58,2.7,10.1],["M97","Baykuş Neb.","PN",11.248,55.02,3.4,9.9],
+  ["NGC 7293","Heliks Neb.","PN",22.494,-20.84,16,7.3],["NGC 2392","Eskimo Neb.","PN",7.490,20.92,0.7,9.2],
+  ["NGC 6543","Kedi Gözü Neb.","PN",17.967,66.63,0.33,8.1],["NGC 7662","Mavi Kar Topu","PN",23.433,42.55,0.5,8.3],
+  ["NGC 3242","Jüpiter Hayaleti","PN",10.400,-18.63,0.67,7.8],["NGC 6826","Göz Kırpan","PN",19.750,50.53,0.5,8.8],
+  ["NGC 246","Kafatası Neb.","PN",0.783,-11.88,3.8,8.0],["NGC 7009","Satürn Neb.","PN",21.067,-11.37,0.7,8.0],
+  ["NGC 6210","","PN",16.733,23.80,0.3,8.8],["NGC 1514","","PN",4.150,30.78,2.0,9.4],
+  ["NGC 2438","","PN",7.700,-14.73,1.1,10.1],
+  // AÇIK KÜMELER
+  ["M6","Kelebek Küm.","Cluster",17.667,-32.22,20,4.2],["M7","Ptolemy Küm.","Cluster",17.898,-34.82,80,3.3],
+  ["M11","Yaban Ördek","Cluster",18.851,-6.27,14,5.8],["M35","","Cluster",6.153,24.33,28,5.1],
+  ["M36","","Cluster",5.601,34.13,12,6.0],["M37","","Cluster",5.873,32.55,24,5.6],
+  ["M38","","Cluster",5.479,35.85,21,6.4],["M41","","Cluster",6.767,-20.73,38,4.5],
+  ["M44","Yengeç Küm.","Cluster",8.673,19.98,95,3.7],["M45","Ülker","Cluster",3.787,24.12,110,1.2],
+  ["M46","","Cluster",7.697,-14.82,27,6.0],["M47","","Cluster",7.612,-14.50,30,4.4],
+  ["M48","","Cluster",8.227,-5.80,54,5.5],["M67","","Cluster",8.850,11.82,25,6.9],
+  ["NGC 869","h Per","Cluster",2.320,57.13,30,4.3],["NGC 884","χ Per","Cluster",2.377,57.12,30,4.4],
+  ["NGC 752","","Cluster",1.958,37.68,50,5.7],["NGC 1502","","Cluster",4.113,62.33,20,5.7],
+  ["NGC 6939","","Cluster",20.533,60.65,7,7.8],["NGC 7789","Karolina Gülü","Cluster",23.957,56.72,25,6.7],
+  // KÜRESEL KÜMELER
+  ["M2","","Globular",21.558,-0.82,13,6.5],["M3","","Globular",13.703,28.37,18,6.2],
+  ["M4","","Globular",16.393,-26.53,26,5.6],["M5","","Globular",15.309,2.08,20,5.6],
+  ["M12","","Globular",16.786,-1.95,16,6.7],["M13","Herkül Küm.","Globular",16.695,36.46,20,5.8],
+  ["M15","","Globular",21.500,12.17,18,6.2],["M22","","Globular",18.607,-23.90,24,5.1],
+  ["M92","","Globular",17.286,43.14,14,6.4],
 ];
 
-let ufukData=null,results=[],filtered=[],activeType='ALL',sortCol='score',sortDir=-1;
-let currentDateUTC0h=null,currentObsStartUTC=0,selectedObj=null;
+// Gezegen yörünge elemanları (Meeus, J2000 epok)
+// {a: yarı büyük eksen AU, e: dışmerkezlik, i: eğim°, Om: yükselen kavşak boylam°,
+//  pi: perihelyon boylam°, L0: J2000 ortalama boylam°, n: derece/gün}
+const GEZEGEN_ELEMANLARI={
+  'Venüs':  {a:0.72333,e:0.00677,i:3.395, Om:76.680, pi:131.533,L0:181.979,n:1.60214,boyutRef:0.33,magRef:-4.0},
+  'Mars':   {a:1.52366,e:0.09341,i:1.850, Om:49.558, pi:336.060,L0:355.433,n:0.52403,boyutRef:0.13,magRef:0.0},
+  'Jüpiter':{a:5.20336,e:0.04839,i:1.305, Om:100.464,pi:14.331, L0:34.351, n:0.08309,boyutRef:0.67,magRef:-2.5},
+  'Satürn': {a:9.53707,e:0.05415,i:2.485, Om:113.666,pi:93.057, L0:50.077, n:0.03346,boyutRef:0.67,magRef:0.7},
+  'Uranüs': {a:19.1913,e:0.04717,i:0.773, Om:74.006, pi:173.005,L0:314.055,n:0.01172,boyutRef:0.06,magRef:5.7},
+  'Neptün': {a:30.0690,e:0.00859,i:1.770, Om:131.784,pi:48.124, L0:304.349,n:0.00600,boyutRef:0.04,magRef:8.0},
+};
+// Dünya elemanları
+const DUNYA={a:1.00000,e:0.01671,i:0.0,Om:0.0,pi:102.937,L0:100.464,n:0.98560};
+
+// ─── Favoriler ────────────────────────────────────────────────────────────────
 function loadFavs(){try{return new Set(JSON.parse(localStorage.getItem('astro_favs')||'[]'));}catch(e){return new Set();}}
 function saveFavs(s){try{localStorage.setItem('astro_favs',JSON.stringify([...s]));}catch(e){}}
 let favorites=loadFavs();
 function toggleFav(name){if(favorites.has(name))favorites.delete(name);else favorites.add(name);saveFavs(favorites);renderTable();}
 
+// ─── Kurulum ──────────────────────────────────────────────────────────────────
 const DEF_SETUPS=[
-  {id:'s1',name:'Quattro 250p — f/3',fratio:3,camera:'ASI2600MM Pro',filters:['L','R','G','B','Ha','OIII','SII']},
-  {id:'s2',name:'Quattro 200p — f/3',fratio:3,camera:'ASI2600MM Pro',filters:['L','R','G','B','Ha','OIII','SII']},
-  {id:'s3',name:'EdgeHD 8" — f/7',fratio:7,camera:'ASI2600MM Pro',filters:['L','R','G','B','Ha','OIII','SII']},
-  {id:'s4',name:'Gezegen — EdgeHD+2.5x',fratio:17.5,camera:'ZWO 224',filters:['UV-IR']},
+  {id:'s1',name:'Quattro 250p — f/3',fratio:3,focalLength:750,sensorW:23.5,sensorH:15.7,camera:'ASI2600MM Pro',filters:['L','R','G','B','Ha','OIII','SII']},
+  {id:'s2',name:'Quattro 200p — f/3',fratio:3,focalLength:600,sensorW:23.5,sensorH:15.7,camera:'ASI2600MM Pro',filters:['L','R','G','B','Ha','OIII','SII']},
+  {id:'s3',name:'EdgeHD 8" — f/7',  fratio:7,focalLength:1422,sensorW:23.5,sensorH:15.7,camera:'ASI2600MM Pro',filters:['L','R','G','B','Ha','OIII','SII']},
+  {id:'s4',name:'Gezegen — EdgeHD+2.5x',fratio:17.5,focalLength:3500,sensorW:4.8,sensorH:3.6,camera:'ZWO 224',filters:['UV-IR']},
 ];
 function loadSetups(){try{const s=JSON.parse(localStorage.getItem('astro_setups'));return(s&&s.length)?s:DEF_SETUPS;}catch(e){return DEF_SETUPS;}}
 function saveSetups(a){try{localStorage.setItem('astro_setups',JSON.stringify(a));}catch(e){}}
 let setups=loadSetups();
-
 function renderSetupSelect(){const sel=document.getElementById('setupSelect');const cur=sel.value;sel.innerHTML='<option value="">— Kurulum seçin —</option>';setups.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name+' ('+s.camera+')';sel.appendChild(o);});if(cur)sel.value=cur;}
 function getSetup(){const id=document.getElementById('setupSelect').value;return setups.find(s=>s.id===id)||null;}
 function openSetupManager(){renderSetupList();document.getElementById('setupForm').style.display='none';document.getElementById('setupModalClose').style.display='flex';document.getElementById('setupModal').classList.add('open');}
 function closeSetupManager(){document.getElementById('setupModal').classList.remove('open');renderSetupSelect();}
-function renderSetupList(){const el=document.getElementById('setupList');el.innerHTML=setups.map(s=>'<div class="sitem"><div><div class="sitem-name">'+s.name+'</div><div class="sitem-detail">f/'+s.fratio+' · '+s.camera+' · '+s.filters.join(', ')+'</div></div><div class="sitem-actions"><button class="btn-sm" onclick="editSetup(\''+s.id+'\')">Düzenle</button><button class="btn-danger" onclick="deleteSetup(\''+s.id+'\')">Sil</button></div></div>').join('')||'<p style="color:var(--text2);font-size:12px">Henüz setup yok.</p>';}
+function renderSetupList(){const el=document.getElementById('setupList');el.innerHTML=setups.map(s=>'<div class="sitem"><div><div class="sitem-name">'+s.name+'</div><div class="sitem-detail">f/'+s.fratio+' · '+s.focalLength+'mm · '+s.sensorW+'×'+s.sensorH+'mm · '+s.camera+' · '+s.filters.join(', ')+'</div></div><div class="sitem-actions"><button class="btn-sm" onclick="editSetup(\''+s.id+'\')">Düzenle</button><button class="btn-danger" onclick="deleteSetup(\''+s.id+'\')">Sil</button></div></div>').join('')||'<p style="color:var(--text2);font-size:12px">Henüz kurulum yok.</p>';}
 function tcheck(lbl){const cb=lbl.querySelector('input');cb.checked=!cb.checked;lbl.classList.toggle('checked',cb.checked);}
-function openAddSetup(){document.getElementById('sfName').value='';document.getElementById('sfFratio').value='';document.getElementById('sfCamera').value='';document.getElementById('sfEditId').value='';document.querySelectorAll('#sfFilters input').forEach(cb=>{cb.checked=false;cb.closest('label').classList.remove('checked');});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
-function editSetup(id){const s=setups.find(x=>x.id===id);if(!s)return;document.getElementById('sfName').value=s.name;document.getElementById('sfFratio').value=s.fratio;document.getElementById('sfCamera').value=s.camera;document.getElementById('sfEditId').value=id;document.querySelectorAll('#sfFilters input').forEach(cb=>{cb.checked=s.filters.includes(cb.value);cb.closest('label').classList.toggle('checked',cb.checked);});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
-function deleteSetup(id){if(!confirm('Bu setupı silmek istiyor musunuz?'))return;setups=setups.filter(s=>s.id!==id);saveSetups(setups);renderSetupList();renderSetupSelect();}
+function openAddSetup(){['sfName','sfFratio','sfFocal','sfSensorW','sfSensorH','sfCamera','sfEditId'].forEach(id=>document.getElementById(id).value='');document.querySelectorAll('#sfFilters input').forEach(cb=>{cb.checked=false;cb.closest('label').classList.remove('checked');});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
+function editSetup(id){const s=setups.find(x=>x.id===id);if(!s)return;document.getElementById('sfName').value=s.name;document.getElementById('sfFratio').value=s.fratio;document.getElementById('sfFocal').value=s.focalLength||'';document.getElementById('sfSensorW').value=s.sensorW||'';document.getElementById('sfSensorH').value=s.sensorH||'';document.getElementById('sfCamera').value=s.camera;document.getElementById('sfEditId').value=id;document.querySelectorAll('#sfFilters input').forEach(cb=>{cb.checked=s.filters.includes(cb.value);cb.closest('label').classList.toggle('checked',cb.checked);});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
+function deleteSetup(id){if(!confirm('Bu kurulumu silmek istiyor musunuz?'))return;setups=setups.filter(s=>s.id!==id);saveSetups(setups);renderSetupList();renderSetupSelect();}
 function closeAddSetup(){document.getElementById('setupForm').style.display='none';document.getElementById('setupModalClose').style.display='flex';}
-function saveSetup(){const name=document.getElementById('sfName').value.trim();const fratio=parseFloat(document.getElementById('sfFratio').value);const camera=document.getElementById('sfCamera').value.trim();const filters=[...document.querySelectorAll('#sfFilters input:checked')].map(cb=>cb.value);if(!name||!fratio||!camera){alert('Lütfen tüm alanları doldurun.');return;}const editId=document.getElementById('sfEditId').value;if(editId){const idx=setups.findIndex(s=>s.id===editId);if(idx>=0)setups[idx]={id:editId,name,fratio,camera,filters};}else setups.push({id:'u'+Date.now(),name,fratio,camera,filters});saveSetups(setups);renderSetupList();closeAddSetup();}
+function saveSetup(){const name=document.getElementById('sfName').value.trim();const fratio=parseFloat(document.getElementById('sfFratio').value);const focalLength=parseFloat(document.getElementById('sfFocal').value)||null;const sensorW=parseFloat(document.getElementById('sfSensorW').value)||null;const sensorH=parseFloat(document.getElementById('sfSensorH').value)||null;const camera=document.getElementById('sfCamera').value.trim();const filters=[...document.querySelectorAll('#sfFilters input:checked')].map(cb=>cb.value);if(!name||!fratio||!camera){alert('Lütfen en azından ad, f/ oranı ve kamera giriniz.');return;}const editId=document.getElementById('sfEditId').value;const obj={name,fratio,focalLength,sensorW,sensorH,camera,filters};if(editId){const idx=setups.findIndex(s=>s.id===editId);if(idx>=0)setups[idx]={id:editId,...obj};}else setups.push({id:'u'+Date.now(),...obj});saveSetups(setups);renderSetupList();closeAddSetup();}
 
+// ─── Konum ────────────────────────────────────────────────────────────────────
+const LOC_PRESETS={
+  'Antalya':{lat:36.8969,lon:30.7133},'İstanbul':{lat:41.0082,lon:28.9784},
+  'Ankara':{lat:39.9334,lon:32.8597},'İzmir':{lat:38.4192,lon:27.1287},
+  'Bursa':{lat:40.1885,lon:29.0610},'Konya':{lat:37.8746,lon:32.4932},
+  'Adana':{lat:37.0000,lon:35.3213},'Trabzon':{lat:41.0027,lon:39.7168},
+  'Erzurum':{lat:39.9069,lon:41.2750},
+};
+function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_location'));if(l){OBS_LAT=l.lat;OBS_LON=l.lon;OBS_NAME=l.name;document.getElementById('locationSelect').value=l.name;if(l.name==='Özel'){document.getElementById('customCoords').style.display='flex';document.getElementById('customLat').value=l.lat;document.getElementById('customLon').value=l.lon;}}}catch(e){}}
+function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
+function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
+function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent='Astrofotoğraf Gece Planı — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6';}
+
+// ─── Bortle ───────────────────────────────────────────────────────────────────
+const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
+const BORTLE_SB_LIMIT=[0,25.0,24.5,24.0,23.5,23.0,22.5,22.0,21.5,21.0];
+function loadBortle(){try{const b=parseInt(localStorage.getItem('astro_bortle'));if(b>=1&&b<=9){OBS_BORTLE=b;document.getElementById('bortleSlider').value=b;document.getElementById('bortleVal').textContent=b;document.getElementById('bortleDesc').textContent=BORTLE_DESCS[b];}}catch(e){}}
+function saveBortle(v){OBS_BORTLE=v;try{localStorage.setItem('astro_bortle',v);}catch(e){}updateSubtitle();}
+function onBortleChange(v){v=parseInt(v);document.getElementById('bortleVal').textContent=v;document.getElementById('bortleDesc').textContent=BORTLE_DESCS[v];saveBortle(v);}
+function getSBWarn(mag,size){if(!size||size<0.5)return false;const area=Math.PI*Math.pow(size/2,2);const sb=mag+2.5*Math.log10(area);return sb>(BORTLE_SB_LIMIT[OBS_BORTLE]||22);}
+
+// ─── FOV & Boyut ──────────────────────────────────────────────────────────────
+const M51_REF=11;
+function getFOV(setup){if(!setup||!setup.focalLength||!setup.sensorW||!setup.sensorH)return null;return{w:(setup.sensorW/setup.focalLength)*3438,h:(setup.sensorH/setup.focalLength)*3438};}
+function getFOVStatus(objSize,setup){const fov=getFOV(setup);if(!fov)return null;const mn=Math.min(fov.w,fov.h);if(objSize<=mn*0.65)return{text:'Tek kare ✓',cls:'fov-ok'};if(objSize<=mn*1.3)return{text:'Sınırda ~',cls:'fov-warn'};return{text:'Mozaik ⊞',cls:'fov-mosaic'};}
+function getSizeInfo(size){const ratio=size/M51_REF;let desc;if(ratio<0.05)desc='nokta gibi';else if(ratio<0.15)desc='çok küçük';else if(ratio<0.4)desc='küçük';else if(ratio<0.8)desc='orta-küçük';else if(ratio<1.5)desc='orta (M51 gibi)';else if(ratio<4)desc='geniş';else if(ratio<10)desc='çok geniş';else desc='dev';const barPct=Math.min(100,Math.max(2,Math.log10(Math.max(0.1,size)/0.5)/Math.log10(200/0.5)*100));return{ratio:ratio.toFixed(ratio<0.1?2:1),desc,barPct};}
+
+// ─── Filtre Önerisi ───────────────────────────────────────────────────────────
 function bExp(fr){return Math.round(300*(fr*fr)/49/30)*30;}
 function fRec(type,moon,setup){
   if(!setup)return{t:'— kurulum seçin',c:'fw'};
@@ -278,46 +468,29 @@ function fRec(type,moon,setup){
   const hasL=has('L'),hasR=has('R'),hasG=has('G'),hasB=has('B');
   const lrgb=hasL&&hasR&&hasG&&hasB,ha=has('Ha'),oiii=has('OIII'),sii=has('SII');
   const exp=bExp(setup.fratio);
-  // L kısa, RGB daha uzun
   const lExp=Math.round(exp*0.4/30)*30||30;
   const rgbExp=exp;
   const bbExp=Math.round(exp*0.6/30)*30;
   const dark=moon<=25,bright=moon>60;
-
+  if(type==='Gezegen'){if(has('UV-IR'))return{t:'UV-IR + Barlow',c:'fl',d:''};return{t:'Renkli kamera',c:'fw',d:''};}
   if(type==='Galaxy'){
-    if(bright){
-      if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Parlak ay — sadece Ha'};
-      return{t:'⚠ Önerilmez',c:'fn',d:'Ay çok parlak'};
-    }
-    if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:dark?'İdeal koşul':'Kısa poz önerilir'};
-    if(hasL)return{t:'L '+lExp+'s',c:'fl',d:'RGB filtre eksik'};
+    if(bright){if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Parlak ay'};return{t:'⚠ Önerilmez',c:'fn',d:''};}
+    if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:dark?'İdeal':'Kısa poz'};
+    if(hasL)return{t:'L '+lExp+'s',c:'fl',d:''};
     return{t:'— Filtre yok',c:'fw',d:''};
   }
-
-  if(type==='Nebula'){
-    if(bright){
-      if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Parlak ay — Ha zorunlu'};
-      return{t:'⚠ Ha gerek',c:'fn',d:'Narrowband olmadan zor'};
-    }
-    if(!bright&&!dark){
-      // Orta ay
-      if(ha&&oiii&&sii)return{t:'Ha '+exp+'s · SHO',c:'fs',d:'Ha önce, OIII/SII ay azalınca'};
-      if(ha&&oiii)return{t:'Ha '+exp+'s · HOO',c:'fs',d:'Ha önce'};
-      if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Ha öncelikli'};
-      if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:'Narrowband yoksa LRGB'};
-      return{t:'— Filtre yok',c:'fw',d:''};
-    }
-    // Karanlık gece
-    if(ha&&oiii&&sii)return{t:'SHO '+exp+'s/kanal',c:'fs',d:'İdeal — tam SHO paleti'};
-    if(ha&&oiii)return{t:'HOO '+exp+'s/kanal',c:'fs',d:'Ha+OIII kombinasyon'};
-    if(ha&&lrgb)return{t:'Ha '+exp+'s · L '+lExp+'s · RGB '+rgbExp+'s',c:'fh',d:'Ha+LRGB karma'};
-    if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Sadece Ha mevcut'};
-    if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:'Geniş bant'};
+  if(type==='Nebula'||type==='PN'){
+    if(bright){if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Ha zorunlu'};return{t:'⚠ Ha gerek',c:'fn',d:''};}
+    if(!bright&&!dark){if(ha&&oiii&&sii)return{t:'Ha '+exp+'s · SHO',c:'fs',d:''};if(ha&&oiii)return{t:'Ha '+exp+'s · HOO',c:'fs',d:''};if(ha)return{t:'Ha '+exp+'s',c:'fh',d:''};if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:''};return{t:'— Filtre yok',c:'fw',d:''};}
+    if(ha&&oiii&&sii)return{t:'SHO '+exp+'s/kanal',c:'fs',d:'İdeal'};
+    if(ha&&oiii)return{t:'HOO '+exp+'s/kanal',c:'fs',d:''};
+    if(ha&&lrgb)return{t:'Ha '+exp+'s · L '+lExp+'s · RGB '+rgbExp+'s',c:'fh',d:''};
+    if(ha)return{t:'Ha '+exp+'s',c:'fh',d:''};
+    if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:''};
     return{t:'— Filtre yok',c:'fw',d:''};
   }
-
   if(type==='Cluster'||type==='Globular'){
-    if(bright)return{t:'⚠ Önerilmez',c:'fn',d:'Ay çok parlak'};
+    if(bright)return{t:'⚠ Önerilmez',c:'fn',d:''};
     if(lrgb)return{t:'L '+lExp+'s · RGB '+bbExp+'s',c:'fl',d:''};
     if(hasL)return{t:'L '+lExp+'s',c:'fl',d:''};
     return{t:'— Filtre yok',c:'fw',d:''};
@@ -325,64 +498,118 @@ function fRec(type,moon,setup){
   return{t:'—',c:'',d:''};
 }
 
+// ─── Astronomi Matematiği ─────────────────────────────────────────────────────
 const R=d=>d*Math.PI/180,D=r=>r*180/Math.PI;
 function jd(date){const y=date.getUTCFullYear(),m=date.getUTCMonth()+1,d=date.getUTCDate(),h=date.getUTCHours()+date.getUTCMinutes()/60+date.getUTCSeconds()/3600;let Y=y,M=m;if(M<=2){Y--;M+=12;}const A=Math.floor(Y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(Y+4716))+Math.floor(30.6001*(M+1))+d+h/24+B-1524.5;}
 function gst(j){const T=(j-2451545)/36525;let g=280.46061837+360.98564736629*(j-2451545)+0.000387933*T*T-T*T*T/38710000;return((g%360)+360)%360;}
 function lst(j,lon){return(gst(j)+lon+360)%360;}
 function aa(ra,dec,j,lat,lon){const ld=lst(j,lon),ha=R(ld-ra*15),d=R(dec),l=R(lat);const sa=Math.sin(d)*Math.sin(l)+Math.cos(d)*Math.cos(l)*Math.cos(ha);const alt=D(Math.asin(Math.max(-1,Math.min(1,sa))));const ca=(Math.sin(d)-Math.sin(l)*sa)/(Math.cos(l)*Math.cos(R(alt)));let az=D(Math.acos(Math.max(-1,Math.min(1,ca))));if(Math.sin(ha)>0)az=360-az;return{alt,az};}
-function merUTC(ra,d0){const j0=jd(d0),l0=lst(j0,LON),rd=ra*15;let diff=rd-l0;diff=((diff%360)+360)%360;return diff/360.985647*24;}
 function hAlt(az){if(!ufukData||ufukData.length<2)return 0;const n=ufukData.length;let lo=ufukData[n-1],hi=ufukData[0];for(let i=0;i<n-1;i++){if(ufukData[i].az<=az&&ufukData[i+1].az>az){lo=ufukData[i];hi=ufukData[i+1];break;}}if(lo.az===hi.az)return lo.alt;let t=(az-lo.az)/(hi.az-lo.az);if(hi.az<lo.az){const sp=(360-lo.az)+hi.az;const dd=az>=lo.az?az-lo.az:360-lo.az+az;t=dd/sp;}return lo.alt+t*(hi.alt-lo.alt);}
+
+// ─── Gezegen Konumları ────────────────────────────────────────────────────────
+function keplerXYZ(el,d){
+  const L=((el.L0+el.n*d)%360+360)%360;
+  const M0=((L-el.pi)%360+360)%360;
+  let E=R(M0);
+  for(let k=0;k<50;k++){const dE=(R(M0)+el.e*Math.sin(E)-E)/(1-el.e*Math.cos(E));E+=dE;if(Math.abs(dE)<1e-9)break;}
+  const v=2*Math.atan2(Math.sqrt(1+el.e)*Math.sin(E/2),Math.sqrt(1-el.e)*Math.cos(E/2));
+  const r=el.a*(1-el.e*Math.cos(E));
+  const omega=R(((el.pi-el.Om)%360+360)%360);
+  const u=v+omega;
+  const Om=R(el.Om);const inc=R(el.i);
+  const x=r*(Math.cos(Om)*Math.cos(u)-Math.sin(Om)*Math.sin(u)*Math.cos(inc));
+  const y=r*(Math.sin(Om)*Math.cos(u)+Math.cos(Om)*Math.sin(u)*Math.cos(inc));
+  const z=r*Math.sin(u)*Math.sin(inc);
+  return{x,y,z,r};
+}
+function ecl2radec(dx,dy,dz,d){
+  const eps=R(23.4393-3.563e-7*d);
+  const ye=dy*Math.cos(eps)-dz*Math.sin(eps);
+  const ze=dy*Math.sin(eps)+dz*Math.cos(eps);
+  const ra=((Math.atan2(ye,dx)*180/Math.PI)/15+24)%24;
+  const dec=Math.atan2(ze,Math.sqrt(dx*dx+ye*ye))*180/Math.PI;
+  return{ra,dec};
+}
+function planetRaDec(name,jdDate){
+  const d=jdDate-2451545.0;
+  const p=keplerXYZ(GEZEGEN_ELEMANLARI[name],d);
+  const e=keplerXYZ(DUNYA,d);
+  return ecl2radec(p.x-e.x,p.y-e.y,p.z-e.z,d);
+}
+
+// ─── Ay Hesabı ────────────────────────────────────────────────────────────────
 function mPhase(j){const k=(j-2451550.1)/29.530588;return((k%1)+1)%1;}
 function mPos(j){const L=(218.316+13.176396*86400*(j-2451545)/86400)%360,M=R((134.963+13.064993*86400*(j-2451545)/86400)%360),lon=R(L+6.289*Math.sin(M)),ob=R(23.439);const ra=D(Math.atan2(Math.sin(lon)*Math.cos(ob),Math.cos(lon))),dec=D(Math.asin(Math.sin(ob)*Math.sin(lon)));return{ra:((ra/15)+24)%24,dec};}
-function mRise(d0,mp){let prev=null,r=null;for(let t=0;t<=24;t+=10/60){const p=aa(mp.ra,mp.dec,jd(d0)+t/24,LAT,LON);if(prev!==null&&prev<0&&p.alt>=0){r=t;break;}prev=p.alt;}return r;}
+function mRise(d0,mp){let prev=null,r=null;for(let t=0;t<=24;t+=10/60){const p=aa(mp.ra,mp.dec,jd(d0)+t/24,OBS_LAT,OBS_LON);if(prev!==null&&prev<0&&p.alt>=0){r=t;break;}prev=p.alt;}return r;}
 function angD(r1,d1,r2,d2){return D(Math.acos(Math.max(-1,Math.min(1,Math.sin(R(d1))*Math.sin(R(d2))+Math.cos(R(d1))*Math.cos(R(d2))*Math.cos(R((r1-r2)*15))))));}
 function pEmoji(p){return['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'][Math.round(p*8)%8];}
 function pText(p){if(p<0.03||p>0.97)return'Yeni Ay';if(p<0.22)return'Hilal';if(p<0.28)return'İlk Çeyrek';if(p<0.47)return'Büyüyen';if(p<0.53)return'Dolunay';if(p<0.72)return'Küçülen';if(p<0.78)return'Son Çeyrek';return'Azalan Hilal';}
 function parseUFUK(txt){const pts=[];for(const ln of txt.split('\n')){const t=ln.trim();if(!t||t.startsWith('#')||t.startsWith('[')||/^[lL]/.test(t))continue;const p=t.split(/[\s,]+/);if(p.length>=2){const az=parseFloat(p[0]),al=parseFloat(p[1]);if(!isNaN(az)&&!isNaN(al))pts.push({az,alt:al});}}return pts.sort((a,b)=>a.az-b.az);}
 
+// ─── Ana Hesaplama ────────────────────────────────────────────────────────────
 function calculate(){
   const dv=document.getElementById('dateInput').value;if(!dv){showMsg('Tarih seçilmedi.','warn');return;}
-  const setup=getSetup();if(!setup){showMsg('Lütfen bir teleskop/kurulum seçin.','warn');return;}
+  const setup=getSetup();if(!setup){showMsg('Lütfen bir kurulum seçin.','warn');return;}
   const[sh,sm]=document.getElementById('startTime').value.split(':').map(Number);
   const obsS=sh-TZ+sm/60,obsE=obsS+7;
   const d0=new Date(dv+'T00:00:00Z');
-  currentDateUTC0h=d0; currentObsStartUTC=obsS; selectedObj=null; _canvasSetup=false;
-  // Reset slider
+  currentDateUTC0h=d0;currentObsStartUTC=obsS;selectedObj=null;_canvasSetup=false;
   const sl=document.getElementById('timeSlider');sl.value=0;
   document.getElementById('timeSliderLabel').textContent=fmtH(((obsS+TZ)%24+24)%24);
   const jdn=jd(d0)+0.5,jdm=jd(d0)+(obsS+3.5)/24;
   const mpv=mPhase(jdn),mp=mPos(jdn);
   const mi=Math.round((1-Math.cos(2*Math.PI*mpv))/2*100);
-  const mac=aa(mp.ra,mp.dec,jdm,LAT,LON);
+  const mac=aa(mp.ra,mp.dec,jdm,OBS_LAT,OBS_LON);
   const mrv=mRise(d0,mp);
   const mrl=mrv!==null?((mrv+TZ)%24+24)%24:null;
   const obsLocal=sh+sm/60;
   let mrNote='→ Geceye etkisi yok';
   if(mrl!==null){if(mrl>obsLocal)mrNote='→ '+fmtH(mrl)+"'e kadar temiz gökyüzü";else mrNote='→ Gece boyunca gökyüzünde';}
   document.getElementById('moonBar').style.display='flex';
-  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' aydınlık<br>Gece ortası yüksekliği: <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?'⚠ Parlak ay — narrowband önerilir':mi>25?'~ Orta ay — Ha öncelikli':'✓ Karanlık gece — ideal')+'</div><div class="moon-rise"><strong>Ay Doğuşu</strong><br>'+(mrl!==null?fmtH(mrl)+' (yerel)':'Gündüz doğuyor')+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div>';
+  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' aydınlık<br>Gece ortası yüksekliği: <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?'⚠ Parlak ay — dar bantlı öneri':mi>25?'~ Orta ay — Ha öncelikli':'✓ Karanlık gece — ideal')+'</div><div class="moon-rise"><strong>Ay Doğuşu</strong><br>'+(mrl!==null?fmtH(mrl)+' (yerel)':'Gündüz doğuyor')+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div>';
   results=[];
+  // DSO hesabı
   for(const o of CAT){
     const[name,common,type,ra,dec,size,mag]=o;if(dec<-50)continue;
     let mx=-90,vm=0,pl=null;
     for(let t=obsS;t<=obsE;t+=10/60){
-      const j2=jd(d0)+t/24,pos=aa(ra,dec,j2,LAT,LON),ha2=ufukData?hAlt(pos.az):0;
-      let ha=lst(j2,LON)-ra*15;ha=((ha%360)+360)%360;if(ha>180)ha-=360;if(ha>30)continue;
+      const j2=jd(d0)+t/24,pos=aa(ra,dec,j2,OBS_LAT,OBS_LON),ha2=hAlt(pos.az);
+      let ha=lst(j2,OBS_LON)-ra*15;ha=((ha%360)+360)%360;if(ha>180)ha-=360;if(ha>30)continue;
       if(pos.alt>ha2+10){vm+=10;if(pos.alt>mx){mx=pos.alt;pl=((t+TZ)%24+24)%24;}}
     }
     if(vm<30)continue;
     const md=angD(ra,dec,mp.ra,mp.dec);
     const sc=Math.round(Math.min(mx/70,1)*35+Math.min(vm/240,1)*30+Math.min(md/90,1)*20+Math.max(0,(11-mag)/11)*15);
     let mc='moon-ok';if(md<30)mc='moon-bad';else if(md<60)mc='moon-warn';
-    results.push({name,common,type,ra,dec,size,mag,maxAlt:Math.round(mx),window:Math.round(vm/60*10)/10,peak:pl||0,moonDist:Math.round(md),moonClass:mc,score:sc,fr:fRec(type,mi,setup)});
+    const sbWarn=getSBWarn(mag,size);
+    results.push({name,common,type,ra,dec,size,mag,maxAlt:Math.round(mx),window:Math.round(vm/60*10)/10,peak:pl||0,moonDist:Math.round(md),moonClass:mc,score:sc,fr:fRec(type,mi,setup),sbWarn});
+  }
+  // Gezegen hesabı
+  const jdnoon=jd(d0)+0.5;
+  for(const [gName,el] of Object.entries(GEZEGEN_ELEMANLARI)){
+    const pos0=planetRaDec(gName,jdnoon);
+    const ra=pos0.ra,dec=pos0.dec;
+    if(dec<-50)continue;
+    let mx=-90,vm=0,pl=null;
+    for(let t=obsS;t<=obsE;t+=10/60){
+      const j2=jd(d0)+t/24,pos=aa(ra,dec,j2,OBS_LAT,OBS_LON),ha2=hAlt(pos.az);
+      if(pos.alt>ha2+5){vm+=10;if(pos.alt>mx){mx=pos.alt;pl=((t+TZ)%24+24)%24;}}
+    }
+    if(vm<20)continue;
+    const md=angD(ra,dec,mp.ra,mp.dec);
+    const sc=Math.round(Math.min(mx/70,1)*40+Math.min(vm/240,1)*40+Math.min(md/90,1)*20);
+    let mc='moon-ok';if(md<15)mc='moon-bad';else if(md<30)mc='moon-warn';
+    results.push({name:gName,common:'',type:'Gezegen',ra,dec,size:el.boyutRef,mag:el.magRef,maxAlt:Math.round(mx),window:Math.round(vm/60*10)/10,peak:pl||0,moonDist:Math.round(md),moonClass:mc,score:sc,fr:fRec('Gezegen',mi,setup),sbWarn:false});
   }
   const seen=new Set();results=results.filter(r=>{if(seen.has(r.name))return false;seen.add(r.name);return true;});
-  document.getElementById('statsBar').style.display='flex';document.getElementById('filterRow').style.display='flex';
+  document.getElementById('statsBar').style.display='flex';
+  document.getElementById('filterRow').style.display='flex';
   document.getElementById('ufukWrap').style.display='block';
-  clearMsg();showMsg(results.length+' obje listelendi — '+setup.name+' · f/'+setup.fratio,'info');
+  clearMsg();showMsg(results.length+' hedef listelendi — '+setup.name+' · f/'+setup.fratio+' · Bortle '+OBS_BORTLE,'info');
   applySort();drawUfuk();
 }
 
+// ─── Filtre & Sıralama ────────────────────────────────────────────────────────
 function setFilter(btn,type){activeType=type;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applySort();}
 function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}applySort();}
 function applySort(){
@@ -390,219 +617,194 @@ function applySort(){
   else if(activeType==='FAV')filtered=results.filter(r=>favorites.has(r.name));
   else filtered=results.filter(r=>r.type===activeType);
   filtered.sort((a,b)=>{let va=a[sortCol],vb=b[sortCol];if(typeof va==='string')return va.localeCompare(vb)*sortDir;return(va-vb)*sortDir;});
-  const gal=results.filter(r=>r.type==='Galaxy').length,neb=results.filter(r=>r.type==='Nebula').length,clu=results.filter(r=>r.type==='Cluster').length,glo=results.filter(r=>r.type==='Globular').length,fav=results.filter(r=>favorites.has(r.name)).length;
-  document.getElementById('statsBar').innerHTML='<div class="stat"><div class="stat-val">'+results.length+'</div><div class="stat-lbl">Toplam</div></div><div class="stat"><div class="stat-val" style="color:var(--gold)">★ '+fav+'</div><div class="stat-lbl">Favori</div></div><div class="stat"><div class="stat-val" style="color:var(--accent2)">'+gal+'</div><div class="stat-lbl">Gökada</div></div><div class="stat"><div class="stat-val" style="color:var(--green)">'+neb+'</div><div class="stat-lbl">Bulutsu</div></div><div class="stat"><div class="stat-val" style="color:var(--accent3)">'+clu+'</div><div class="stat-lbl">Açık Küme</div></div><div class="stat"><div class="stat-val" style="color:var(--gold)">'+glo+'</div><div class="stat-lbl">Küresel</div></div>';
+  const cnt=t=>results.filter(r=>r.type===t).length;
+  const fav=results.filter(r=>favorites.has(r.name)).length;
+  document.getElementById('statsBar').innerHTML=
+    '<div class="stat"><div class="stat-val">'+results.length+'</div><div class="stat-lbl">Toplam</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--gold)">★ '+fav+'</div><div class="stat-lbl">Favori</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--accent2)">'+cnt('Galaxy')+'</div><div class="stat-lbl">Gökada</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--green)">'+cnt('Nebula')+'</div><div class="stat-lbl">Bulutsu</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:#ff9a6c">'+cnt('PN')+'</div><div class="stat-lbl">Gez. Bul.</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--accent3)">'+cnt('Cluster')+'</div><div class="stat-lbl">Açık Küme</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--gold)">'+cnt('Globular')+'</div><div class="stat-lbl">Küresel</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:#ffe566">'+cnt('Gezegen')+'</div><div class="stat-lbl">Gezegen</div></div>';
   renderTable();
 }
+
 function fmtH(h){const hh=Math.floor(((h%24)+24)%24),mm=Math.round((h%1)*60);return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');}
+
 function renderTable(){
   const tb=document.getElementById('tableBody');
-  if(!filtered.length){const msg=activeType==='FAV'?'Henüz favori obje seçmediniz — tablodaki ★ ikonuna tıklayın.':'Bu gece bu kriterlerde görüntülenebilir obje yok.';tb.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
-  const tC={Galaxy:'tg',Nebula:'tn',Cluster:'tc',Globular:'tgl'},tL={Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL'};
-  tb.innerHTML=filtered.map(r=>'<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
-    +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
-    +'<td class="name-cell">'+r.name+(r.common?'<span class="common">'+r.common+'</span>':'')+'</td>'
-    +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
-    +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
-    +'<td class="alt-cell">'+r.maxAlt+'°</td>'
-    +'<td class="window-cell">'+r.window+'s</td>'
-    +'<td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td>'
-    +'<td><span class="filter-rec '+r.fr.c+'" title="'+(r.fr.d||'')+'">'+r.fr.t+'</span></td>'
-    +'<td><div class="score-bar-wrap"><div class="score-bar"><div class="score-fill" style="width:'+r.score+'%"></div></div><span style="font-size:12px;color:var(--text)">'+r.score+'</span></div></td>'
-    +'</tr>').join('');
-}
-function drawUfuk(){
-  const wrap=document.getElementById('ufukWrap');
-  if(!ufukData&&results.length===0){wrap.style.display='none';return;}
-  wrap.style.display='block';
-  drawFrame(currentObsStartUTC);
-  setupCanvasInteraction();
+  if(!filtered.length){const msg=activeType==='FAV'?'Henüz favori obje seçmediniz — ★ ikonuna tıklayın.':'Bu gece bu kriterlerde görüntülenebilir hedef yok.';tb.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
+  const tC={Galaxy:'tg',Nebula:'tn',Cluster:'tc',Globular:'tgl',PN:'tpn',Gezegen:'tpl'};
+  const tL={Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL',PN:'GEZ. BUL.',Gezegen:'GEZEGEN'};
+  const setup=getSetup();
+  const dv=document.getElementById('dateInput').value;
+  tb.innerHTML=filtered.map(r=>{
+    const fr=r.fr;
+    const si=getSizeInfo(r.size);
+    const fovS=getFOVStatus(r.size,setup);
+    const noteKey='note_'+dv+'_'+r.name;
+    const hasNote=!!(localStorage.getItem(noteKey));
+    let sizeCell='<div class="size-cell">'+r.size+"'";
+    if(r.type!=='Gezegen'){
+      sizeCell+='<div class="size-bar-bg"><div class="size-bar-fill" style="width:'+si.barPct+'%"></div></div>';
+      sizeCell+='<div class="size-m51">M51\'e göre: '+si.ratio+'× ('+si.desc+')</div>';
+      if(fovS)sizeCell+='<div class="'+fovS.cls+'">'+fovS.text+'</div>';
+      if(r.sbWarn)sizeCell+='<div class="bortle-warn">⚠ Bortle '+OBS_BORTLE+' için zor</div>';
+    }
+    sizeCell+='</div>';
+    return '<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
+      +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
+      +'<td><button class="note-btn '+(hasNote?'has-note':'')+'" onclick="event.stopPropagation();openNote(\''+r.name+'\')" title="Not ekle/düzenle">'+(hasNote?'📝':'✎')+'</button></td>'
+      +'<td class="name-cell">'+r.name+(r.common?'<span class="common">'+r.common+'</span>':'')+'</td>'
+      +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
+      +sizeCell
+      +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
+      +'<td class="alt-cell">'+r.maxAlt+'°</td>'
+      +'<td class="window-cell">'+r.window+'s</td>'
+      +'<td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td>'
+      +'<td><span class="filter-rec '+fr.c+'" title="'+(fr.d||'')+'">'+fr.t+'</span></td>'
+      +'<td><div class="score-bar-wrap"><div class="score-bar"><div class="score-fill" style="width:'+r.score+'%"></div></div><span style="font-size:12px;color:var(--text)">'+r.score+'</span></div></td>'
+      +'</tr>';
+  }).join('');
 }
 
+// ─── Canvas ───────────────────────────────────────────────────────────────────
 function canvasAltY(alt,H){return H-10-(alt/65)*(H-20);}
 function canvasAzX(az,W){return 62+(az/360)*(W-70);}
+const TYPE_COLOR={Galaxy:'#c792ea',Nebula:'#89ddff',Cluster:'#f78c6c',Globular:'#ffd700',PN:'#ff9a6c',Gezegen:'#ffe566'};
+
+function drawUfuk(){document.getElementById('ufukWrap').style.display='block';drawFrame(currentObsStartUTC);setupCanvasInteraction();}
+function onTimeSlider(val){if(!currentDateUTC0h)return;const utcH=currentObsStartUTC+parseInt(val)/60;document.getElementById('timeSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);drawFrame(utcH);}
 
 function drawFrame(utcHour){
   const cv=document.getElementById('ufukCanvas');
-  const W=cv.parentElement.clientWidth-4;
-  const H=220;
+  const W=cv.parentElement.clientWidth-4,H=220;
   cv.width=W;cv.height=H;
   const ctx=cv.getContext('2d');
-
-  // Background
   ctx.fillStyle='#0a0c1a';ctx.fillRect(0,0,W,H);
-
-  // Grid lines & alt labels
-  ctx.strokeStyle='#1e2240';ctx.lineWidth=0.5;
-  ctx.font='9px monospace';ctx.fillStyle='#3a4070';
-  for(let a=0;a<=60;a+=10){
-    const y=canvasAltY(a,H);
-    ctx.beginPath();ctx.moveTo(62,y);ctx.lineTo(W,y);ctx.stroke();
-    ctx.fillText(a+'°',2,y+3);
-  }
-
-  // Horizon profile
+  // Grid
+  ctx.strokeStyle='#1e2240';ctx.lineWidth=0.5;ctx.font='9px monospace';ctx.fillStyle='#3a4070';
+  for(let a=0;a<=60;a+=10){const y=canvasAltY(a,H);ctx.beginPath();ctx.moveTo(62,y);ctx.lineTo(W,y);ctx.stroke();ctx.fillText(a+'°',2,y+3);}
+  // Ufuk
   if(ufukData&&ufukData.length>1){
     ctx.beginPath();ctx.strokeStyle='#4fc3f7';ctx.lineWidth=1.5;
-    ufukData.forEach((p,i)=>{
-      const x=canvasAzX(p.az,W),y=canvasAltY(p.alt,H);
-      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-    });
-    const last=ufukData[ufukData.length-1];
-    ctx.lineTo(canvasAzX(last.az,W),canvasAltY(last.alt,H));
-    ctx.stroke();
-    // Fill below
-    ctx.lineTo(W,H);ctx.lineTo(62,H);ctx.closePath();
-    ctx.fillStyle='rgba(79,195,247,0.06)';ctx.fill();
+    ufukData.forEach((p,i)=>{const x=canvasAzX(p.az,W),y=canvasAltY(p.alt,H);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});
+    const last=ufukData[ufukData.length-1];ctx.lineTo(canvasAzX(last.az,W),canvasAltY(last.alt,H));
+    ctx.stroke();ctx.lineTo(W,H);ctx.lineTo(62,H);ctx.closePath();ctx.fillStyle='rgba(79,195,247,0.06)';ctx.fill();
   } else {
-    // Flat horizon line
-    const y=canvasAltY(0,H);
-    ctx.beginPath();ctx.strokeStyle='rgba(79,195,247,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
-    ctx.moveTo(62,y);ctx.lineTo(W,y);ctx.stroke();ctx.setLineDash([]);
+    const y=canvasAltY(0,H);ctx.beginPath();ctx.strokeStyle='rgba(79,195,247,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.moveTo(62,y);ctx.lineTo(W,y);ctx.stroke();ctx.setLineDash([]);
   }
-
-  // Cardinal labels
-  ctx.fillStyle='#6b75a8';ctx.font='10px monospace';
-  ['K','KD','D','GD','G','GB','B','KB'].forEach((l,i)=>{
-    const x=canvasAzX(i*45,W);ctx.fillText(l,x-4,H-2);
-  });
-
-  // Object dots
-  const typeColor={Galaxy:'#c792ea',Nebula:'#89ddff',Cluster:'#f78c6c',Globular:'#ffd700'};
-  if(!currentDateUTC0h)return;
+  // Yön etiketleri
+  ctx.fillStyle='#6b75a8';ctx.font='9px monospace';
+  ['K','KD','D','GD','G','GB','B','KB'].forEach((l,i)=>ctx.fillText(l,canvasAzX(i*45,W)-4,H-2));
+  if(!currentDateUTC0h||!results.length)return;
   const j2=jd(currentDateUTC0h)+utcHour/24;
-
+  // Seçili obje yörüngesi
+  if(selectedObj){
+    const obj=results.find(r=>r.name===selectedObj);
+    if(obj){
+      const color=TYPE_COLOR[obj.type]||'#fff';
+      let prevX=null,prevY=null,prevAbove=null;
+      for(let t=currentObsStartUTC;t<=currentObsStartUTC+7;t+=15/60){
+        const jt=jd(currentDateUTC0h)+t/24;
+        const pos=aa(obj.ra,obj.dec,jt,OBS_LAT,OBS_LON);
+        const above=pos.alt>hAlt(pos.az);
+        const x=canvasAzX(pos.az,W),y=canvasAltY(pos.alt,H);
+        if(prevX!==null){
+          ctx.beginPath();ctx.moveTo(prevX,prevY);ctx.lineTo(x,y);
+          if(above&&prevAbove){ctx.strokeStyle=color;ctx.setLineDash([]);ctx.lineWidth=2;ctx.globalAlpha=0.55;}
+          else{ctx.strokeStyle='#ff5370';ctx.setLineDash([3,3]);ctx.lineWidth=1;ctx.globalAlpha=0.25;}
+          ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+        }
+        prevX=x;prevY=y;prevAbove=above;
+      }
+    }
+  }
+  // Obje noktaları
   results.forEach(r=>{
-    const pos=aa(r.ra,r.dec,j2,LAT,LON);
+    const pos=aa(r.ra,r.dec,j2,OBS_LAT,OBS_LON);
     const horiAlt=hAlt(pos.az);
     const x=canvasAzX(pos.az,W);
-    const objAlt=pos.alt;
-    const color=typeColor[r.type]||'#ffffff';
-    const isSelected=(selectedObj===r.name);
-    const margin=objAlt-horiAlt;
-
+    const color=TYPE_COLOR[r.type]||'#fff';
+    const isSel=(selectedObj===r.name);
+    const margin=pos.alt-horiAlt;
     if(margin<0){
-      // Below horizon — red X
       const y=canvasAltY(Math.max(horiAlt+3,2),H);
-      ctx.strokeStyle='#ff5370';ctx.lineWidth=isSelected?2:1.5;ctx.globalAlpha=0.7;
+      ctx.strokeStyle='#ff5370';ctx.lineWidth=isSel?2:1.5;ctx.globalAlpha=0.6;
       ctx.beginPath();ctx.moveTo(x-4,y-4);ctx.lineTo(x+4,y+4);ctx.stroke();
       ctx.beginPath();ctx.moveTo(x+4,y-4);ctx.lineTo(x-4,y+4);ctx.stroke();
       ctx.globalAlpha=1;
     } else {
-      const y=canvasAltY(objAlt,H);
+      const y=canvasAltY(pos.alt,H);
       const dotColor=margin<10?'#ffcb6b':color;
-      const r2=isSelected?7:5;
-      // Dashed line from dot to horizon
-      ctx.strokeStyle=dotColor;ctx.lineWidth=0.5;ctx.setLineDash([2,3]);ctx.globalAlpha=0.35;
-      const yH=canvasAltY(horiAlt,H);
-      ctx.beginPath();ctx.moveTo(x,y+r2);ctx.lineTo(x,yH);ctx.stroke();
+      const r2=isSel?7:5;
+      ctx.strokeStyle=dotColor;ctx.lineWidth=0.5;ctx.setLineDash([2,3]);ctx.globalAlpha=0.3;
+      ctx.beginPath();ctx.moveTo(x,y+r2);ctx.lineTo(x,canvasAltY(horiAlt,H));ctx.stroke();
       ctx.setLineDash([]);ctx.globalAlpha=1;
-      // Selection ring
-      if(isSelected){
-        ctx.beginPath();ctx.arc(x,y,r2+4,0,Math.PI*2);
-        ctx.strokeStyle=dotColor;ctx.lineWidth=1.5;ctx.stroke();
-      }
-      // Dot
-      ctx.beginPath();ctx.arc(x,y,r2,0,Math.PI*2);
-      ctx.fillStyle=dotColor;ctx.fill();
-      // Label for selected or favorites
-      if(isSelected||favorites.has(r.name)){
-        ctx.font='bold 10px monospace';ctx.fillStyle='#ffffff';
-        ctx.fillText(r.name,x+r2+3,y+3);
-      }
+      if(isSel){ctx.beginPath();ctx.arc(x,y,r2+4,0,Math.PI*2);ctx.strokeStyle=dotColor;ctx.lineWidth=1.5;ctx.stroke();}
+      ctx.beginPath();ctx.arc(x,y,r2,0,Math.PI*2);ctx.fillStyle=dotColor;ctx.fill();
+      if(isSel||favorites.has(r.name)){ctx.font='bold 10px monospace';ctx.fillStyle='#fff';ctx.fillText(r.name,x+r2+3,y+3);}
     }
   });
 }
 
-function onTimeSlider(val){
-  if(!currentDateUTC0h)return;
-  const utcH=currentObsStartUTC+parseInt(val)/60;
-  const localH=((utcH+TZ)%24+24)%24;
-  document.getElementById('timeSliderLabel').textContent=fmtH(localH);
-  drawFrame(utcH);
-}
-
-let _canvasSetup=false;
 function setupCanvasInteraction(){
   if(_canvasSetup)return;_canvasSetup=true;
   const cv=document.getElementById('ufukCanvas');
   const tip=document.getElementById('objIpucu');
-  const typeColor={Galaxy:'#c792ea',Nebula:'#89ddff',Cluster:'#f78c6c',Globular:'#ffd700'};
-
-  cv.addEventListener('mousemove',function(e){
-    if(!currentDateUTC0h||!results.length){tip.style.display='none';return;}
-    const rect=cv.getBoundingClientRect();
-    const scaleX=cv.width/rect.width;
-    const mx=(e.clientX-rect.left)*scaleX;
-    const my=(e.clientY-rect.top)*(cv.height/rect.height);
+  function getHit(mx,my){
+    if(!currentDateUTC0h||!results.length)return null;
     const slVal=parseInt(document.getElementById('timeSlider').value);
     const utcH=currentObsStartUTC+slVal/60;
     const j2=jd(currentDateUTC0h)+utcH/24;
     const W=cv.width,H=cv.height;
     let hit=null,minDist=999;
     results.forEach(r=>{
-      const pos=aa(r.ra,r.dec,j2,LAT,LON);
-      const horiAlt=hAlt(pos.az);
-      const margin=pos.alt-horiAlt;
-      const x=canvasAzX(pos.az,W);
-      const y=margin<0?canvasAltY(Math.max(horiAlt+3,2),H):canvasAltY(pos.alt,H);
-      const d=Math.sqrt((mx-x)**2+(my-y)**2);
-      if(d<14&&d<minDist){minDist=d;hit=r;
-        hit._pos=pos;hit._margin=margin;}
-    });
-    if(hit){
-      const color=typeColor[hit.type]||'#fff';
-      const status=hit._margin<0?'<span style="color:#ff5370">Ufuk arkasında</span>':hit._margin<10?'<span style="color:#ffcb6b">Ufka yakın ('+hit._margin.toFixed(1)+'°)</span>':'<span style="color:#89ddff">+'+hit._margin.toFixed(1)+'° ufuk üstü</span>';
-      tip.innerHTML='<span style="color:'+color+';font-weight:700">'+hit.name+'</span>'+(hit.common?' <span style="color:#6b75a8">'+hit.common+'</span>':'')+'<br>Az: '+hit._pos.az.toFixed(1)+'°  Alt: '+hit._pos.alt.toFixed(1)+'°<br>'+status;
-      const bRect=cv.getBoundingClientRect();
-      let tx=e.clientX-bRect.left+12,ty=e.clientY-bRect.top-10;
-      if(tx+150>bRect.width)tx=e.clientX-bRect.left-160;
-      tip.style.left=tx+'px';tip.style.top=ty+'px';
-      tip.style.display='block';
-      cv.style.cursor='pointer';
-    } else {
-      tip.style.display='none';cv.style.cursor='default';
-    }
-  });
-
-  cv.addEventListener('mouseleave',()=>{tip.style.display='none';});
-
-  cv.addEventListener('click',function(e){
-    if(!currentDateUTC0h||!results.length)return;
-    const rect=cv.getBoundingClientRect();
-    const scaleX=cv.width/rect.width;
-    const mx=(e.clientX-rect.left)*scaleX;
-    const my=(e.clientY-rect.top)*(cv.height/rect.height);
-    const slVal=parseInt(document.getElementById('timeSlider').value);
-    const utcH=currentObsStartUTC+slVal/60;
-    const j2=jd(currentDateUTC0h)+utcH/24;
-    const W=cv.width,H=cv.height;
-    let hit=null,minDist=999;
-    results.forEach(r=>{
-      const pos=aa(r.ra,r.dec,j2,LAT,LON);
+      const pos=aa(r.ra,r.dec,j2,OBS_LAT,OBS_LON);
       const horiAlt=hAlt(pos.az);
       const x=canvasAzX(pos.az,W);
       const y=(pos.alt-horiAlt)<0?canvasAltY(Math.max(horiAlt+3,2),H):canvasAltY(pos.alt,H);
       const d=Math.sqrt((mx-x)**2+(my-y)**2);
-      if(d<14&&d<minDist){minDist=d;hit=r;}
+      if(d<14&&d<minDist){minDist=d;hit=r;hit._pos=pos;hit._margin=pos.alt-horiAlt;}
     });
+    return hit;
+  }
+  cv.addEventListener('mousemove',function(e){
+    const rect=cv.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)*(cv.width/rect.width);
+    const my=(e.clientY-rect.top)*(cv.height/rect.height);
+    const hit=getHit(mx,my);
+    if(hit){
+      const color=TYPE_COLOR[hit.type]||'#fff';
+      const status=hit._margin<0?'<span style="color:#ff5370">Ufkun altında</span>':hit._margin<10?'<span style="color:#ffcb6b">Ufka yakın ('+hit._margin.toFixed(1)+'°)</span>':'<span style="color:#89ddff">+'+hit._margin.toFixed(1)+'° ufuk üstü</span>';
+      tip.innerHTML='<span style="color:'+color+';font-weight:700">'+hit.name+'</span>'+(hit.common?' <span style="color:#6b75a8">'+hit.common+'</span>':'')+'<br>Az: '+hit._pos.az.toFixed(1)+'°  Alt: '+hit._pos.alt.toFixed(1)+'°<br>'+status;
+      const bRect=cv.getBoundingClientRect();
+      let tx=e.clientX-bRect.left+12,ty=e.clientY-bRect.top-10;
+      if(tx+170>bRect.width)tx=e.clientX-bRect.left-175;
+      tip.style.left=tx+'px';tip.style.top=ty+'px';tip.style.display='block';
+      cv.style.cursor='pointer';
+    } else {tip.style.display='none';cv.style.cursor='default';}
+  });
+  cv.addEventListener('mouseleave',()=>tip.style.display='none');
+  cv.addEventListener('click',function(e){
+    const rect=cv.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)*(cv.width/rect.width);
+    const my=(e.clientY-rect.top)*(cv.height/rect.height);
+    const hit=getHit(mx,my);
     if(hit){
       selectedObj=(selectedObj===hit.name)?null:hit.name;
-      const slVal2=parseInt(document.getElementById('timeSlider').value);
-      drawFrame(currentObsStartUTC+slVal2/60);
-      // Scroll table to row
-      const rows=document.querySelectorAll('#tableBody tr');
-      rows.forEach(row=>{
-        row.style.background='';
-        if(row.dataset.objname===selectedObj){
-          row.style.background='rgba(79,195,247,0.12)';
-          row.scrollIntoView({behavior:'smooth',block:'nearest'});
-        }
+      const slVal=parseInt(document.getElementById('timeSlider').value);
+      drawFrame(currentObsStartUTC+slVal/60);
+      document.querySelectorAll('#tableBody tr').forEach(row=>{
+        row.style.background=row.dataset.objname===selectedObj?'rgba(79,195,247,0.12)':'';
+        if(row.dataset.objname===selectedObj)row.scrollIntoView({behavior:'smooth',block:'nearest'});
       });
     }
   });
 }
-document.getElementById('hznFile').addEventListener('change',function(e){const file=e.target.files[0];if(!file)return;const rd=new FileReader();rd.onload=ev=>{const d=parseUFUK(ev.target.result);if(d.length<3){showMsg('Geçerli ufuk verisi okunamadı.','warn');ufukData=null;}else{ufukData=d;showMsg('Ufuk yüklendi: '+d.length+' nokta.','info');drawUfuk();}};rd.readAsText(file);});
+
 function selectObjFromTable(name){
   selectedObj=(selectedObj===name)?null:name;
   const slVal=parseInt(document.getElementById('timeSlider').value);
@@ -611,9 +813,46 @@ function selectObjFromTable(name){
     row.style.background=row.dataset.objname===selectedObj?'rgba(79,195,247,0.12)':'';
   });
 }
+
+// ─── Notlar ───────────────────────────────────────────────────────────────────
+let _noteObj='';
+function openNote(name){
+  _noteObj=name;
+  const dv=document.getElementById('dateInput').value;
+  document.getElementById('noteObjName').textContent=name;
+  document.getElementById('noteText').value=localStorage.getItem('note_'+dv+'_'+name)||'';
+  document.getElementById('noteModal').classList.add('open');
+}
+function closeNoteModal(){document.getElementById('noteModal').classList.remove('open');}
+function saveNoteAndClose(){
+  const dv=document.getElementById('dateInput').value;
+  const txt=document.getElementById('noteText').value.trim();
+  if(txt)localStorage.setItem('note_'+dv+'_'+_noteObj,txt);
+  else localStorage.removeItem('note_'+dv+'_'+_noteObj);
+  closeNoteModal();renderTable();
+}
+
+// ─── Dosya & Mesaj ────────────────────────────────────────────────────────────
+document.getElementById('hznFile').addEventListener('change',function(e){
+  const file=e.target.files[0];if(!file)return;
+  const rd=new FileReader();
+  rd.onload=ev=>{const d=parseUFUK(ev.target.result);if(d.length<3){showMsg('Geçerli ufuk verisi okunamadı.','warn');ufukData=null;}else{ufukData=d;showMsg('Ufuk yüklendi: '+d.length+' nokta.','info');if(currentDateUTC0h)drawUfuk();}};
+  rd.readAsText(file);
+});
 function showMsg(t,type){document.getElementById('msgArea').innerHTML='<div class="msg msg-'+(type==='warn'?'warn':'info')+'">'+t+'</div>';}
 function clearMsg(){document.getElementById('msgArea').innerHTML='';}
-(function(){const today=new Date(),y=today.getFullYear(),m=String(today.getMonth()+1).padStart(2,'0'),d=String(today.getDate()).padStart(2,'0');document.getElementById('dateInput').value=y+'-'+m+'-'+d;renderSetupSelect();showMsg('Kurulum seçin, tarih belirleyin ve Hesapla\'ya basın. Horizon dosyası (.hrz) opsiyoneldir.','info');if(favorites.size>0){activeType='FAV';document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type==='FAV')b.classList.add('active');});}})();
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+(function(){
+  const today=new Date(),y=today.getFullYear(),m=String(today.getMonth()+1).padStart(2,'0'),d=String(today.getDate()).padStart(2,'0');
+  document.getElementById('dateInput').value=y+'-'+m+'-'+d;
+  loadLocation();loadBortle();
+  renderSetupSelect();
+  updateSubtitle();
+  showMsg('Kurulum ve tarih seçip Hesapla\'ya basın. Ufuk dosyası (.hrz) opsiyoneldir.','info');
+  if(favorites.size>0){activeType='FAV';document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type==='FAV')b.classList.add('active');});}
+})();
+
 </script>
 </body>
 </html>
