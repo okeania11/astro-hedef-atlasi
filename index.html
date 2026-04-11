@@ -671,7 +671,7 @@ function renderTable(){
       +'<td class="window-cell">'+r.window+' saat</td>'
       +'<td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td>'
       +'<td><span class="filter-rec '+fr.c+'" title="'+(fr.d||'')+'">'+fr.t+'</span></td>'
-      +'<td><div class="score-bar-wrap"><div class="score-bar"><div class="score-fill" style="width:'+r.score+'%"></div></div><span style="font-size:12px;color:var(--text)">'+r.score+'</span></div></td>'
+      +'<td><span style="font-size:14px;color:var(--text);font-weight:700">'+r.score+'</span></td>'
       +'</tr>';
   }).join('');
 }
