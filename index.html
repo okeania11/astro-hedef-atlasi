@@ -97,7 +97,7 @@ tbody tr:last-child td{border-bottom:none;}
 .tgl{background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3);}
 .tpn{background:rgba(255,154,108,.2);color:#ff9a6c;border:1px solid rgba(255,154,108,.3);}
 .tpl{background:rgba(255,215,0,.25);color:#ffe566;border:1px solid rgba(255,215,0,.4);}
-.size-cell{font-size:12px;}
+.size-cell{font-size:12px;min-width:160px;}
 .size-bar-bg{height:3px;background:var(--bg3);border-radius:2px;width:60px;margin:3px 0;}
 .size-bar-fill{height:100%;border-radius:2px;background:var(--accent2);}
 .size-m51{font-size:11px;color:var(--text2);}
@@ -648,14 +648,18 @@ function renderTable(){
     const fovS=getFOVStatus(r.size,setup);
     const noteKey='note_'+dv+'_'+r.name;
     const hasNote=!!(localStorage.getItem(noteKey));
-    let sizeCell='<div class="size-cell">'+r.size+"'";
-    if(r.type!=='Gezegen'){
-      sizeCell+='<div class="size-bar-bg"><div class="size-bar-fill" style="width:'+si.barPct+'%"></div></div>';
-      sizeCell+='<div class="size-m51">M51\'e göre: '+si.ratio+'× ('+si.desc+')</div>';
-      if(fovS)sizeCell+='<div class="'+fovS.cls+'">'+fovS.text+'</div>';
-      if(r.sbWarn)sizeCell+='<div class="bortle-warn">⚠ Bortle '+OBS_BORTLE+' için zor</div>';
+    let sizeCell='<td class="size-cell" style="white-space:nowrap">';
+    if(r.type==='Gezegen'){
+      sizeCell+=r.size+"'";
+    } else {
+      sizeCell+='<span style="color:var(--text)">'+r.size+"'</span>";
+      sizeCell+=' <span class="size-m51">'+si.ratio+'× M51</span>';
+      sizeCell+='<br><span style="display:inline-block;width:55px;height:3px;background:var(--bg3);border-radius:2px;vertical-align:middle"><span style="display:inline-block;width:'+si.barPct+'%;height:100%;background:var(--accent2);border-radius:2px"></span></span>';
+      sizeCell+=' <span class="size-m51">('+si.desc+')</span>';
+      if(fovS)sizeCell+='<br><span class="'+fovS.cls+'">'+fovS.text+'</span>';
+      if(r.sbWarn)sizeCell+=' <span class="bortle-warn">⚠ zor</span>';
     }
-    sizeCell+='</div>';
+    sizeCell+='</td>';
     return '<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
       +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
       +'<td><button class="note-btn '+(hasNote?'has-note':'')+'" onclick="event.stopPropagation();openNote(\''+r.name+'\')" title="Not ekle/düzenle">'+(hasNote?'📝':'✎')+'</button></td>'
@@ -664,7 +668,7 @@ function renderTable(){
       +sizeCell
       +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
       +'<td class="alt-cell">'+r.maxAlt+'°</td>'
-      +'<td class="window-cell">'+r.window+'s</td>'
+      +'<td class="window-cell">'+r.window+' saat</td>'
       +'<td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td>'
       +'<td><span class="filter-rec '+fr.c+'" title="'+(fr.d||'')+'">'+fr.t+'</span></td>'
       +'<td><div class="score-bar-wrap"><div class="score-bar"><div class="score-fill" style="width:'+r.score+'%"></div></div><span style="font-size:12px;color:var(--text)">'+r.score+'</span></div></td>'
