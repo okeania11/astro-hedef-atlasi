@@ -493,52 +493,41 @@ function toggleLang(){
 
 function applyLang(){
   const L = LANG[LANG_CURRENT];
-  document.getElementById('langToggle').textContent = L.langBtn;
-  document.getElementById('mainSubtitle').textContent = L.subtitle + ' · ' + OBS_NAME + ' · Bortle ' + OBS_BORTLE + ' · v0.6';
-  // Topbar
-  document.querySelector('.topbar label').textContent = L.location;
-  document.querySelector('.bortle-wrap label').textContent = L.bortle;
-  const custOpt = document.querySelector('#locationSelect option[value="Özel"]');
-  if(custOpt) custOpt.textContent = L.custom;
-  document.getElementById('customLat').placeholder = L.customLat;
-  document.getElementById('customLon').placeholder = L.customLon;
-  document.querySelector('.custom-coords .btn-sm').textContent = L.apply;
-  document.getElementById('bortleDesc').textContent = L.bortleDescs[OBS_BORTLE];
-  // Setup bar
-  document.querySelector('.setup-bar label').textContent = L.setupLabel;
-  const setupMgrBtn = document.querySelector('.setup-bar .btn-sm');
-  setupMgrBtn.textContent = L.setupManage;
-  setupMgrBtn.title = L.setupManageTip;
-  const setupSel = document.getElementById('setupSelect');
-  if(setupSel.options[0]) setupSel.options[0].textContent = L.setupPlaceholder;
-  // Controls
+  const $ = id => document.getElementById(id);
+  const $$ = sel => document.querySelector(sel);
+  const safe = (el, fn) => { try{ if(el) fn(el); }catch(e){} };
+
+  safe($('langToggle'), el => el.textContent = L.langBtn);
+  safe($('mainSubtitle'), el => el.textContent = L.subtitle + ' · ' + OBS_NAME + ' · Bortle ' + OBS_BORTLE + ' · v0.6');
+  safe($$('.topbar label'), el => el.textContent = L.location);
+  safe($$('.bortle-wrap label'), el => el.textContent = L.bortle);
+  safe($$('#locationSelect option[value="Özel"]'), el => el.textContent = L.custom);
+  safe($('customLat'), el => el.placeholder = L.customLat);
+  safe($('customLon'), el => el.placeholder = L.customLon);
+  safe($$('.custom-coords .btn-sm'), el => el.textContent = L.apply);
+  safe($('bortleDesc'), el => el.textContent = L.bortleDescs[OBS_BORTLE]);
+  safe($$('.setup-bar label'), el => el.textContent = L.setupLabel);
+  safe($$('.setup-bar .btn-sm'), el => { el.textContent = L.setupManage; el.title = L.setupManageTip; });
+  const setupSel = $('setupSelect');
+  if(setupSel && setupSel.options[0]) setupSel.options[0].textContent = L.setupPlaceholder;
   const fieldLabels = document.querySelectorAll('.controls .field label');
   if(fieldLabels[0]) fieldLabels[0].textContent = L.dateLabel;
   if(fieldLabels[1]) fieldLabels[1].textContent = L.startLabel;
   if(fieldLabels[2]) fieldLabels[2].innerHTML = L.ufukLabel + ' <span style="color:var(--accent3);font-weight:400">'+L.ufukOpt+'</span>';
-  const calcBtn = document.querySelector('.controls .btn');
-  calcBtn.textContent = L.calcBtn;
-  calcBtn.title = L.calcTip;
-  // Ufuk
-  document.querySelector('.ufuk-wrap .section-label').textContent = L.ufukTitle;
-  const timeLabel = document.querySelector('.ufuk-wrap .topbar-time-label');
-  if(timeLabel) timeLabel.textContent = L.timeLabel;
-  // Legend spans
-  const legendSpans = document.querySelectorAll('.ufuk-legend span');
-  const legendKeys = ['legendGalaxy','legendNebula','legendPN','legendCluster','legendGlobular','legendNear'];
+  safe($$('.controls .btn'), el => { el.textContent = L.calcBtn; el.title = L.calcTip; });
+  safe($$('.ufuk-wrap .section-label'), el => el.textContent = L.ufukTitle);
   // Filter buttons
   const filterBtns = document.querySelectorAll('.filter-row .filter-btn');
   const btnKeys = ['favBtn','allBtn','galaxyBtn','nebulaBtn','pnBtn','clusterBtn','globularBtn','planetBtn'];
   const tipKeys = ['favTip','allTip','galaxyTip','nebulaTip','pnTip','clusterTip','globularTip','planetTip'];
-  filterBtns.forEach((btn,i)=>{if(btnKeys[i]){btn.textContent=L[btnKeys[i]];btn.title=L[tipKeys[i]]||'';}});
+  filterBtns.forEach((btn,i)=>{ if(btnKeys[i]){ btn.textContent=L[btnKeys[i]]||btn.textContent; btn.title=L[tipKeys[i]]||''; }});
   // Table headers
   const ths = document.querySelectorAll('thead th');
   if(ths.length>=11){
     ths[0].title=L.colStarTip;
     ths[1].title=L.colNoteTip;
     ths[2].title=L.colObjTip; ths[2].innerHTML=L.colObj;
-    ths[3].title=L.colTypeTip; ths[3].innerHTML='<span onclick="sortBy(\'type\')">'+L.colType+'</span>';
-    ths[3].onclick=()=>sortBy('type');
+    ths[3].title=L.colTypeTip; ths[3].onclick=()=>sortBy('type'); ths[3].innerHTML=L.colType;
     ths[4].title=L.colSizeTip; ths[4].innerHTML=L.colSize;
     ths[5].title=L.colPeakTip; ths[5].innerHTML=L.colPeak;
     ths[6].title=L.colAltTip; ths[6].innerHTML=L.colAlt;
@@ -547,12 +536,15 @@ function applyLang(){
     ths[9].title=L.colFilterTip; ths[9].textContent=L.colFilter;
     ths[10].title=L.colScoreTip; ths[10].innerHTML=L.colScore;
   }
-  // Re-render if data exists
   if(results.length) applySort();
 }
 
 function loadLang(){
-  try{const l=localStorage.getItem('astro_lang');if(l==='EN'||l==='TR')LANG_CURRENT=l;}catch(e){}
+  try{
+    const l=localStorage.getItem('astro_lang');
+    if(l==='EN'||l==='TR') LANG_CURRENT=l;
+    else LANG_CURRENT='TR';
+  }catch(e){ LANG_CURRENT='TR'; }
 }
 
 let OBS_LAT=36.8969,OBS_LON=30.7133,OBS_NAME='Antalya';
@@ -946,8 +938,14 @@ function drawFrame(utcHour){
     const y=canvasAltY(0,H);ctx.beginPath();ctx.strokeStyle='rgba(79,195,247,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.moveTo(62,y);ctx.lineTo(W,y);ctx.stroke();ctx.setLineDash([]);
   }
   // Yön etiketleri
-  ctx.fillStyle='#6b75a8';ctx.font='9px monospace';
-  ['K','KD','D','GD','G','GB','B','KB'].forEach((l,i)=>ctx.fillText(l,canvasAzX(i*45,W)-4,H-2));
+  ctx.font='bold 11px monospace';
+  ['K','KD','D','GD','G','GB','B','KB'].forEach((l,i)=>{
+    const x=canvasAzX(i*45,W)-4;
+    // Ana yönler daha parlak
+    const isMain=(i%2===0);
+    ctx.fillStyle=isMain?'#a0aad0':'#5a6490';
+    ctx.fillText(l,x,H-2);
+  });
   if(!currentDateUTC0h||!results.length)return;
   const j2=jd(currentDateUTC0h)+utcHour/24;
   // Seçili obje yörüngesi
