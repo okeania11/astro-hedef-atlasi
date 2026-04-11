@@ -138,6 +138,7 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
       <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6</div>
     </div>
+    <button id="langToggle" onclick="toggleLang()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:4px;cursor:pointer;letter-spacing:1px;margin-top:2px;flex-shrink:0" title="Switch language / Dil değiştir">🌐 EN</button>
   </header>
 
   <!-- Konum & Bortle -->
@@ -200,13 +201,13 @@ tbody tr:last-child td{border-bottom:none;}
       <div id="objIpucu" style="display:none;position:absolute;background:#131628;border:1px solid #4fc3f7;border-radius:4px;padding:6px 10px;font-size:11px;font-family:'Space Mono',monospace;pointer-events:none;z-index:10;white-space:nowrap"></div>
     </div>
     <div style="display:flex;gap:14px;margin-top:7px;font-size:10px;color:var(--text2);flex-wrap:wrap">
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c792ea;margin-right:3px"></span>Gökada</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#89ddff;margin-right:3px"></span>Bulutsu</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff9a6c;margin-right:3px"></span>Gezegen Bulutsusü</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f78c6c;margin-right:3px"></span>Açık Küme</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffd700;margin-right:3px"></span>Küresel / Gezegen</span>
-      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffcb6b;margin-right:3px;outline:1px solid #ffcb6b"></span>Ufka yakın</span>
-      <span style="color:#ff5370">✕ Ufkun altında</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c792ea;margin-right:3px"></span><span class="ufuk-legend-item">Gökada</span></span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#89ddff;margin-right:3px"></span><span class="ufuk-legend-item">Bulutsu</span></span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff9a6c;margin-right:3px"></span><span class="ufuk-legend-item">Gezegenimsi Bulutsu</span></span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f78c6c;margin-right:3px"></span><span class="ufuk-legend-item">Açık Küme</span></span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffd700;margin-right:3px"></span><span class="ufuk-legend-item">Küresel / Gezegen</span></span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffcb6b;margin-right:3px;outline:1px solid #ffcb6b"></span><span class="ufuk-legend-item">Ufka yakın</span></span>
+      <span style="color:#ff5370" class="ufuk-legend-below">✕ Ufkun altında</span>
     </div>
   </div>
 
@@ -214,12 +215,12 @@ tbody tr:last-child td{border-bottom:none;}
   <div id="statsBar" class="stats-bar" style="display:none"></div>
 
   <div id="filterRow" class="filter-row" style="display:none">
-    <span style="color:var(--text2);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-right:4px;">Filtre:</span>
+    <span id="filterLabel" style="color:var(--text2);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-right:4px;">Filtre:</span>
     <button class="filter-btn fav-btn" data-type="FAV" onclick="setFilter(this,'FAV')" title="Sadece favori objeleri göster">★ Favoriler</button>
     <button class="filter-btn active" data-type="ALL" onclick="setFilter(this,'ALL')" title="Tüm objeleri göster">Tümü</button>
     <button class="filter-btn" data-type="Galaxy" onclick="setFilter(this,'Galaxy')" title="Sadece gökadaları göster">Gökada</button>
     <button class="filter-btn" data-type="Nebula" onclick="setFilter(this,'Nebula')" title="Sadece bulutsüları göster">Bulutsu</button>
-    <button class="filter-btn" data-type="PN" onclick="setFilter(this,'PN')" title="Sadece gezegen bulutsülarını göster">Gezegen Bulutsusü</button>
+    <button class="filter-btn" data-type="PN" onclick="setFilter(this,'PN')" title="Sadece gezegenimsi bulutsuları göster">Gezegenimsi Bulutsu</button>
     <button class="filter-btn" data-type="Cluster" onclick="setFilter(this,'Cluster')" title="Sadece açık kümeleri göster">Açık Küme</button>
     <button class="filter-btn" data-type="Globular" onclick="setFilter(this,'Globular')" title="Sadece küresel kümeleri göster">Küresel Küme</button>
     <button class="filter-btn" data-type="Gezegen" onclick="setFilter(this,'Gezegen')" title="Sadece gezegenleri göster">Gezegen</button>
@@ -231,7 +232,7 @@ tbody tr:last-child td{border-bottom:none;}
         <th style="width:24px" title="Favori olarak işaretle — kalıcı olarak kaydedilir">★</th>
         <th style="width:24px" title="Objeye özel gece notu — tarih bazında kaydedilir">📝</th>
         <th onclick="sortBy('name')" title="Katalog adı — M, NGC, IC, Sh2 vb. Tıklayarak sırala">Obje ↕</th>
-        <th onclick="sortBy('type')" title="Obje türü: Gökada, Bulutsu, Gezegen Bulutsüsü, Açık/Küresel Küme, Gezegen">Tür</th>
+        <th onclick="sortBy('type')" title="Obje türü: Gökada, Bulutsu, Gezegenimsi Bulutsu, Açık/Küresel Küme, Gezegen">Tür</th>
         <th onclick="sortBy('size')" title="Açısal boyut (arcmin). M51 referansıyla kıyaslanır. Kurulum girilmişse kareye sığıp sığmadığı gösterilir.">Boyut ↕</th>
         <th onclick="sortBy('peak')" title="Objenin o gece meridiani geçtiği yerel saat — en yüksek noktaya ulaştığı an">En Yüksek ↕</th>
         <th onclick="sortBy('maxAlt')" title="Objenin o gece ulaştığı maksimum yükseklik açısı (derece). Yüksek olması daha iyi görüntü demektir.">Tepe Nokta ↕</th>
@@ -241,7 +242,7 @@ tbody tr:last-child td{border-bottom:none;}
         <th onclick="sortBy('score')" title="Yükseklik, çekim süresi, ay mesafesi ve parlaklık faktörlerine göre hesaplanan genel uygunluk puanı (0-100)">Puan ↕</th>
       </tr></thead>
       <tbody id="tableBody"><tr><td colspan="11">
-        <div class="empty-state"><div class="icon">🔭</div><p>Kurulum ve tarih seçip Hesapla'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.</p></div>
+        <div class="empty-state"><div class="icon">🔭</div><p id="emptyInitText">Kurulum ve tarih seçip Hesapla'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.</p></div>
       </td></tr></tbody>
     </table>
   </div>
@@ -250,7 +251,7 @@ tbody tr:last-child td{border-bottom:none;}
 <!-- Kurulum Modalı -->
 <div class="modal-overlay" id="setupModal">
   <div class="modal">
-    <h3>⚙ Kurulum Yöneticisi</h3>
+    <h3 id="setupMgrTitle">⚙ Kurulum Yöneticisi</h3>
     <div class="setup-list" id="setupList"></div>
     <button class="btn-sm" onclick="openAddSetup()" style="margin-bottom:12px">+ Yeni Kurulum Ekle</button>
     <div id="setupForm" style="display:none">
@@ -289,8 +290,8 @@ tbody tr:last-child td{border-bottom:none;}
 <!-- Not Modalı -->
 <div class="modal-overlay" id="noteModal">
   <div class="modal" style="max-width:420px">
-    <h3>📝 <span id="noteObjName"></span></h3>
-    <textarea class="note-textarea" id="noteText" placeholder="Bu obje için notlarınız..."></textarea>
+    <h3>📝 <span id="noteModalTitle"></span> <span id="noteObjName"></span></h3>
+    <textarea class="note-textarea" id="noteText" id="noteText" placeholder="Bu obje için notlarınız..."></textarea>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeNoteModal()">İptal</button>
       <button class="btn-primary" onclick="saveNoteAndClose()">Kaydet</button>
@@ -303,10 +304,10 @@ tbody tr:last-child td{border-bottom:none;}
     Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6
   </div>
   <div style="font-size:11px;color:#2a3050;margin-top:5px;font-family:'Space Mono',monospace;">
-    Tasarım &amp; konsept: <span style="color:#3d4870">Okan Doğu</span> &nbsp;·&nbsp; Antalya, Türkiye
+    <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:#3d4870">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
   </div>
   <div style="font-size:10px;color:#1c2238;margin-top:3px;font-family:'Space Mono',monospace;">
-    Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır &nbsp;·&nbsp; Sunucu veya internet bağlantısı gerekmez
+    <span class="footer-calc">Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez</span>
   </div>
 </footer>
 
@@ -315,11 +316,189 @@ tbody tr:last-child td{border-bottom:none;}
 // ─── Sabitler & Durum ─────────────────────────────────────────────────────────
 const TZ=3;
 
+// ─── Dil Sistemi ──────────────────────────────────────────────────────────────
+let _lang='TR';
+const _L={
+  TR:{
+    subtitle:'Astrofotoğraf Gece Planı',
+    locationLabel:'Konum:', bortleLabel:'Bortle:',
+    customOpt:'✏ Özel Koordinat', latPh:'Enlem', lonPh:'Boylam', applyBtn:'Uygula',
+    setupLabel:'Teleskop / Kurulum:', setupManageBtn:'⚙ Kurulum Yönet',
+    setupPh:'— Kurulum seçin —', dateLabel:'Tarih', startLabel:'Gözlem Başlangıcı',
+    ufukFileLabel:'Ufuk Dosyası (.hrz)', ufukOpt:'— opsiyonel', calcBtn:'▶ HESAPLA',
+    ufukTitle:'Ufuk Profili — Obje Konumları', timeLabel:'Saat:',
+    legendGalaxy:'Gökada', legendNebula:'Bulutsu', legendPN:'Gezegenimsi Bulutsu', legendCluster:'Açık Küme', legendGlobular:'Küresel / Gezegen', legendNear:'Ufka yakın',
+    filterLabel:'Filtre:', favBtn:'★ Favoriler', allBtn:'Tümü',
+    galaxyBtn:'Gökada', nebulaBtn:'Bulutsu', pnBtn:'Gezegenimsi Bulutsu',
+    clusterBtn:'Açık Küme', globularBtn:'Küresel Küme', planetBtn:'Gezegen',
+    colObj:'Obje ↕', colType:'Tür', colSize:'Boyut ↕', colPeak:'En Yüksek ↕',
+    colAlt:'Tepe Nokta ↕', colWindow:'Çekim Süresi ↕', colMoon:'Ay Mes. ↕',
+    colFilter:'Filtre Önerisi', colScore:'Puan ↕',
+    statTotal:'Toplam', statFav:'Favori', statGalaxy:'Gökada', statNebula:'Bulutsu',
+    statPN:'Gez. Bul.', statCluster:'Açık Küme', statGlobular:'Küresel', statPlanet:'Gezegen',
+    moonRiseTitle:'Ay Doğuşu', moonRiseDaytime:'Gündüz doğuyor',
+    moonRiseClean:"'e kadar temiz gökyüzü", moonRiseAll:'→ Gece boyunca gökyüzünde', moonRiseNone:'→ Geceye etkisi yok',
+    moonAlt:'Gece ortası yüksekliği',
+    moonBright:'⚠ Parlak ay — dar bantlı öneri', moonMid:'~ Orta ay — Ha öncelikli', moonDark:'✓ Karanlık gece — ideal',
+    moonNew:'Yeni Ay', moonCrescent:'Hilal', moonFirstQ:'İlk Çeyrek', moonWaxing:'Büyüyen',
+    moonFull:'Dolunay', moonWaning:'Küçülen', moonLastQ:'Son Çeyrek', moonDecCrescent:'Azalan Hilal',
+    illuminated:'aydınlık',
+    calcResult:'hedef listelendi', noSetup:'Lütfen bir kurulum seçin.', noDate:'Tarih seçilmedi.',
+    ufukLoaded:'Ufuk yüklendi:', ufukPoints:'nokta.', ufukError:'Geçerli ufuk verisi okunamadı.',
+    initMsg:"Kurulum ve tarih seçip Hesapla'ya basın. Ufuk dosyası (.hrz) opsiyoneldir.",
+    emptyFav:'Henüz favori obje seçmediniz — ★ ikonuna tıklayın.',
+    emptyNight:'Bu gece bu kriterlerde görüntülenebilir hedef yok.',
+    emptyInit:'Kurulum ve tarih seçip Hesapla\'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.',
+    setupMgrTitle:'⚙ Kurulum Yöneticisi', setupAddBtn:'+ Yeni Kurulum Ekle',
+    setupNameLabel:'Kurulum Adı', setupFratioLabel:'Odak Oranı (f/)',
+    setupFocalLabel:'Odak Uzunluğu (mm)', setupSensorLabel:'Sensör Boyutu (mm)',
+    setupSensorWPh:'Genişlik örn: 23.5', setupSensorHPh:'Yükseklik örn: 15.7',
+    setupCameraLabel:'Kamera', setupFiltersLabel:'Mevcut Filtreler',
+    saveBtn:'Kaydet', cancelBtn:'İptal', closeBtn:'Kapat',
+    editBtn:'Düzenle', deleteBtn:'Sil', deleteConfirm:'Bu kurulumu silmek istiyor musunuz?',
+    noSetups:'Henüz kurulum yok.', notePh:'Bu obje için notlarınız...',
+    fovOk:'Kareye sığar ✓', fovWarn:'Sınırda ~', fovMosaic:'Kareye sığmaz ⊞',
+    bortleWarn:'⚠ zor', m51ref:'× M51', hourUnit:' saat',
+    sizeLabels:['nokta gibi','çok küçük','küçük','orta-küçük','orta (M51 gibi)','geniş','çok geniş','dev'],
+    bortleDescs:['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'],
+    filterNoSetup:'— kurulum seçin', filterNone:'— Filtre yok',
+    footerDesign:'Tasarım & konsept:', footerCity:'Antalya, Türkiye',
+    footerCalc:'Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez',
+    langBtn:'🌐 EN',
+  },
+  EN:{
+    subtitle:'Astrophotography Night Planner',
+    locationLabel:'Location:', bortleLabel:'Bortle:',
+    customOpt:'✏ Custom Coords', latPh:'Latitude', lonPh:'Longitude', applyBtn:'Apply',
+    setupLabel:'Telescope / Setup:', setupManageBtn:'⚙ Manage Setup',
+    setupPh:'— Select setup —', dateLabel:'Date', startLabel:'Observation Start',
+    ufukFileLabel:'Horizon File (.hrz)', ufukOpt:'— optional', calcBtn:'▶ CALCULATE',
+    ufukTitle:'Horizon Profile — Object Positions', timeLabel:'Time:',
+    legendGalaxy:'Galaxy', legendNebula:'Nebula', legendPN:'Planetary Neb.', legendCluster:'Open Cluster', legendGlobular:'Globular / Planet', legendNear:'Near horizon',
+    filterLabel:'Filter:', favBtn:'★ Favorites', allBtn:'All',
+    galaxyBtn:'Galaxy', nebulaBtn:'Nebula', pnBtn:'Planetary Neb.',
+    clusterBtn:'Open Cluster', globularBtn:'Globular', planetBtn:'Planet',
+    colObj:'Object ↕', colType:'Type', colSize:'Size ↕', colPeak:'Transit ↕',
+    colAlt:'Max Alt ↕', colWindow:'Shoot Time ↕', colMoon:'Moon Dist ↕',
+    colFilter:'Filter Rec.', colScore:'Score ↕',
+    statTotal:'Total', statFav:'Favorite', statGalaxy:'Galaxy', statNebula:'Nebula',
+    statPN:'Plan.Neb.', statCluster:'Open Cl.', statGlobular:'Globular', statPlanet:'Planet',
+    moonRiseTitle:'Moonrise', moonRiseDaytime:'Rises during daytime',
+    moonRiseClean:' — clear until then', moonRiseAll:'→ In sky all night', moonRiseNone:'→ No effect on night',
+    moonAlt:'Midnight altitude',
+    moonBright:'⚠ Bright moon — narrowband recommended', moonMid:'~ Moderate moon — Ha priority', moonDark:'✓ Dark sky — ideal',
+    moonNew:'New Moon', moonCrescent:'Crescent', moonFirstQ:'First Quarter', moonWaxing:'Waxing Gibbous',
+    moonFull:'Full Moon', moonWaning:'Waning Gibbous', moonLastQ:'Last Quarter', moonDecCrescent:'Waning Crescent',
+    illuminated:'illuminated',
+    calcResult:'targets listed', noSetup:'Please select a setup.', noDate:'No date selected.',
+    ufukLoaded:'Horizon loaded:', ufukPoints:'points.', ufukError:'Could not read horizon data.',
+    initMsg:'Select a setup and date, then press Calculate. Horizon file (.hrz) is optional.',
+    emptyFav:'No favorites yet — click the ★ icon.',
+    emptyNight:'No visible targets matching criteria tonight.',
+    emptyInit:'Select a setup and date, then press Calculate.<br>Horizon file (.hrz) is optional.',
+    setupMgrTitle:'⚙ Setup Manager', setupAddBtn:'+ Add New Setup',
+    setupNameLabel:'Setup Name', setupFratioLabel:'Focal Ratio (f/)',
+    setupFocalLabel:'Focal Length (mm)', setupSensorLabel:'Sensor Size (mm)',
+    setupSensorWPh:'Width e.g. 23.5', setupSensorHPh:'Height e.g. 15.7',
+    setupCameraLabel:'Camera', setupFiltersLabel:'Available Filters',
+    saveBtn:'Save', cancelBtn:'Cancel', closeBtn:'Close',
+    editBtn:'Edit', deleteBtn:'Delete', deleteConfirm:'Delete this setup?',
+    noSetups:'No setups yet.', notePh:'Your notes for this object...',
+    fovOk:'Fits in frame ✓', fovWarn:'Borderline ~', fovMosaic:'Mosaic needed ⊞',
+    bortleWarn:'⚠ difficult', m51ref:'× M51', hourUnit:'h',
+    sizeLabels:['dot-like','very small','small','medium-small','medium (like M51)','large','very large','huge'],
+    bortleDescs:['','Excellent dark sky','True dark sky','Rural sky','Rural/suburban — good','Rural/suburban','Bright rural','Suburban/rural','City sky','City center'],
+    filterNoSetup:'— select setup', filterNone:'— No filter',
+    footerDesign:'Design & concept:', footerCity:'Antalya, Turkey',
+    footerCalc:'All calculations run in real-time in the browser · No server or internet connection required',
+    langBtn:'🌐 TR',
+  }
+};
+function L(k){return(_L[_lang]&&_L[_lang][k]!==undefined)?_L[_lang][k]:(_L['TR'][k]||k);}
+function renderMoonBar(){
+  if(!_moonCache)return;
+  const{mpv,mi,mac,mrl,mrNote}=_moonCache;
+  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' '+L('illuminated')+'<br>'+L('moonAlt')+': <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?L('moonBright'):mi>25?L('moonMid'):L('moonDark'))+'</div><div class="moon-rise"><strong>'+L('moonRiseTitle')+'</strong><br>'+(mrl!==null?fmtH(mrl)+' ('+(_lang==='TR'?'yerel':'local')+')':L('moonRiseDaytime'))+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div>';
+}
+function toggleLang(){
+  _lang=_lang==='TR'?'EN':'TR';
+  applyLang();
+  renderMoonBar();
+  if(!results.length)showMsg(L('initMsg'),'info');
+  if(results.length)applySort();
+  try{const ei=document.getElementById('emptyInitText');if(ei)ei.innerHTML=L('emptyInit');}catch(e){}
+  try{const fl=document.getElementById('filterLabel');if(fl)fl.textContent=L('filterLabel');}catch(e){}
+  // Legend
+  try{
+    const lg=document.querySelectorAll('.ufuk-legend-item');
+    const lkeys=['legendGalaxy','legendNebula','legendPN','legendCluster','legendGlobular','legendNear'];
+    lg.forEach((el,i)=>{if(lkeys[i])el.textContent=L(lkeys[i]);});
+    const lb=document.querySelector('.ufuk-legend-below');
+    if(lb)lb.textContent='✕ '+(_lang==='TR'?'Ufkun altında':'Below horizon');
+  }catch(e){}
+  // Footer
+  try{
+    const fd=document.querySelector('.footer-design');if(fd)fd.textContent=L('footerDesign');
+    const fc=document.querySelector('.footer-city');if(fc)fc.textContent=L('footerCity');
+    const fcl=document.querySelector('.footer-calc');if(fcl)fcl.textContent=L('footerCalc');
+  }catch(e){}
+  // Modals
+  try{document.querySelector('#setupModal h3').textContent=L('setupMgrTitle');}catch(e){}
+  try{document.querySelector('#setupForm button.btn-primary').textContent=L('saveBtn');}catch(e){}
+  try{document.querySelectorAll('.btn-cancel').forEach(b=>b.textContent=L('cancelBtn'));}catch(e){}
+  try{document.querySelectorAll('#setupModalClose .btn-cancel').forEach(b=>b.textContent=L('closeBtn'));}catch(e){}
+  try{document.querySelector('#setupModal .btn-sm').textContent=L('setupAddBtn');}catch(e){}
+  try{document.querySelector('#noteText').placeholder=L('notePh');}catch(e){}
+  try{document.querySelector('#noteModal .btn-primary').textContent=L('saveBtn');}catch(e){}
+  // Form labels
+  try{const fl2=document.querySelectorAll('#setupForm .form-row label');
+    if(fl2[0])fl2[0].textContent=L('setupNameLabel');
+    if(fl2[1])fl2[1].textContent=L('setupFratioLabel');
+    if(fl2[2])fl2[2].textContent=L('setupFocalLabel');
+    if(fl2[3])fl2[3].textContent=L('setupSensorLabel');
+    if(fl2[4])fl2[4].textContent=L('setupCameraLabel');
+    if(fl2[5])fl2[5].textContent=L('setupFiltersLabel');
+  }catch(e){}
+  // Placeholders
+  try{document.getElementById('sfSensorW').placeholder=L('setupSensorWPh');}catch(e){}
+  try{document.getElementById('sfSensorH').placeholder=L('setupSensorHPh');}catch(e){}
+}
+function applyLang(){
+  const s=id=>{try{return document.getElementById(id);}catch(e){return null;}};
+  const q=sel=>{try{return document.querySelector(sel);}catch(e){return null;}};
+  const set=(el,fn)=>{try{if(el)fn(el);}catch(e){}};
+  set(s('langToggle'),el=>el.textContent=L('langBtn'));
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6');
+  set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
+  set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
+  set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
+  set(s('customLat'),el=>el.placeholder=L('latPh'));
+  set(s('customLon'),el=>el.placeholder=L('lonPh'));
+  set(q('.custom-coords .btn-sm'),el=>el.textContent=L('applyBtn'));
+  set(s('bortleDesc'),el=>el.textContent=L('bortleDescs')[OBS_BORTLE]);
+  set(q('.setup-bar label'),el=>el.textContent=L('setupLabel'));
+  set(q('.setup-bar .btn-sm'),el=>el.textContent=L('setupManageBtn'));
+  const ss=s('setupSelect');if(ss&&ss.options[0])ss.options[0].textContent=L('setupPh');
+  const fl=document.querySelectorAll('.controls .field label');
+  if(fl[0])fl[0].textContent=L('dateLabel');
+  if(fl[1])fl[1].textContent=L('startLabel');
+  if(fl[2])fl[2].innerHTML=L('ufukFileLabel')+' <span style="color:var(--accent3);font-weight:400">'+L('ufukOpt')+'</span>';
+  set(q('.controls .btn'),el=>el.textContent=L('calcBtn'));
+  set(q('.ufuk-wrap .section-label'),el=>el.textContent=L('ufukTitle'));
+  const fb=document.querySelectorAll('.filter-row .filter-btn');
+  const fkeys=['favBtn','allBtn','galaxyBtn','nebulaBtn','pnBtn','clusterBtn','globularBtn','planetBtn'];
+  fb.forEach((b,i)=>{if(fkeys[i])b.textContent=L(fkeys[i]);});
+  const ths=document.querySelectorAll('thead th');
+  const hkeys=['','','colObj','colType','colSize','colPeak','colAlt','colWindow','colMoon','colFilter','colScore'];
+  ths.forEach((th,i)=>{if(hkeys[i])th.textContent=L(hkeys[i]);});
+}
+
 
 let OBS_LAT=36.8969,OBS_LON=30.7133,OBS_NAME='Antalya';
 let OBS_BORTLE=7;
 let ufukData=null,results=[],filtered=[],activeType='ALL',sortCol='score',sortDir=-1;
 let currentDateUTC0h=null,currentObsStartUTC=0,selectedObj=null,_canvasSetup=false;
+let _moonCache=null;
 
 // ─── Katalog ──────────────────────────────────────────────────────────────────
 // [isim, yaygınIsim, tür, ra_s, dec_d, boyut_açıkdak, büyüklük]
@@ -394,6 +573,38 @@ const CAT=[
   ["M92","","Globular",17.286,43.14,14,6.4],
 ];
 
+// ─── İngilizce Yaygın İsimler ────────────────────────────────────────────────
+const EN_NAMES={
+  'M31':'Andromeda Galaxy','M33':'Triangulum Galaxy','M51':'Whirlpool Galaxy',
+  'M63':'Sunflower Galaxy','M64':'Black Eye Galaxy','M74':'Phantom Galaxy',
+  'M81':'Bode\'s Galaxy','M82':'Cigar Galaxy','M83':'Southern Pinwheel',
+  'M87':'Virgo A','M101':'Pinwheel Galaxy','M104':'Sombrero Galaxy',
+  'NGC 891':'Silver Sliver','NGC 4565':'Needle Galaxy','NGC 4631':'Whale Galaxy',
+  'NGC 5128':'Centaurus A','NGC 6946':'Fireworks Galaxy','NGC 4038':'Antennae Galaxies',
+  'M1':'Crab Nebula','M8':'Lagoon Nebula','M16':'Eagle Nebula','M17':'Omega Nebula',
+  'M20':'Trifid Nebula','M27':'Dumbbell Nebula','M42':'Orion Nebula',
+  'M57':'Ring Nebula','M76':'Little Dumbbell','M97':'Owl Nebula',
+  'NGC 281':'Pacman Nebula','NGC 1499':'California Nebula','NGC 1977':'Running Man Nebula',
+  'NGC 2244':'Rosette Nebula','NGC 2359':'Thor\'s Helmet','NGC 2392':'Eskimo Nebula',
+  'NGC 6302':'Bug Nebula','NGC 6357':'Lobster Nebula','NGC 7380':'Wizard Nebula',
+  'NGC 7635':'Bubble Nebula','IC 434':'Horsehead Nebula','IC 405':'Flaming Star Nebula',
+  'IC 410':'Tadpoles Nebula','IC 443':'Jellyfish Nebula','IC 1805':'Heart Nebula',
+  'IC 1848':'Soul Nebula','IC 2177':'Seagull Nebula','IC 5070':'Pelican Nebula',
+  'IC 5146':'Cocoon Nebula','NGC 7000':'North America Nebula','Sh2-240':'Spaghetti Nebula',
+  'NGC 7293':'Helix Nebula','NGC 6543':'Cat\'s Eye Nebula','NGC 7662':'Blue Snowball',
+  'NGC 3242':'Ghost of Jupiter','NGC 6826':'Blinking Planetary','NGC 246':'Skull Nebula',
+  'NGC 7009':'Saturn Nebula',
+  'M6':'Butterfly Cluster','M7':'Ptolemy Cluster','M11':'Wild Duck Cluster',
+  'M44':'Beehive Cluster','M45':'Pleiades','NGC 7789':'Caroline\'s Rose',
+  'M13':'Hercules Cluster','NGC 869':'h Persei','NGC 884':'χ Persei',
+};
+const EN_PLANET_NAMES={'Venüs':'Venus','Mars':'Mars','Jüpiter':'Jupiter','Satürn':'Saturn','Uranüs':'Uranus','Neptün':'Neptune'};
+function getCommonName(name){
+  if(_lang==='EN'&&EN_PLANET_NAMES[name])return EN_PLANET_NAMES[name];
+  if(_lang==='EN'&&EN_NAMES[name])return EN_NAMES[name];
+  return null;
+}
+
 // Gezegen yörünge elemanları (Meeus, J2000 epok)
 // {a: yarı büyük eksen AU, e: dışmerkezlik, i: eğim°, Om: yükselen kavşak boylam°,
 //  pi: perihelyon boylam°, L0: J2000 ortalama boylam°, n: derece/gün}
@@ -428,11 +639,11 @@ function renderSetupSelect(){const sel=document.getElementById('setupSelect');co
 function getSetup(){const id=document.getElementById('setupSelect').value;return setups.find(s=>s.id===id)||null;}
 function openSetupManager(){renderSetupList();document.getElementById('setupForm').style.display='none';document.getElementById('setupModalClose').style.display='flex';document.getElementById('setupModal').classList.add('open');}
 function closeSetupManager(){document.getElementById('setupModal').classList.remove('open');renderSetupSelect();}
-function renderSetupList(){const el=document.getElementById('setupList');el.innerHTML=setups.map(s=>'<div class="sitem"><div><div class="sitem-name">'+s.name+'</div><div class="sitem-detail">f/'+s.fratio+' · '+s.focalLength+'mm · '+s.sensorW+'×'+s.sensorH+'mm · '+s.camera+' · '+s.filters.join(', ')+'</div></div><div class="sitem-actions"><button class="btn-sm" onclick="editSetup(\''+s.id+'\')">Düzenle</button><button class="btn-danger" onclick="deleteSetup(\''+s.id+'\')">Sil</button></div></div>').join('')||'<p style="color:var(--text2);font-size:12px">'+'Henüz kurulum yok.'+'</p>';}
+function renderSetupList(){const el=document.getElementById('setupList');el.innerHTML=setups.map(s=>'<div class="sitem"><div><div class="sitem-name">'+s.name+'</div><div class="sitem-detail">f/'+s.fratio+' · '+s.focalLength+'mm · '+s.sensorW+'×'+s.sensorH+'mm · '+s.camera+' · '+s.filters.join(', ')+'</div></div><div class="sitem-actions"><button class="btn-sm" onclick="editSetup(\''+s.id+'\')">Düzenle</button><button class="btn-danger" onclick="deleteSetup(\''+s.id+'\')">Sil</button></div></div>').join('')||'<p style="color:var(--text2);font-size:12px">'+L('noSetups')+'</p>';}
 function tcheck(lbl){const cb=lbl.querySelector('input');cb.checked=!cb.checked;lbl.classList.toggle('checked',cb.checked);}
 function openAddSetup(){['sfName','sfFratio','sfFocal','sfSensorW','sfSensorH','sfCamera','sfEditId'].forEach(id=>document.getElementById(id).value='');document.querySelectorAll('#sfFilters input').forEach(cb=>{cb.checked=false;cb.closest('label').classList.remove('checked');});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
 function editSetup(id){const s=setups.find(x=>x.id===id);if(!s)return;document.getElementById('sfName').value=s.name;document.getElementById('sfFratio').value=s.fratio;document.getElementById('sfFocal').value=s.focalLength||'';document.getElementById('sfSensorW').value=s.sensorW||'';document.getElementById('sfSensorH').value=s.sensorH||'';document.getElementById('sfCamera').value=s.camera;document.getElementById('sfEditId').value=id;document.querySelectorAll('#sfFilters input').forEach(cb=>{cb.checked=s.filters.includes(cb.value);cb.closest('label').classList.toggle('checked',cb.checked);});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
-function deleteSetup(id){if(!confirm('Bu kurulumu silmek istiyor musunuz?'))return;setups=setups.filter(s=>s.id!==id);saveSetups(setups);renderSetupList();renderSetupSelect();}
+function deleteSetup(id){if(!confirm(L('deleteConfirm')))return;setups=setups.filter(s=>s.id!==id);saveSetups(setups);renderSetupList();renderSetupSelect();}
 function closeAddSetup(){document.getElementById('setupForm').style.display='none';document.getElementById('setupModalClose').style.display='flex';}
 function saveSetup(){const name=document.getElementById('sfName').value.trim();const fratio=parseFloat(document.getElementById('sfFratio').value);const focalLength=parseFloat(document.getElementById('sfFocal').value)||null;const sensorW=parseFloat(document.getElementById('sfSensorW').value)||null;const sensorH=parseFloat(document.getElementById('sfSensorH').value)||null;const camera=document.getElementById('sfCamera').value.trim();const filters=[...document.querySelectorAll('#sfFilters input:checked')].map(cb=>cb.value);if(!name||!fratio||!camera){alert('Lütfen en azından ad, f/ oranı ve kamera giriniz.');return;}const editId=document.getElementById('sfEditId').value;const obj={name,fratio,focalLength,sensorW,sensorH,camera,filters};if(editId){const idx=setups.findIndex(s=>s.id===editId);if(idx>=0)setups[idx]={id:editId,...obj};}else setups.push({id:'u'+Date.now(),...obj});saveSetups(setups);renderSetupList();closeAddSetup();}
 
@@ -448,26 +659,26 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent='Astrofotoğraf Gece Planı — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
 const BORTLE_SB_LIMIT=[0,25.0,24.5,24.0,23.5,23.0,22.5,22.0,21.5,21.0];
-function loadBortle(){try{const b=parseInt(localStorage.getItem('astro_bortle'));if(b>=1&&b<=9){OBS_BORTLE=b;document.getElementById('bortleSlider').value=b;document.getElementById('bortleVal').textContent=b;document.getElementById('bortleDesc').textContent=BORTLE_DESCS[b];}}catch(e){}}
+function loadBortle(){try{const b=parseInt(localStorage.getItem('astro_bortle'));if(b>=1&&b<=9){OBS_BORTLE=b;document.getElementById('bortleSlider').value=b;document.getElementById('bortleVal').textContent=b;document.getElementById('bortleDesc').textContent=L('bortleDescs')[b];}}catch(e){}}
 function saveBortle(v){OBS_BORTLE=v;try{localStorage.setItem('astro_bortle',v);}catch(e){}updateSubtitle();}
-function onBortleChange(v){v=parseInt(v);document.getElementById('bortleVal').textContent=v;document.getElementById('bortleDesc').textContent=BORTLE_DESCS[v];saveBortle(v);}
+function onBortleChange(v){v=parseInt(v);document.getElementById('bortleVal').textContent=v;document.getElementById('bortleDesc').textContent=L('bortleDescs')[v];saveBortle(v);}
 function getSBWarn(mag,size){if(!size||size<0.5)return false;const area=Math.PI*Math.pow(size/2,2);const sb=mag+2.5*Math.log10(area);return sb>(BORTLE_SB_LIMIT[OBS_BORTLE]||22);}
 
 // ─── FOV & Boyut ──────────────────────────────────────────────────────────────
 const M51_REF=11;
 function getFOV(setup){if(!setup||!setup.focalLength||!setup.sensorW||!setup.sensorH)return null;return{w:(setup.sensorW/setup.focalLength)*3438,h:(setup.sensorH/setup.focalLength)*3438};}
-function getFOVStatus(objSize,setup){const fov=getFOV(setup);if(!fov)return null;const mn=Math.min(fov.w,fov.h);if(objSize<=mn*0.65)return{text:'Kareye sığar ✓',cls:'fov-ok'};if(objSize<=mn*1.3)return{text:'Sınırda ~',cls:'fov-warn'};return{text:'Kareye sığmaz ⊞',cls:'fov-mosaic'};}
-function getSizeInfo(size){const ratio=size/M51_REF;let desc;if(ratio<0.05)desc='nokta gibi';else if(ratio<0.15)desc='çok küçük';else if(ratio<0.4)desc='küçük';else if(ratio<0.8)desc='orta-küçük';else if(ratio<1.5)desc='orta (M51 gibi)';else if(ratio<4)desc='geniş';else if(ratio<10)desc='çok geniş';else desc='dev';const barPct=Math.min(100,Math.max(2,Math.log10(Math.max(0.1,size)/0.5)/Math.log10(200/0.5)*100));return{ratio:ratio.toFixed(ratio<0.1?2:1),desc,barPct};}
+function getFOVStatus(objSize,setup){const fov=getFOV(setup);if(!fov)return null;const mn=Math.min(fov.w,fov.h);if(objSize<=mn*0.65)return{text:L('fovOk'),cls:'fov-ok'};if(objSize<=mn*1.3)return{text:L('fovWarn'),cls:'fov-warn'};return{text:L('fovMosaic'),cls:'fov-mosaic'};}
+function getSizeInfo(size){const ratio=size/M51_REF;let desc;if(ratio<0.05)desc=L('sizeLabels')[0];else if(ratio<0.15)desc=L('sizeLabels')[1];else if(ratio<0.4)desc=L('sizeLabels')[2];else if(ratio<0.8)desc=L('sizeLabels')[3];else if(ratio<1.5)desc=L('sizeLabels')[4];else if(ratio<4)desc=L('sizeLabels')[5];else if(ratio<10)desc=L('sizeLabels')[6];else desc=L('sizeLabels')[7];const barPct=Math.min(100,Math.max(2,Math.log10(Math.max(0.1,size)/0.5)/Math.log10(200/0.5)*100));return{ratio:ratio.toFixed(ratio<0.1?2:1),desc,barPct};}
 
 // ─── Filtre Önerisi ───────────────────────────────────────────────────────────
 function bExp(fr){return Math.round(300*(fr*fr)/49/30)*30;}
 function fRec(type,moon,setup){
-  if(!setup)return{t:'— kurulum seçin',c:'fw'};
+  if(!setup)return{t:L('filterNoSetup'),c:'fw'};
   const has=f=>setup.filters.includes(f);
   const hasL=has('L'),hasR=has('R'),hasG=has('G'),hasB=has('B');
   const lrgb=hasL&&hasR&&hasG&&hasB,ha=has('Ha'),oiii=has('OIII'),sii=has('SII');
@@ -476,17 +687,22 @@ function fRec(type,moon,setup){
   const rgbExp=exp;
   const bbExp=Math.round(exp*0.6/30)*30;
   const dark=moon<=25,bright=moon>60;
-  if(type==='Gezegen'){if(has('UV-IR'))return{t:'UV-IR + Barlow',c:'fl',d:''};return{t:'Renkli kamera',c:'fw',d:''};}
+  if(type==='Gezegen'){if(has('UV-IR'))return{t:'UV-IR + Barlow',c:'fl',d:''};return{t:_lang==='TR'?'Renkli kamera':'Color camera',c:'fw',d:''};}
   if(type==='Galaxy'){
-    if(bright){if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Parlak ay'};return{t:'⚠ Önerilmez',c:'fn',d:''};}
-    if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:dark?'İdeal':'Kısa poz'};
+    if(bright){if(ha)return{t:'Ha '+exp+'s',c:'fh',d:_lang==='TR'?'Parlak ay — sadece Ha':'Bright moon — Ha only'};return{t:'⚠ Önerilmez',c:'fn',d:''};}
+    if(dark){
+      if(lrgb&&ha)return{t:'L '+lExp+'s · RGB '+rgbExp+'s · Ha '+exp+'s',c:'fl',d:_lang==='TR'?'Ha emission bölgeleri için':'For galaxies with emission regions'};
+      if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:_lang==='TR'?'İdeal koşul':'Ideal conditions'};
+      if(hasL)return{t:'L '+lExp+'s',c:'fl',d:''};
+    }
+    if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:_lang==='TR'?'Kısa poz önerilir':'Short exposures recommended'};
     if(hasL)return{t:'L '+lExp+'s',c:'fl',d:''};
     return{t:'— Filtre yok',c:'fw',d:''};
   }
   if(type==='Nebula'||type==='PN'){
     if(bright){if(ha)return{t:'Ha '+exp+'s',c:'fh',d:'Ha zorunlu'};return{t:'⚠ Ha gerek',c:'fn',d:''};}
     if(!bright&&!dark){if(ha&&oiii&&sii)return{t:'Ha '+exp+'s · SHO',c:'fs',d:''};if(ha&&oiii)return{t:'Ha '+exp+'s · HOO',c:'fs',d:''};if(ha)return{t:'Ha '+exp+'s',c:'fh',d:''};if(lrgb)return{t:'L '+lExp+'s · RGB '+rgbExp+'s',c:'fl',d:''};return{t:'— Filtre yok',c:'fw',d:''};}
-    if(ha&&oiii&&sii)return{t:'SHO '+exp+'s/kanal',c:'fs',d:'İdeal'};
+    if(ha&&oiii&&sii)return{t:'SHO '+exp+'s/kanal',c:'fs',d:_lang==='TR'?'İdeal':'Ideal'};
     if(ha&&oiii)return{t:'HOO '+exp+'s/kanal',c:'fs',d:''};
     if(ha&&lrgb)return{t:'Ha '+exp+'s · L '+lExp+'s · RGB '+rgbExp+'s',c:'fh',d:''};
     if(ha)return{t:'Ha '+exp+'s',c:'fh',d:''};
@@ -547,15 +763,15 @@ function mPos(j){const L=(218.316+13.176396*86400*(j-2451545)/86400)%360,M=R((13
 function mRise(d0,mp){let prev=null,r=null;for(let t=0;t<=24;t+=10/60){const p=aa(mp.ra,mp.dec,jd(d0)+t/24,OBS_LAT,OBS_LON);if(prev!==null&&prev<0&&p.alt>=0){r=t;break;}prev=p.alt;}return r;}
 function angD(r1,d1,r2,d2){return D(Math.acos(Math.max(-1,Math.min(1,Math.sin(R(d1))*Math.sin(R(d2))+Math.cos(R(d1))*Math.cos(R(d2))*Math.cos(R((r1-r2)*15))))));}
 function pEmoji(p){return['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'][Math.round(p*8)%8];}
-function pText(p){if(p<0.03||p>0.97)return'Yeni Ay';if(p<0.22)return'Hilal';if(p<0.28)return'İlk Çeyrek';if(p<0.47)return'Büyüyen';if(p<0.53)return'Dolunay';if(p<0.72)return'Küçülen';if(p<0.78)return'Son Çeyrek';return'Azalan Hilal';}
+function pText(p){if(p<0.03||p>0.97)return L('moonNew');if(p<0.22)return L('moonCrescent');if(p<0.28)return L('moonFirstQ');if(p<0.47)return L('moonWaxing');if(p<0.53)return L('moonFull');if(p<0.72)return L('moonWaning');if(p<0.78)return L('moonLastQ');return L('moonDecCrescent');}
 function parseUFUK(txt){const pts=[];for(const ln of txt.split('\n')){const t=ln.trim();if(!t||t.startsWith('#')||t.startsWith('[')||/^[lL]/.test(t))continue;const p=t.split(/[\s,]+/);if(p.length>=2){const az=parseFloat(p[0]),al=parseFloat(p[1]);if(!isNaN(az)&&!isNaN(al))pts.push({az,alt:al});}}return pts.sort((a,b)=>a.az-b.az);}
 
 // ─── Ana Hesaplama ────────────────────────────────────────────────────────────
 function calculate(){
-  const dv=document.getElementById('dateInput').value;if(!dv){showMsg('Tarih seçilmedi.','warn');return;}
-  const setup=getSetup();if(!setup){showMsg('Lütfen bir kurulum seçin.','warn');return;}
+  const dv=document.getElementById('dateInput').value;if(!dv){showMsg(L('noDate'),'warn');return;}
+  const setup=getSetup();if(!setup){showMsg(L('noSetup'),'warn');return;}
   const[sh,sm]=document.getElementById('startTime').value.split(':').map(Number);
-  const obsS=sh-TZ+sm/60,obsE=obsS+7;
+  const obsS=sh-TZ+sm/60,obsE=obsS+10;
   const d0=new Date(dv+'T00:00:00Z');
   currentDateUTC0h=d0;currentObsStartUTC=obsS;selectedObj=null;_canvasSetup=false;
   const sl=document.getElementById('timeSlider');sl.value=0;
@@ -567,10 +783,11 @@ function calculate(){
   const mrv=mRise(d0,mp);
   const mrl=mrv!==null?((mrv+TZ)%24+24)%24:null;
   const obsLocal=sh+sm/60;
-  let mrNote='→ Geceye etkisi yok';
-  if(mrl!==null){if(mrl>obsLocal)mrNote='→ '+fmtH(mrl)+"'e kadar temiz gökyüzü";else mrNote='→ Gece boyunca gökyüzünde';}
+  let mrNote=L('moonRiseNone');
+  if(mrl!==null){if(mrl>obsLocal)mrNote='→ '+fmtH(mrl)+L('moonRiseClean');else mrNote=L('moonRiseAll');}
   document.getElementById('moonBar').style.display='flex';
-  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' aydınlık<br>Gece ortası yüksekliği: <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?'⚠ Parlak ay — dar bantlı öneri':mi>25?'~ Orta ay — Ha öncelikli':'✓ Karanlık gece — ideal')+'</div><div class="moon-rise"><strong>Ay Doğuşu</strong><br>'+(mrl!==null?fmtH(mrl)+' (yerel)':'Gündüz doğuyor')+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div>';
+  _moonCache={mpv,mi,mac,mrl,mrNote,obsLocal:sh+sm/60};
+  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' '+L('illuminated')+'<br>'+L('moonAlt')+': <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?L('moonBright'):mi>25?L('moonMid'):L('moonDark'))+'</div><div class="moon-rise"><strong>Ay Doğuşu</strong><br>'+(mrl!==null?fmtH(mrl)+' ('+(_lang==='TR'?'yerel':'local')+')':L('moonRiseDaytime'))+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div>';
   results=[];
   // DSO hesabı
   for(const o of CAT){
@@ -588,7 +805,7 @@ function calculate(){
     const sc=Math.round(Math.min(mx/70,1)*35+Math.min(vm/240,1)*30+Math.min(md/90,1)*20+Math.max(0,(11-mag)/11)*15);
     let mc='moon-ok';if(md<30)mc='moon-bad';else if(md<60)mc='moon-warn';
     const sbWarn=getSBWarn(mag,size);
-    results.push({name,common,type,ra,dec,size,mag,maxAlt:Math.round(mx),window:Math.round(vm/60*10)/10,peak:pl||0,moonDist:Math.round(md),moonClass:mc,score:sc,fr:fRec(type,mi,setup),sbWarn});
+    results.push({name,common,type,ra,dec,size,mag,maxAlt:Math.round(mx),window:Math.round(vm/60*10)/10,peak:pl||0,moonDist:Math.round(md),moonClass:mc,score:sc,fr:fRec(type,mi,setup),_moonIllum:mi,sbWarn});
   }
   // Gezegen hesabı
   const jdnoon=jd(d0)+0.5;
@@ -605,18 +822,18 @@ function calculate(){
     const md=angD(ra,dec,mp.ra,mp.dec);
     const sc=Math.round(Math.min(mx/70,1)*40+Math.min(vm/240,1)*40+Math.min(md/90,1)*20);
     let mc='moon-ok';if(md<15)mc='moon-bad';else if(md<30)mc='moon-warn';
-    results.push({name:gName,common:'',type:'Gezegen',ra,dec,size:el.boyutRef,mag:el.magRef,maxAlt:Math.round(mx),window:Math.round(vm/60*10)/10,peak:pl||0,moonDist:Math.round(md),moonClass:mc,score:sc,fr:fRec('Gezegen',mi,setup),sbWarn:false});
+    results.push({name:gName,common:'',type:'Gezegen',ra,dec,size:el.boyutRef,mag:el.magRef,maxAlt:Math.round(mx),window:Math.round(vm/60*10)/10,peak:pl||0,moonDist:Math.round(md),moonClass:mc,score:sc,fr:fRec("Gezegen",mi,setup),_moonIllum:mi,sbWarn:false});
   }
   const seen=new Set();results=results.filter(r=>{if(seen.has(r.name))return false;seen.add(r.name);return true;});
   document.getElementById('statsBar').style.display='flex';
   document.getElementById('filterRow').style.display='flex';
   document.getElementById('ufukWrap').style.display='block';
-  clearMsg();showMsg(results.length+' '+'hedef listelendi'+' — '+setup.name+' · f/'+setup.fratio+' · Bortle '+OBS_BORTLE,'info');
+  clearMsg();showMsg(results.length+' '+L('calcResult')+' — '+setup.name+' · f/'+setup.fratio+' · Bortle '+OBS_BORTLE,'info');
   applySort();drawUfuk();
 }
 
 // ─── Filtre & Sıralama ────────────────────────────────────────────────────────
-function setFilter(btn,type){activeType=type;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applySort();}
+function setFilter(btn,type){activeType=type;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applySort();if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}}
 function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}applySort();}
 function applySort(){
   if(activeType==='ALL')filtered=[...results];
@@ -626,14 +843,14 @@ function applySort(){
   const cnt=t=>results.filter(r=>r.type===t).length;
   const fav=results.filter(r=>favorites.has(r.name)).length;
   document.getElementById('statsBar').innerHTML=
-    '<div class="stat"><div class="stat-val">'+results.length+'</div><div class="stat-lbl">Toplam</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--gold)">★ '+fav+'</div><div class="stat-lbl">Favori</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--accent2)">'+cnt('Galaxy')+'</div><div class="stat-lbl">Gökada</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--green)">'+cnt('Nebula')+'</div><div class="stat-lbl">Bulutsu</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:#ff9a6c">'+cnt('PN')+'</div><div class="stat-lbl">Gez. Bul.</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--accent3)">'+cnt('Cluster')+'</div><div class="stat-lbl">Açık Küme</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--gold)">'+cnt('Globular')+'</div><div class="stat-lbl">Küresel</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:#ffe566">'+cnt('Gezegen')+'</div><div class="stat-lbl">Gezegen</div></div>';
+    '<div class="stat"><div class="stat-val">'+results.length+'</div><div class="stat-lbl">'+L('statTotal')+'</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--gold)">★ '+fav+'</div><div class="stat-lbl">'+L('statFav')+'</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--accent2)">'+cnt('Galaxy')+'</div><div class="stat-lbl">'+L('statGalaxy')+'</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--green)">'+cnt('Nebula')+'</div><div class="stat-lbl">'+L('statNebula')+'</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:#ff9a6c">'+cnt('PN')+'</div><div class="stat-lbl">'+L('statPN')+'</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--accent3)">'+cnt('Cluster')+'</div><div class="stat-lbl">'+L('statCluster')+'</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:var(--gold)">'+cnt('Globular')+'</div><div class="stat-lbl">'+L('statGlobular')+'</div></div>'+
+    '<div class="stat"><div class="stat-val" style="color:#ffe566">'+cnt('Gezegen')+'</div><div class="stat-lbl">'+L('statPlanet')+'</div></div>';
   renderTable();
 }
 
@@ -641,13 +858,15 @@ function fmtH(h){const hh=Math.floor(((h%24)+24)%24),mm=Math.round((h%1)*60);ret
 
 function renderTable(){
   const tb=document.getElementById('tableBody');
-  if(!filtered.length){const msg=activeType==='FAV'?'Henüz favori obje seçmediniz — ★ ikonuna tıklayın.':'Bu gece bu kriterlerde görüntülenebilir hedef yok.';tb.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
+  if(!filtered.length){const msg=activeType==='FAV'?L('emptyFav'):L('emptyNight');tb.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
   const tC={Galaxy:'tg',Nebula:'tn',Cluster:'tc',Globular:'tgl',PN:'tpn',Gezegen:'tpl'};
-  const tL={Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL',PN:'GEZ. BUL.',Gezegen:'GEZEGEN'};
+  const tL=_lang==='TR'?
+    {Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL',PN:'GEZ. BUL.',Gezegen:'GEZEGEN'}:
+    {Galaxy:'GALAXY',Nebula:'NEBULA',Cluster:'OPEN CL.',Globular:'GLOBULAR',PN:'PLAN. NEB.',Gezegen:'PLANET'};
   const setup=getSetup();
   const dv=document.getElementById('dateInput').value;
   tb.innerHTML=filtered.map(r=>{
-    const fr=r.fr;
+    const _setup=getSetup();const fr=_setup?fRec(r.type,r._moonIllum||50,_setup):r.fr;
     const si=getSizeInfo(r.size);
     const fovS=getFOVStatus(r.size,setup);
     const noteKey='note_'+dv+'_'+r.name;
@@ -667,12 +886,12 @@ function renderTable(){
     return '<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
       +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
       +'<td><button class="note-btn '+(hasNote?'has-note':'')+'" onclick="event.stopPropagation();openNote(\''+r.name+'\')" title="Bu obje için not ekle veya düzenle">'+(hasNote?'📝':'✎')+'</button></td>'
-      +'<td class="name-cell">'+r.name+(r.common?'<span class="common">'+r.common+'</span>':'')+'</td>'
+      +'<td class="name-cell">'+r.name+(()=>{const en=getCommonName(r.name);const nm=en||r.common;return nm?'<span class="common">'+nm+'</span>':''})()+'</td>'
       +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
       +sizeCell
       +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
       +'<td class="alt-cell">'+r.maxAlt+'°</td>'
-      +'<td class="window-cell">'+r.window+' saat</td>'
+      +'<td class="window-cell">'+r.window+L('hourUnit')+'</td>'
       +'<td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td>'
       +'<td><span class="filter-rec '+fr.c+'" title="'+(fr.d||'')+'">'+fr.t+'</span></td>'
       +'<td><span style="font-size:14px;color:var(--text);font-weight:700">'+r.score+'</span></td>'
@@ -685,7 +904,12 @@ function canvasAltY(alt,H){return H-10-(alt/65)*(H-20);}
 function canvasAzX(az,W){return 62+(az/360)*(W-70);}
 const TYPE_COLOR={Galaxy:'#c792ea',Nebula:'#89ddff',Cluster:'#f78c6c',Globular:'#ffd700',PN:'#ff9a6c',Gezegen:'#ffe566'};
 
-function drawUfuk(){document.getElementById('ufukWrap').style.display='block';drawFrame(currentObsStartUTC);setupCanvasInteraction();}
+function drawUfuk(){
+  const wrap=document.getElementById('ufukWrap');
+  wrap.style.display='block';
+  // Display değişikliğinin layout'a yansıması için kısa bekle
+  setTimeout(()=>{drawFrame(currentObsStartUTC);setupCanvasInteraction();},50);
+}
 function onTimeSlider(val){if(!currentDateUTC0h)return;const utcH=currentObsStartUTC+parseInt(val)/60;document.getElementById('timeSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);drawFrame(utcH);}
 
 function drawFrame(utcHour){
@@ -708,7 +932,8 @@ function drawFrame(utcHour){
   }
   // Yön etiketleri
   ctx.font='bold 11px monospace';
-  ['K','KD','D','GD','G','GB','B','KB'].forEach((l,i)=>{
+  const cardinals=_lang==='TR'?['K','KD','D','GD','G','GB','B','KB']:['N','NE','E','SE','S','SW','W','NW'];
+  cardinals.forEach((l,i)=>{
     const x=canvasAzX(i*45,W)-4;
     // Ana yönler daha parlak
     const isMain=(i%2===0);
@@ -851,7 +1076,7 @@ function saveNoteAndClose(){
 document.getElementById('hznFile').addEventListener('change',function(e){
   const file=e.target.files[0];if(!file)return;
   const rd=new FileReader();
-  rd.onload=ev=>{const d=parseUFUK(ev.target.result);if(d.length<3){showMsg('Geçerli ufuk verisi okunamadı.','warn');ufukData=null;}else{ufukData=d;showMsg('Ufuk yüklendi: '+d.length+' nokta.','info');if(currentDateUTC0h)drawUfuk();}};
+  rd.onload=ev=>{const d=parseUFUK(ev.target.result);if(d.length<3){showMsg(L('ufukError'),'warn');ufukData=null;}else{ufukData=d;showMsg(L('ufukLoaded')+' '+d.length+' '+L('ufukPoints'),'info');if(currentDateUTC0h)drawUfuk();}};
   rd.readAsText(file);
 });
 function showMsg(t,type){document.getElementById('msgArea').innerHTML='<div class="msg msg-'+(type==='warn'?'warn':'info')+'">'+t+'</div>';}
@@ -864,7 +1089,7 @@ function clearMsg(){document.getElementById('msgArea').innerHTML='';}
   loadLocation();loadBortle();
   renderSetupSelect();
   updateSubtitle();
-  showMsg('Kurulum ve tarih seçip Hesapla\'ya basın. Ufuk dosyası (.hrz) opsiyoneldir.','info');
+  showMsg(L('initMsg'),'info');
   if(favorites.size>0){activeType='FAV';document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type==='FAV')b.classList.add('active');});}
 })();
 
