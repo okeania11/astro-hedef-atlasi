@@ -170,7 +170,7 @@ tbody tr:last-child td{border-bottom:none;}
   <div class="setup-bar">
     <label>Teleskop / Kurulum:</label>
     <select class="setup-select" id="setupSelect"><option value="">— Kurulum seçin —</option></select>
-    <button class="btn-sm" onclick="openSetupManager()">⚙ Kurulum Yönet</button>
+    <button class="btn-sm" onclick="openSetupManager()" title="Teleskop kurulumlarını yönet">⚙ Kurulum Yönet</button>
   </div>
 
   <!-- Kontroller -->
@@ -178,7 +178,7 @@ tbody tr:last-child td{border-bottom:none;}
     <div class="field"><label>Tarih</label><input type="date" id="dateInput"></div>
     <div class="field"><label>Gözlem Başlangıcı</label><input type="time" id="startTime" value="21:00"></div>
     <div class="field"><label>Ufuk Dosyası (.hrz) <span style="color:var(--accent3);font-weight:400">— opsiyonel</span></label><input type="file" id="hznFile" accept=".hrz,.hzn,.txt"></div>
-    <button class="btn" onclick="calculate()">▶ HESAPLA</button>
+    <button class="btn" onclick="calculate()" title="Seçilen gece için görüntülenebilir objeleri hesapla">▶ HESAPLA</button>
   </div>
 
   <div id="msgArea"></div>
@@ -213,30 +213,30 @@ tbody tr:last-child td{border-bottom:none;}
 
   <div id="filterRow" class="filter-row" style="display:none">
     <span style="color:var(--text2);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-right:4px;">Filtre:</span>
-    <button class="filter-btn fav-btn" data-type="FAV" onclick="setFilter(this,'FAV')">★ Favoriler</button>
-    <button class="filter-btn active" data-type="ALL" onclick="setFilter(this,'ALL')">Tümü</button>
-    <button class="filter-btn" data-type="Galaxy" onclick="setFilter(this,'Galaxy')">Gökada</button>
-    <button class="filter-btn" data-type="Nebula" onclick="setFilter(this,'Nebula')">Bulutsu</button>
-    <button class="filter-btn" data-type="PN" onclick="setFilter(this,'PN')">Gezegen Bulutsusü</button>
-    <button class="filter-btn" data-type="Cluster" onclick="setFilter(this,'Cluster')">Açık Küme</button>
-    <button class="filter-btn" data-type="Globular" onclick="setFilter(this,'Globular')">Küresel Küme</button>
-    <button class="filter-btn" data-type="Gezegen" onclick="setFilter(this,'Gezegen')">Gezegen</button>
+    <button class="filter-btn fav-btn" data-type="FAV" onclick="setFilter(this,'FAV')" title="Sadece favori objeleri göster">★ Favoriler</button>
+    <button class="filter-btn active" data-type="ALL" onclick="setFilter(this,'ALL')" title="Tüm objeleri göster">Tümü</button>
+    <button class="filter-btn" data-type="Galaxy" onclick="setFilter(this,'Galaxy')" title="Sadece gökadaları göster">Gökada</button>
+    <button class="filter-btn" data-type="Nebula" onclick="setFilter(this,'Nebula')" title="Sadece bulutsüları göster">Bulutsu</button>
+    <button class="filter-btn" data-type="PN" onclick="setFilter(this,'PN')" title="Sadece gezegen bulutsülarını göster">Gezegen Bulutsusü</button>
+    <button class="filter-btn" data-type="Cluster" onclick="setFilter(this,'Cluster')" title="Sadece açık kümeleri göster">Açık Küme</button>
+    <button class="filter-btn" data-type="Globular" onclick="setFilter(this,'Globular')" title="Sadece küresel kümeleri göster">Küresel Küme</button>
+    <button class="filter-btn" data-type="Gezegen" onclick="setFilter(this,'Gezegen')" title="Sadece gezegenleri göster">Gezegen</button>
   </div>
 
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th style="width:24px">★</th>
-        <th style="width:24px">📝</th>
-        <th onclick="sortBy('name')">Obje ↕</th>
-        <th onclick="sortBy('type')">Tür</th>
-        <th onclick="sortBy('size')">Boyut ↕</th>
-        <th onclick="sortBy('peak')">En Yüksek Saat ↕</th>
-        <th onclick="sortBy('maxAlt')">Tepe Nokta ↕</th>
-        <th onclick="sortBy('window')">Çekim Süresi ↕</th>
-        <th onclick="sortBy('moonDist')">Ay Mes. ↕</th>
-        <th>Filtre Önerisi</th>
-        <th onclick="sortBy('score')">Puan ↕</th>
+        <th style="width:24px" title="Favori olarak işaretle — kalıcı olarak kaydedilir">★</th>
+        <th style="width:24px" title="Objeye özel gece notu — tarih bazında kaydedilir">📝</th>
+        <th onclick="sortBy('name')" title="Katalog adı — M, NGC, IC, Sh2 vb. Tıklayarak sırala">Obje ↕</th>
+        <th onclick="sortBy('type')" title="Obje türü: Gökada, Bulutsu, Gezegen Bulutsüsü, Açık/Küresel Küme, Gezegen">Tür</th>
+        <th onclick="sortBy('size')" title="Açısal boyut (arcmin). M51 referansıyla kıyaslanır. Kurulum girilmişse kareye sığıp sığmadığı gösterilir.">Boyut ↕</th>
+        <th onclick="sortBy('peak')" title="Objenin o gece meridiani geçtiği yerel saat — en yüksek noktaya ulaştığı an">En Yüksek ↕</th>
+        <th onclick="sortBy('maxAlt')" title="Objenin o gece ulaştığı maksimum yükseklik açısı (derece). Yüksek olması daha iyi görüntü demektir.">Tepe Nokta ↕</th>
+        <th onclick="sortBy('window')" title="Objenin ufuk üstünde ve meridian sınırı içinde kaldığı toplam süre (saat cinsinden)">Çekim Süresi ↕</th>
+        <th onclick="sortBy('moonDist')" title="Obje ile Ay arasındaki açısal mesafe (derece). 30° altı kırmızı, 60° altı sarı uyarı verir.">Ay Mes. ↕</th>
+        <th title="Seçilen kurulum filtreleri ve ay fazına göre önerilen filtre kombinasyonu ve pozlama süresi">Filtre Önerisi</th>
+        <th onclick="sortBy('score')" title="Yükseklik, çekim süresi, ay mesafesi ve parlaklık faktörlerine göre hesaplanan genel uygunluk puanı (0-100)">Puan ↕</th>
       </tr></thead>
       <tbody id="tableBody"><tr><td colspan="11">
         <div class="empty-state"><div class="icon">🔭</div><p>Kurulum ve tarih seçip Hesapla'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.</p></div>
@@ -662,7 +662,7 @@ function renderTable(){
     sizeCell+='</td>';
     return '<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
       +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
-      +'<td><button class="note-btn '+(hasNote?'has-note':'')+'" onclick="event.stopPropagation();openNote(\''+r.name+'\')" title="Not ekle/düzenle">'+(hasNote?'📝':'✎')+'</button></td>'
+      +'<td><button class="note-btn '+(hasNote?'has-note':'')+'" onclick="event.stopPropagation();openNote(\''+r.name+'\')" title="Bu obje için not ekle veya düzenle">'+(hasNote?'📝':'✎')+'</button></td>'
       +'<td class="name-cell">'+r.name+(r.common?'<span class="common">'+r.common+'</span>':'')+'</td>'
       +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
       +sizeCell
