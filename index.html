@@ -574,7 +574,9 @@ function calculate(){
     let mx=-90,vm=0,pl=null;
     for(let t=obsS;t<=obsE;t+=10/60){
       const j2=jd(d0)+t/24,pos=aa(ra,dec,j2,OBS_LAT,OBS_LON),ha2=hAlt(pos.az);
-      let ha=lst(j2,OBS_LON)-ra*15;ha=((ha%360)+360)%360;if(ha>180)ha-=360;if(ha>30)continue;
+      let ha=lst(j2,OBS_LON)-ra*15;ha=((ha%360)+360)%360;if(ha>180)ha-=360;
+      // Batıda alçaksa (meridian geçmiş ve 30°'nin altına düşmüş) önerme
+      if(ha>0&&pos.alt<30)continue;
       if(pos.alt>ha2+10){vm+=10;if(pos.alt>mx){mx=pos.alt;pl=((t+TZ)%24+24)%24;}}
     }
     if(vm<30)continue;
