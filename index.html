@@ -138,7 +138,7 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
       <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6</div>
     </div>
-    <button id="langToggle" onclick="toggleLang()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:4px;cursor:pointer;letter-spacing:1px;margin-top:2px;flex-shrink:0" title="Switch language / Dil değiştir">🌐 EN</button>
+    <button id="langToggle" onclick="toggleLang()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:4px;cursor:pointer;letter-spacing:1px;margin-top:2px;flex-shrink:0" title="Switch language / Dil değiştir">🇹🇷 TR</button>
   </header>
 
   <!-- Konum & Bortle -->
@@ -364,7 +364,7 @@ const _L={
     filterNoSetup:'— kurulum seçin', filterNone:'— Filtre yok',
     footerDesign:'Tasarım & konsept:', footerCity:'Antalya, Türkiye',
     footerCalc:'Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez',
-    langBtn:'🌐 EN',
+    langBtn:'🇬🇧 EN',
   },
   EN:{
     subtitle:'Astrophotography Night Planner',
@@ -411,7 +411,7 @@ const _L={
     filterNoSetup:'— select setup', filterNone:'— No filter',
     footerDesign:'Design & concept:', footerCity:'Antalya, Turkey',
     footerCalc:'All calculations run in real-time in the browser · No server or internet connection required',
-    langBtn:'🌐 TR',
+    langBtn:'🇹🇷 TR',
   }
 };
 function L(k){return(_L[_lang]&&_L[_lang][k]!==undefined)?_L[_lang][k]:(_L['TR'][k]||k);}
