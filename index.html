@@ -10,7 +10,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
 :root{--bg:#07080f;--bg2:#0d0f1c;--bg3:#131628;--border:#1e2240;--accent:#4fc3f7;--accent2:#c792ea;--accent3:#f78c6c;--gold:#ffd700;--green:#89ddff;--text:#cdd3f5;--text2:#6b75a8;--danger:#ff5370;--warning:#ffcb6b;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:13px;min-height:100vh;}
+body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:15px;min-height:100vh;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 70%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 50% 15%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 70% 50%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 20% 90%,rgba(200,220,255,0.5) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 80% 10%,rgba(200,220,255,0.4) 0%,transparent 100%);}
 .container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:28px 20px 60px;}
 .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff;letter-spacing:-0.5px;}
@@ -67,8 +67,8 @@ header{margin-bottom:20px;}
 canvas{width:100%;display:block;border-radius:3px;}
 .stats-bar{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
 .stat{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:7px 12px;}
-.stat-val{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--accent);}
-.stat-lbl{font-size:10px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;}
+.stat-val{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--accent);}
+.stat-lbl{font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;}
 .moon-bar{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:10px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
 .moon-phase{font-size:26px;line-height:1;}
 .moon-info,.moon-rise{font-size:12px;line-height:1.8;}
@@ -82,36 +82,36 @@ canvas{width:100%;display:block;border-radius:3px;}
 .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;overflow-x:auto;}
 table{width:100%;border-collapse:collapse;min-width:960px;}
 thead tr{background:var(--bg3);border-bottom:1px solid var(--border);}
-th{padding:9px 10px;text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);white-space:nowrap;cursor:pointer;user-select:none;}
+th{padding:10px 12px;text-align:left;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);white-space:nowrap;cursor:pointer;user-select:none;}
 th:hover{color:var(--accent);}
-td{padding:7px 10px;border-bottom:1px solid rgba(30,34,64,.6);vertical-align:middle;}
+td{padding:9px 12px;border-bottom:1px solid rgba(30,34,64,.6);vertical-align:middle;}
 tbody tr{transition:background .1s;cursor:pointer;}
 tbody tr:hover{background:rgba(79,195,247,.04);}
 tbody tr:last-child td{border-bottom:none;}
-.name-cell{font-weight:700;color:#fff;font-size:13px;}
-.name-cell .common{font-size:10px;color:var(--text2);font-weight:400;display:block;margin-top:1px;}
-.type-badge{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;letter-spacing:.5px;font-weight:700;white-space:nowrap;}
+.name-cell{font-weight:700;color:#fff;font-size:15px;}
+.name-cell .common{font-size:12px;color:var(--text2);font-weight:400;display:block;margin-top:1px;}
+.type-badge{display:inline-block;padding:3px 8px;border-radius:3px;font-size:10px;letter-spacing:.5px;font-weight:700;white-space:nowrap;}
 .tg{background:rgba(199,146,234,.2);color:var(--accent2);border:1px solid rgba(199,146,234,.3);}
 .tn{background:rgba(137,221,255,.2);color:var(--green);border:1px solid rgba(137,221,255,.3);}
 .tc{background:rgba(247,140,108,.2);color:var(--accent3);border:1px solid rgba(247,140,108,.3);}
 .tgl{background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3);}
 .tpn{background:rgba(255,154,108,.2);color:#ff9a6c;border:1px solid rgba(255,154,108,.3);}
 .tpl{background:rgba(255,215,0,.25);color:#ffe566;border:1px solid rgba(255,215,0,.4);}
-.size-cell{font-size:11px;}
+.size-cell{font-size:12px;}
 .size-bar-bg{height:3px;background:var(--bg3);border-radius:2px;width:60px;margin:3px 0;}
 .size-bar-fill{height:100%;border-radius:2px;background:var(--accent2);}
-.size-m51{font-size:9px;color:var(--text2);}
-.fov-ok{color:var(--green);font-size:9px;}
-.fov-warn{color:var(--warning);font-size:9px;}
-.fov-mosaic{color:var(--accent3);font-size:9px;}
-.bortle-warn{color:var(--warning);font-size:9px;}
-.filter-rec{font-size:11px;font-weight:700;white-space:nowrap;}
+.size-m51{font-size:11px;color:var(--text2);}
+.fov-ok{color:var(--green);font-size:11px;}
+.fov-warn{color:var(--warning);font-size:11px;}
+.fov-mosaic{color:var(--accent3);font-size:11px;}
+.bortle-warn{color:var(--warning);font-size:11px;}
+.filter-rec{font-size:13px;font-weight:700;white-space:nowrap;}
 .fl{color:var(--accent);}.fh{color:#ff9a6c;}.fs{color:var(--accent2);}.fw{color:var(--warning);}.fn{color:var(--danger);}
 .score-bar-wrap{display:flex;align-items:center;gap:7px;}
 .score-bar{width:44px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
 .score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));}
-.moon-cell{font-size:12px;}.moon-ok{color:#89ddff;}.moon-warn{color:var(--warning);}.moon-bad{color:var(--danger);}
-.window-cell{color:var(--accent3);font-size:12px;}.peak-cell{color:var(--text);font-size:12px;}.alt-cell{color:var(--accent);font-size:12px;}
+.moon-cell{font-size:13px;}.moon-ok{color:#89ddff;}.moon-warn{color:var(--warning);}.moon-bad{color:var(--danger);}
+.window-cell{color:var(--accent3);font-size:13px;}.peak-cell{color:var(--text);font-size:13px;}.alt-cell{color:var(--accent);font-size:13px;}
 .fav-star{background:none!important;border:none;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;transition:transform .15s,color .15s;color:#7a84a8!important;-webkit-appearance:none;}
 .fav-star:hover{transform:scale(1.3);color:#c0c8e8!important;}
 .fav-star.active{color:#ffd700!important;text-shadow:0 0 8px rgba(255,215,0,.5);}
@@ -233,7 +233,7 @@ tbody tr:last-child td{border-bottom:none;}
         <th onclick="sortBy('size')">Boyut ↕</th>
         <th onclick="sortBy('peak')">En Yüksek Saat ↕</th>
         <th onclick="sortBy('maxAlt')">Maks. Yükseklik ↕</th>
-        <th onclick="sortBy('window')">Pencere ↕</th>
+        <th onclick="sortBy('window')">Çekim Süresi ↕</th>
         <th onclick="sortBy('moonDist')">Ay Mes. ↕</th>
         <th>Filtre Önerisi</th>
         <th onclick="sortBy('score')">Puan ↕</th>
@@ -457,7 +457,7 @@ function getSBWarn(mag,size){if(!size||size<0.5)return false;const area=Math.PI*
 // ─── FOV & Boyut ──────────────────────────────────────────────────────────────
 const M51_REF=11;
 function getFOV(setup){if(!setup||!setup.focalLength||!setup.sensorW||!setup.sensorH)return null;return{w:(setup.sensorW/setup.focalLength)*3438,h:(setup.sensorH/setup.focalLength)*3438};}
-function getFOVStatus(objSize,setup){const fov=getFOV(setup);if(!fov)return null;const mn=Math.min(fov.w,fov.h);if(objSize<=mn*0.65)return{text:'Tek kare ✓',cls:'fov-ok'};if(objSize<=mn*1.3)return{text:'Sınırda ~',cls:'fov-warn'};return{text:'Mozaik ⊞',cls:'fov-mosaic'};}
+function getFOVStatus(objSize,setup){const fov=getFOV(setup);if(!fov)return null;const mn=Math.min(fov.w,fov.h);if(objSize<=mn*0.65)return{text:'Kareye sığar ✓',cls:'fov-ok'};if(objSize<=mn*1.3)return{text:'Sınırda ~',cls:'fov-warn'};return{text:'Kareye sığmaz ⊞',cls:'fov-mosaic'};}
 function getSizeInfo(size){const ratio=size/M51_REF;let desc;if(ratio<0.05)desc='nokta gibi';else if(ratio<0.15)desc='çok küçük';else if(ratio<0.4)desc='küçük';else if(ratio<0.8)desc='orta-küçük';else if(ratio<1.5)desc='orta (M51 gibi)';else if(ratio<4)desc='geniş';else if(ratio<10)desc='çok geniş';else desc='dev';const barPct=Math.min(100,Math.max(2,Math.log10(Math.max(0.1,size)/0.5)/Math.log10(200/0.5)*100));return{ratio:ratio.toFixed(ratio<0.1?2:1),desc,barPct};}
 
 // ─── Filtre Önerisi ───────────────────────────────────────────────────────────
