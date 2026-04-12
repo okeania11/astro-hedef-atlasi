@@ -1026,8 +1026,8 @@ function calculate(){
 }
 
 // ─── Filtre & Sıralama ────────────────────────────────────────────────────────
-function setFilter(btn,type){activeType=type;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applySort();if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}}
-function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}applySort();}
+function setFilter(btn,type){activeType=type;_showAll=false;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applySort();if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}}
+function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}_showAll=false;applySort();}
 function applySort(){
   if(activeType==='ALL')filtered=[...results];
   else if(activeType==='FAV')filtered=results.filter(r=>favorites.has(r.name));
@@ -1049,6 +1049,9 @@ function applySort(){
 
 function fmtH(h){const hh=Math.floor(((h%24)+24)%24),mm=Math.round((h%1)*60);return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');}
 
+const PAGE_SIZE=50;
+let _showAll=false;
+
 function renderTable(){
   const tb=document.getElementById('tableBody');
   if(!filtered.length){const msg=activeType==='FAV'?L('emptyFav'):L('emptyNight');tb.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
@@ -1058,7 +1061,8 @@ function renderTable(){
     {Galaxy:'GALAXY',Nebula:'NEBULA',Cluster:'OPEN CL.',Globular:'GLOBULAR',PN:'PLAN. NEB.',Gezegen:'PLANET'};
   const setup=getSetup();
   const dv=document.getElementById('dateInput').value;
-  tb.innerHTML=filtered.map(r=>{
+  const toShow=_showAll?filtered:filtered.slice(0,PAGE_SIZE);
+  tb.innerHTML=toShow.map(r=>{
     const _setup=getSetup();const fr=_setup?fRec(r.type,r._moonIllum||50,_setup):r.fr;
     const si=getSizeInfo(r.size);
     const fovS=getFOVStatus(r.size,setup);
@@ -1090,7 +1094,16 @@ function renderTable(){
       +'<td><span style="font-size:14px;color:var(--text);font-weight:700">'+r.score+'</span></td>'
       +'</tr>';
   }).join('');
+  // Show all button
+  if(!_showAll&&filtered.length>PAGE_SIZE){
+    tb.innerHTML+='<tr><td colspan="11" style="text-align:center;padding:14px">'
+      +'<button onclick="showAllRows()" class="btn-sm" style="padding:8px 24px;font-size:12px;color:var(--accent);border-color:var(--accent)">'
+      +'▼ '+(_lang==='TR'?'Tümünü Göster':'Show All')+' ('+filtered.length+')'
+      +'</button></td></tr>';
+  }
 }
+
+function showAllRows(){_showAll=true;renderTable();}
 
 // ─── Canvas ───────────────────────────────────────────────────────────────────
 function canvasAltY(alt,H){return H-10-(alt/65)*(H-20);}
