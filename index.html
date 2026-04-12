@@ -136,7 +136,7 @@ tbody tr:last-child td{border-bottom:none;}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.3</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.4</div>
       <div style="font-size:11px;margin-top:5px;font-family:'Space Mono',monospace;">
         <a href="https://okanizma.wordpress.com/astro-hedef-atlas-uygulamasi-astro-target-planner/" target="_blank" style="color:var(--accent);text-decoration:none;opacity:0.7" id="siteLink">📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın</a>
       </div>
@@ -236,6 +236,32 @@ tbody tr:last-child td{border-bottom:none;}
     <button class="filter-btn" data-type="Gezegen" onclick="setFilter(this,'Gezegen')" title="Sadece gezegenleri göster">Gezegen</button>
   </div>
 
+
+  <!-- Arama & Dışarıdan Obje -->
+  <div id="searchRow" style="display:none;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center" class="filter-row">
+    <input type="text" id="searchInput" oninput="onSearch(this.value)" placeholder="Obje ara... (M97, NGC 891...)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:6px 12px;border-radius:4px;outline:none;width:220px">
+    <button class="btn-sm" onclick="clearSearch()" id="searchClear" style="display:none">✕</button>
+    <button class="btn-sm" onclick="openSimbadModal()" style="margin-left:auto">🔍 Katalogdan Obje Ekle</button>
+  </div>
+
+  <!-- SIMBAD Modal -->
+  <div class="modal-overlay" id="simbadModal">
+    <div class="modal" style="max-width:440px">
+      <h3>🔍 Katalogdan Obje Ekle</h3>
+      <div class="msg msg-warn" style="margin-bottom:12px;font-size:11px">⚠ Bu özellik internet bağlantısı gerektirir</div>
+      <div class="form-row">
+        <label>Obje Adı</label>
+        <input type="text" id="simbadInput" placeholder="örn: LBN 438, Barnard 33, vdB 141" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:13px;padding:8px 12px;border-radius:4px;outline:none">
+      </div>
+      <div id="simbadResult" style="font-size:12px;margin-top:10px;min-height:40px;color:var(--text2)"></div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeSimbadModal()">İptal</button>
+        <button class="btn-sm" onclick="simbadSearch()" style="padding:9px 20px">Ara</button>
+        <button class="btn-primary" id="simbadAddBtn" style="display:none" onclick="addSimbadObj()">Listeye Ekle</button>
+      </div>
+    </div>
+  </div>
+
   <div class="table-wrap">
     <table>
       <thead><tr>
@@ -298,7 +324,7 @@ tbody tr:last-child td{border-bottom:none;}
 
 <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.3
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.4
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -471,7 +497,7 @@ function applyLang(){
   set(s('siteLink'),el=>el.textContent=L('siteLink'));
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.3');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.4');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -836,7 +862,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.3';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.4';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1004,6 +1030,7 @@ function calculate(){
   const seen=new Set();results=results.filter(r=>{if(seen.has(r.name))return false;seen.add(r.name);return true;});
   document.getElementById('statsBar').style.display='flex';
   document.getElementById('filterRow').style.display='flex';
+  document.getElementById('searchRow').style.display='flex';
   document.getElementById('ufukWrap').style.display='block';
   clearMsg();showMsg(results.length+' '+L('calcResult')+' — '+setup.name+' · f/'+setup.fratio+' · Bortle '+OBS_BORTLE,'info');
   applySort();drawUfuk();
@@ -1013,9 +1040,10 @@ function calculate(){
 function setFilter(btn,type){activeType=type;_showAll=false;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applySort();if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}}
 function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}_showAll=false;applySort();}
 function applySort(){
-  if(activeType==='ALL')filtered=[...results];
-  else if(activeType==='FAV')filtered=results.filter(r=>favorites.has(r.name));
-  else filtered=results.filter(r=>r.type===activeType);
+  let base=_searchTerm?results.filter(r=>r.name.toLowerCase().includes(_searchTerm)||r.common.toLowerCase().includes(_searchTerm)):results;
+  if(activeType==='ALL')filtered=[...base];
+  else if(activeType==='FAV')filtered=base.filter(r=>favorites.has(r.name));
+  else filtered=base.filter(r=>r.type===activeType);
   filtered.sort((a,b)=>{let va=a[sortCol],vb=b[sortCol];if(typeof va==='string')return va.localeCompare(vb)*sortDir;return(va-vb)*sortDir;});
   const cnt=t=>results.filter(r=>r.type===t).length;
   const fav=results.filter(r=>favorites.has(r.name)).length;
@@ -1269,6 +1297,168 @@ function toggleTheme(){
   try{localStorage.setItem('astro_theme',_theme);}catch(e){}
   applyTheme();
   if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}
+}
+
+
+// ─── Arama & SIMBAD ───────────────────────────────────────────────────────────
+let _searchTerm='';
+let _simbadObj=null;
+let _extraObjects=[];
+
+function onSearch(val){
+  _searchTerm=val.trim().toLowerCase();
+  document.getElementById('searchClear').style.display=_searchTerm?'inline-block':'none';
+  applySort();
+}
+function clearSearch(){
+  _searchTerm='';
+  document.getElementById('searchInput').value='';
+  document.getElementById('searchClear').style.display='none';
+  applySort();
+}
+function openSimbadModal(){
+  document.getElementById('simbadInput').value='';
+  document.getElementById('simbadResult').innerHTML='';
+  document.getElementById('simbadAddBtn').style.display='none';
+  _simbadObj=null;
+  document.getElementById('simbadModal').classList.add('open');
+}
+function closeSimbadModal(){document.getElementById('simbadModal').classList.remove('open');}
+
+async function simbadSearch(){
+  const name=document.getElementById('simbadInput').value.trim();
+  if(!name)return;
+  const res=document.getElementById('simbadResult');
+  res.innerHTML='<span style="color:var(--text2)">Aranıyor...</span>';
+  document.getElementById('simbadAddBtn').style.display='none';
+  _simbadObj=null;
+  // Try multiple APIs
+  const found = await tryNED(name) || await trySIMBAD(name);
+  if(found){
+    _simbadObj=found;
+    res.innerHTML='<span style="color:var(--green)">✓ Bulundu:</span> <strong style="color:#fff">'+found.id+'</strong><br><span style="color:var(--text2)">RA: '+(found.ra*15).toFixed(4)+'° · Dec: '+found.dec.toFixed(4)+'° · Tür: '+found.otype+'</span>';
+    document.getElementById('simbadAddBtn').style.display='inline-block';
+  } else {
+    res.innerHTML='<span style="color:var(--danger)">✕ Obje bulunamadı. Farklı yazım deneyin (örn: "NGC 891", "M 97", "Barnard 33").</span>';
+  }
+  return;
+}
+async function tryNED(name){
+  try{
+    const url='https://ned.ipac.caltech.edu/api/mobile/object?name='+encodeURIComponent(name);
+    const r=await fetch(url);
+    const d=await r.json();
+    if(d&&d.Preferred&&d.Preferred.RA){
+      return{name,id:d.Preferred.Name||name,common:'',type:nedTypeToType(d.Preferred.Type||''),ra:d.Preferred.RA/15,dec:d.Preferred.Dec,size:5,mag:10,otype:d.Preferred.Type||'?'};
+    }
+  }catch(e){}
+  return null;
+}
+async function trySIMBAD(name){
+  try{
+    const url='https://simbad.cds.unistra.fr/simbad/sim-tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=json&QUERY='+encodeURIComponent(`SELECT TOP 1 main_id,ra,dec,otype_txt FROM basic JOIN ident ON oid=basic.oid WHERE id='${name.replace(/'/g,"''")}'`);
+    const r=await fetch(url);
+    const d=await r.json();
+    if(d.data&&d.data.length>0){
+      const[id,ra,dec,otype]=d.data[0];
+      if(ra!==null&&dec!==null)return{name,id:id||name,common:'',type:oTypeToType(otype||''),ra:ra/15,dec,size:5,mag:10,otype:otype||'?'};
+    }
+  }catch(e){}
+  return null;
+}
+function nedTypeToType(t){
+  const s=t.toLowerCase();
+  if(s.includes('galaxy')||s==='g')return'Galaxy';
+  if(s.includes('planetary')||s==='pn')return'PN';
+  if(s.includes('nebul')||s.includes('hii')||s==='neb')return'Nebula';
+  if(s.includes('globular')||s==='gcl')return'Globular';
+  if(s.includes('cluster')||s==='ocl')return'Cluster';
+  return'Nebula';
+}
+async function simbadSearch_unused(){
+  const name=document.getElementById('simbadInput').value.trim();
+  if(!name)return;
+  const res=document.getElementById('simbadResult');
+  res.innerHTML='<span style="color:var(--text2)">Aranıyor...</span>';
+  document.getElementById('simbadAddBtn').style.display='none';
+  _simbadObj=null;
+  try{
+    // SIMBAD script endpoint - CORS destekli
+    const script=`output console=off script=off
+format object "%IDLIST(1)|%COO(d d)|%OTYPELIST"
+query id ${name}`;
+    const r=await fetch('https://simbad.cds.unistra.fr/simbad/sim-script',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'script='+encodeURIComponent(script)
+    });
+    const txt=await r.text();
+    const lines=txt.split('\n').map(l=>l.trim()).filter(l=>l&&!l.startsWith('::')&&!l.startsWith('!'));
+    const dataLine=lines.find(l=>l.includes('|'));
+    if(dataLine){
+      const parts=dataLine.split('|');
+      const id=parts[0].trim();
+      const coords=(parts[1]||'').trim().split(/\s+/);
+      const ra=parseFloat(coords[0]);
+      const dec=parseFloat(coords[1]);
+      const otype=(parts[2]||'').trim().split(/[,;]/)[0].trim();
+      if(!isNaN(ra)&&!isNaN(dec)){
+        _simbadObj={name:name,common:id!==name?id:'',type:oTypeToType(otype),ra:ra/15,dec,size:5,mag:10};
+        res.innerHTML='<span style="color:var(--green)">✓ Bulundu:</span> <strong style="color:#fff">'+id+'</strong><br><span style="color:var(--text2)">RA: '+ra.toFixed(4)+'° · Dec: '+dec.toFixed(4)+'° · Tür: '+otype+'</span>';
+        document.getElementById('simbadAddBtn').style.display='inline-block';
+      } else {
+        res.innerHTML='<span style="color:var(--danger)">✕ Koordinat okunamadı. Farklı bir isim deneyin.</span>';
+      }
+    } else {
+      res.innerHTML='<span style="color:var(--danger)">✕ Obje bulunamadı. Farklı bir isim deneyin (örn: M 97, NGC 891).</span>';
+    }
+  }catch(e){
+    res.innerHTML='<span style="color:var(--danger)">✕ Bağlantı hatası. İnternet bağlantınızı kontrol edin.</span>';
+  }
+}
+
+function oTypeToType(otype){
+  const o=otype.toLowerCase();
+  if(o.includes('galaxy')||o.includes('galaxies'))return'Galaxy';
+  if(o.includes('planetary'))return'PN';
+  if(o.includes('nebul')||o.includes('hii')||o.includes('cloud'))return'Nebula';
+  if(o.includes('globular'))return'Globular';
+  if(o.includes('cluster'))return'Cluster';
+  return'Nebula';
+}
+
+function addSimbadObj(){
+  if(!_simbadObj)return;
+  // Check duplicate
+  if(results.find(r=>r.name.toLowerCase()===_simbadObj.name.toLowerCase())){
+    document.getElementById('simbadResult').innerHTML+='<br><span style="color:var(--warning)">⚠ Bu obje zaten listede.</span>';
+    return;
+  }
+  // Calculate for tonight
+  if(!currentDateUTC0h){closeSimbadModal();return;}
+  const setup=getSetup();
+  const mi=_moonCache?_moonCache.mi:50;
+  const mp=_moonCache?mPos(jd(currentDateUTC0h)+0.5):{ra:0,dec:0};
+  const obsS=currentObsStartUTC,obsE=obsS+10;
+  const d0=currentDateUTC0h;
+  let mx=-90,vm=0,pl=null;
+  for(let t=obsS;t<=obsE;t+=10/60){
+    const j2=jd(d0)+t/24,pos=aa(_simbadObj.ra,_simbadObj.dec,j2,OBS_LAT,OBS_LON),ha2=hAlt(pos.az);
+    let ha=lst(j2,OBS_LON)-_simbadObj.ra*15;ha=((ha%360)+360)%360;if(ha>180)ha-=360;
+    if(ha>0&&pos.alt<30)continue;
+    if(pos.alt>ha2+10){vm+=10;if(pos.alt>mx){mx=pos.alt;pl=((t+TZ)%24+24)%24;}}
+  }
+  if(mx<-80){document.getElementById('simbadResult').innerHTML+='<br><span style="color:var(--danger)">✕ Bu obje bu gece görünmüyor.</span>';return;}
+  const md=angD(_simbadObj.ra,_simbadObj.dec,mp.ra,mp.dec);
+  const sc=Math.round(Math.min(mx/70,1)*35+Math.min(vm/240,1)*30+Math.min(md/90,1)*20+15);
+  let mc='moon-ok';if(md<30)mc='moon-bad';else if(md<60)mc='moon-warn';
+  const obj={..._simbadObj,maxAlt:Math.round(mx),window:Math.round(vm/60*10)/10,peak:pl||0,moonDist:Math.round(md),moonClass:mc,score:sc,fr:setup?fRec(_simbadObj.type,mi,setup):{t:'—',c:'',d:''},_moonIllum:mi,sbWarn:false,_external:true};
+  results.unshift(obj);
+  favorites.add(obj.name);saveFavs(favorites);
+  _showAll=false;
+  applySort();
+  closeSimbadModal();
+  showMsg('✓ '+obj.name+' listeye eklendi ve favorilere kaydedildi.','info');
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
