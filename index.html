@@ -82,11 +82,11 @@ canvas{width:100%;display:block;border-radius:3px;}
 .filter-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent);}
 .filter-btn.fav-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);}
 .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;overflow-x:auto;}
-table{width:100%;border-collapse:collapse;min-width:960px;}
+table{width:100%;border-collapse:collapse;min-width:900px;}
 thead tr{background:var(--bg3);border-bottom:1px solid var(--border);}
-th{padding:10px 12px;text-align:left;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);white-space:nowrap;cursor:pointer;user-select:none;}
+th{padding:8px 8px;text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);white-space:nowrap;cursor:pointer;user-select:none;}
 th:hover{color:var(--accent);}
-td{padding:9px 12px;border-bottom:1px solid rgba(30,34,64,.6);vertical-align:middle;}
+td{padding:7px 8px;border-bottom:1px solid rgba(30,34,64,.6);vertical-align:middle;}
 tbody tr{transition:background .1s;cursor:pointer;}
 tbody tr:hover{background:rgba(79,195,247,.04);}
 tbody tr:last-child td{border-bottom:none;}
@@ -99,7 +99,7 @@ tbody tr:last-child td{border-bottom:none;}
 .tgl{background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3);}
 .tpn{background:rgba(255,154,108,.2);color:#ff9a6c;border:1px solid rgba(255,154,108,.3);}
 .tpl{background:rgba(255,215,0,.25);color:#ffe566;border:1px solid rgba(255,215,0,.4);}
-.size-cell{font-size:12px;min-width:160px;}
+.size-cell{font-size:11px;min-width:130px;}
 .size-bar-bg{height:3px;background:var(--bg3);border-radius:2px;width:60px;margin:3px 0;}
 .size-bar-fill{height:100%;border-radius:2px;background:var(--accent2);}
 .size-m51{font-size:11px;color:var(--text2);}
@@ -107,19 +107,17 @@ tbody tr:last-child td{border-bottom:none;}
 .fov-warn{color:var(--warning);font-size:11px;}
 .fov-mosaic{color:var(--accent3);font-size:11px;}
 .bortle-warn{color:var(--warning);font-size:11px;}
-.filter-rec{font-size:13px;font-weight:700;white-space:nowrap;}
+.filter-rec{font-size:11px;font-weight:700;white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis;}
 .fl{color:var(--accent);}.fh{color:#ff9a6c;}.fs{color:var(--accent2);}.fw{color:var(--warning);}.fn{color:var(--danger);}
 .score-bar-wrap{display:flex;align-items:center;gap:7px;}
 .score-bar{width:44px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
 .score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));}
-.moon-cell{font-size:13px;}.moon-ok{color:#89ddff;}.moon-warn{color:var(--warning);}.moon-bad{color:var(--danger);}
-.window-cell{color:var(--accent3);font-size:13px;}.peak-cell{color:var(--text);font-size:13px;}.alt-cell{color:var(--accent);font-size:13px;}
+.moon-cell{font-size:12px;}.moon-ok{color:#89ddff;}.moon-warn{color:var(--warning);}.moon-bad{color:var(--danger);}
+.window-cell{color:var(--accent3);font-size:12px;}.peak-cell{color:var(--text);font-size:12px;}.alt-cell{color:var(--accent);font-size:12px;}
 .fav-star{background:none!important;border:none;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;transition:transform .15s,color .15s;color:#7a84a8!important;-webkit-appearance:none;}
 .fav-star:hover{transform:scale(1.3);color:#c0c8e8!important;}
 .fav-star.active{color:#ffd700!important;text-shadow:0 0 8px rgba(255,215,0,.5);}
-.note-btn{background:none!important;border:none;cursor:pointer;font-size:13px;padding:0 2px;color:#3a4060!important;-webkit-appearance:none;transition:color .15s;}
 .note-btn:hover{color:#6b75a8!important;}
-.note-btn.has-note{color:#4fc3f7!important;}
 .empty-state{text-align:center;padding:44px 20px;color:var(--text2);}
 .empty-state .icon{font-size:40px;margin-bottom:10px;opacity:.5;}
 .empty-state p{font-size:12px;line-height:1.8;}
@@ -138,16 +136,18 @@ tbody tr:last-child td{border-bottom:none;}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.1</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.3</div>
       <div style="font-size:11px;margin-top:5px;font-family:'Space Mono',monospace;">
         <a href="https://okanizma.wordpress.com/astro-hedef-atlas-uygulamasi-astro-target-planner/" target="_blank" style="color:var(--accent);text-decoration:none;opacity:0.7" id="siteLink">📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın</a>
+      </div>
+      <div style="font-size:9px;margin-top:4px;font-family:'Space Mono',monospace;">
+        <span id="downloadText" style="color:var(--text2)">internetsiz kullanım için</span><br>
+        <a id="downloadBtn" href="https://github.com/okeania11/astro-hedef-atlasi/releases/latest/download/AstroHedefAtlasi.html" download="AstroHedefAtlasi.html" style="display:inline-block;margin-top:4px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;text-decoration:none">⬇ İndir</a>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <button id="themeToggle" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Tema değiştir">☀️</button>
       <button id="langToggle" onclick="toggleLang()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer;letter-spacing:1px" title="Switch language / Dil değiştir">🇬🇧 EN</button>
-      <div id="downloadText" style="font-size:9px;color:var(--text2);text-align:right">internetsiz<br>kullanım için</div>
-      <a href="https://github.com/okeania11/astro-hedef-atlasi/raw/main/index.html" download="AstroHedefAtlasi.html" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;text-decoration:none;display:block;text-align:center" title="İnternetsiz kullanmak için bilgisayarınıza kaydedin" id="downloadBtn">⬇ İndir</a>
     </div>
   </header>
 
@@ -240,8 +240,7 @@ tbody tr:last-child td{border-bottom:none;}
     <table>
       <thead><tr>
         <th style="width:24px" title="Favori olarak işaretle — kalıcı olarak kaydedilir">★</th>
-        <th style="width:24px" title="Objeye özel gece notu — tarih bazında kaydedilir">📝</th>
-        <th onclick="sortBy('name')" title="Katalog adı — M, NGC, IC, Sh2 vb. Tıklayarak sırala">Obje ↕</th>
+                <th onclick="sortBy('name')" title="Katalog adı — M, NGC, IC, Sh2 vb. Tıklayarak sırala">Obje ↕</th>
         <th onclick="sortBy('type')" title="Obje türü: Gökada, Bulutsu, Gezegenimsi Bulutsu, Açık/Küresel Küme, Gezegen">Tür</th>
         <th onclick="sortBy('size')" title="Açısal boyut (arcmin). M51 referansıyla kıyaslanır. Kurulum girilmişse kareye sığıp sığmadığı gösterilir.">Boyut ↕</th>
         <th onclick="sortBy('peak')" title="Objenin o gece meridiani geçtiği yerel saat — en yüksek noktaya ulaştığı an">En Yüksek ↕</th>
@@ -251,13 +250,10 @@ tbody tr:last-child td{border-bottom:none;}
         <th title="Seçilen kurulum filtreleri ve ay fazına göre önerilen filtre kombinasyonu ve pozlama süresi">Filtre Önerisi</th>
         <th onclick="sortBy('score')" title="Yükseklik, çekim süresi, ay mesafesi ve parlaklık faktörlerine göre hesaplanan genel uygunluk puanı (0-100)">Puan ↕</th>
       </tr></thead>
-      <tbody id="tableBody"><tr><td colspan="11">
+      <tbody id="tableBody"><tr><td colspan="10">
         <div class="empty-state"><div class="icon">🔭</div><p id="emptyInitText">Kurulum ve tarih seçip Hesapla'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.</p></div>
       </td></tr></tbody>
     </table>
-  </div>
-  <div style="margin-top:7px;font-size:10px;color:#3a4060;font-family:'Space Mono',monospace;padding:0 2px">
-    ★ Puan = Yükseklik (%35) · Çekim süresi (%30) · Ay mesafesi (%20) · Parlaklık / magnitude (%15)
   </div>
 </div>
 
@@ -300,21 +296,9 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- Not Modalı -->
-<div class="modal-overlay" id="noteModal">
-  <div class="modal" style="max-width:420px">
-    <h3>📝 <span id="noteModalTitle"></span> <span id="noteObjName"></span></h3>
-    <textarea class="note-textarea" id="noteText" id="noteText" placeholder="Bu obje için notlarınız..."></textarea>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeNoteModal()">İptal</button>
-      <button class="btn-primary" onclick="saveNoteAndClose()">Kaydet</button>
-    </div>
-  </div>
-</div>
-
 <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.1
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.3
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -424,14 +408,14 @@ const _L={
     filterNoSetup:'— select setup', filterNone:'— No filter',
     footerDesign:'Design & concept:', footerCity:'Antalya, Turkey',
     footerCalc:'All calculations run in real-time in the browser · No server or internet connection required',
-    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz<br>kullanım için', downloadBtn:'⬇ İndir',
+    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz kullanım için', downloadBtn:'⬇ İndir',
   }
 };
 function L(k){return(_L[_lang]&&_L[_lang][k]!==undefined)?_L[_lang][k]:(_L['TR'][k]||k);}
 function renderMoonBar(){
   if(!_moonCache)return;
   const{mpv,mi,mac,mrl,mrNote}=_moonCache;
-  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' '+L('illuminated')+'<br>'+L('moonAlt')+': <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?L('moonBright'):mi>25?L('moonMid'):L('moonDark'))+'</div><div class="moon-rise"><strong>'+L('moonRiseTitle')+'</strong><br>'+(mrl!==null?fmtH(mrl)+' ('+(_lang==='TR'?'yerel':'local')+')':L('moonRiseDaytime'))+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div>';
+  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' '+L('illuminated')+'<br>'+L('moonAlt')+': <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?L('moonBright'):mi>25?L('moonMid'):L('moonDark'))+'</div><div class="moon-rise"><strong>'+L('moonRiseTitle')+'</strong><br>'+(mrl!==null?fmtH(mrl)+' ('+(_lang==='TR'?'yerel':'local')+')':L('moonRiseDaytime'))+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div><div style="border-left:1px solid var(--border);padding-left:20px;font-size:11px;line-height:2;color:var(--text2)"><strong style="color:var(--accent2)">Puan Nasıl Hesaplanır?</strong><br>Yükseklik %35 · Çekim %30<br>Ay %20 · Parlaklık %15</div>';
 }
 function toggleLang(){
   _lang=_lang==='TR'?'EN':'TR';
@@ -487,7 +471,7 @@ function applyLang(){
   set(s('siteLink'),el=>el.textContent=L('siteLink'));
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.1');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.3');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -852,7 +836,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.1';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.3';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -980,7 +964,7 @@ function calculate(){
   if(mrl!==null){if(mrl>obsLocal)mrNote='→ '+fmtH(mrl)+L('moonRiseClean');else mrNote=L('moonRiseAll');}
   document.getElementById('moonBar').style.display='flex';
   _moonCache={mpv,mi,mac,mrl,mrNote,obsLocal:sh+sm/60};
-  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' '+L('illuminated')+'<br>'+L('moonAlt')+': <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?L('moonBright'):mi>25?L('moonMid'):L('moonDark'))+'</div><div class="moon-rise"><strong>Ay Doğuşu</strong><br>'+(mrl!==null?fmtH(mrl)+' ('+(_lang==='TR'?'yerel':'local')+')':L('moonRiseDaytime'))+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div>';
+  renderMoonBar();
   results=[];
   // DSO hesabı
   for(const o of CAT){
@@ -1054,7 +1038,7 @@ let _showAll=false;
 
 function renderTable(){
   const tb=document.getElementById('tableBody');
-  if(!filtered.length){const msg=activeType==='FAV'?L('emptyFav'):L('emptyNight');tb.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
+  if(!filtered.length){const msg=activeType==='FAV'?L('emptyFav'):L('emptyNight');tb.innerHTML='<tr><td colspan="10"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
   const tC={Galaxy:'tg',Nebula:'tn',Cluster:'tc',Globular:'tgl',PN:'tpn',Gezegen:'tpl'};
   const tL=_lang==='TR'?
     {Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL',PN:'GEZ. BUL.',Gezegen:'GEZEGEN'}:
@@ -1066,8 +1050,6 @@ function renderTable(){
     const _setup=getSetup();const fr=_setup?fRec(r.type,r._moonIllum||50,_setup):r.fr;
     const si=getSizeInfo(r.size);
     const fovS=getFOVStatus(r.size,setup);
-    const noteKey='note_'+dv+'_'+r.name;
-    const hasNote=!!(localStorage.getItem(noteKey));
     let sizeCell='<td class="size-cell" style="white-space:nowrap">';
     if(r.type==='Gezegen'){
       sizeCell+=r.size+"'";
@@ -1082,8 +1064,7 @@ function renderTable(){
     sizeCell+='</td>';
     return '<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
       +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
-      +'<td><button class="note-btn '+(hasNote?'has-note':'')+'" onclick="event.stopPropagation();openNote(\''+r.name+'\')" title="Bu obje için not ekle veya düzenle">'+(hasNote?'📝':'✎')+'</button></td>'
-      +'<td class="name-cell">'+r.name+(()=>{const en=getCommonName(r.name);const nm=en||r.common;return nm?'<span class="common">'+nm+'</span>':''})()+'</td>'
+            +'<td class="name-cell">'+r.name+(()=>{const en=getCommonName(r.name);const nm=en||r.common;return nm?'<span class="common">'+nm+'</span>':''})()+'</td>'
       +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
       +sizeCell
       +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
@@ -1096,7 +1077,7 @@ function renderTable(){
   }).join('');
   // Show all button
   if(!_showAll&&filtered.length>PAGE_SIZE){
-    tb.innerHTML+='<tr><td colspan="11" style="text-align:center;padding:14px">'
+    tb.innerHTML+='<tr><td colspan="10" style="text-align:center;padding:14px">'
       +'<button onclick="showAllRows()" class="btn-sm" style="padding:8px 24px;font-size:12px;color:var(--accent);border-color:var(--accent)">'
       +'▼ '+(_lang==='TR'?'Tümünü Göster':'Show All')+' ('+filtered.length+')'
       +'</button></td></tr>';
@@ -1261,23 +1242,6 @@ function selectObjFromTable(name){
   });
 }
 
-// ─── Notlar ───────────────────────────────────────────────────────────────────
-let _noteObj='';
-function openNote(name){
-  _noteObj=name;
-  const dv=document.getElementById('dateInput').value;
-  document.getElementById('noteObjName').textContent=name;
-  document.getElementById('noteText').value=localStorage.getItem('note_'+dv+'_'+name)||'';
-  document.getElementById('noteModal').classList.add('open');
-}
-function closeNoteModal(){document.getElementById('noteModal').classList.remove('open');}
-function saveNoteAndClose(){
-  const dv=document.getElementById('dateInput').value;
-  const txt=document.getElementById('noteText').value.trim();
-  if(txt)localStorage.setItem('note_'+dv+'_'+_noteObj,txt);
-  else localStorage.removeItem('note_'+dv+'_'+_noteObj);
-  closeNoteModal();renderTable();
-}
 
 document.getElementById('hznFile').addEventListener('change',function(e){
   const file=e.target.files[0];if(!file)return;
