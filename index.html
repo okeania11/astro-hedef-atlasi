@@ -138,7 +138,10 @@ tbody tr:last-child td{border-bottom:none;}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.1</div>
+      <div style="font-size:11px;margin-top:5px;font-family:'Space Mono',monospace;">
+        <a href="https://okanizma.wordpress.com/astro-hedef-atlas-uygulamasi-astro-target-planner/" target="_blank" style="color:var(--accent);text-decoration:none;opacity:0.7" id="siteLink">📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın</a>
+      </div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <button id="themeToggle" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Tema değiştir">☀️</button>
@@ -311,7 +314,7 @@ tbody tr:last-child td{border-bottom:none;}
 
 <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.1
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -374,7 +377,7 @@ const _L={
     filterNoSetup:'— kurulum seçin', filterNone:'— Filtre yok',
     footerDesign:'Tasarım & konsept:', footerCity:'Antalya, Türkiye',
     footerCalc:'Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez',
-    langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download',
+    siteLink:'📖 About this app — click for details', langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download',
   },
   EN:{
     subtitle:'Astrophotography Night Planner',
@@ -421,7 +424,7 @@ const _L={
     filterNoSetup:'— select setup', filterNone:'— No filter',
     footerDesign:'Design & concept:', footerCity:'Antalya, Turkey',
     footerCalc:'All calculations run in real-time in the browser · No server or internet connection required',
-    langBtn:'🇬🇧 EN', downloadText:'internetsiz<br>kullanım için', downloadBtn:'⬇ İndir',
+    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz<br>kullanım için', downloadBtn:'⬇ İndir',
   }
 };
 function L(k){return(_L[_lang]&&_L[_lang][k]!==undefined)?_L[_lang][k]:(_L['TR'][k]||k);}
@@ -481,9 +484,10 @@ function applyLang(){
   const s=id=>{try{return document.getElementById(id);}catch(e){return null;}};
   const q=sel=>{try{return document.querySelector(sel);}catch(e){return null;}};
   const set=(el,fn)=>{try{if(el)fn(el);}catch(e){}};
+  set(s('siteLink'),el=>el.textContent=L('siteLink'));
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.1');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -848,7 +852,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.1';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
