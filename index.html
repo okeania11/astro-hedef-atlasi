@@ -7,8 +7,10 @@
 <title>Astro Hedef Atlası — Astro Target Planner</title>
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Orbitron:wght@700;900&display=swap');
 :root{--bg:#07080f;--bg2:#0d0f1c;--bg3:#131628;--border:#1e2240;--accent:#4fc3f7;--accent2:#c792ea;--accent3:#f78c6c;--gold:#ffd700;--green:#89ddff;--text:#cdd3f5;--text2:#6b75a8;--danger:#ff5370;--warning:#ffcb6b;}
+body.light-theme{--bg:#3a3d4e;--bg2:#32354a;--bg3:#2a2d3e;--border:#484c66;--accent:#4fc3f7;--accent2:#c792ea;--accent3:#f78c6c;--gold:#ffd700;--green:#89ddff;--text:#d8dce8;--text2:#8890b8;--danger:#ff5370;--warning:#ffcb6b;}
+body.light-theme::before{opacity:0.4;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:15px;min-height:100vh;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 70%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 50% 15%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 70% 50%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 20% 90%,rgba(200,220,255,0.5) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 80% 10%,rgba(200,220,255,0.4) 0%,transparent 100%);}
@@ -67,7 +69,7 @@ header{margin-bottom:20px;}
 canvas{width:100%;display:block;border-radius:3px;}
 .stats-bar{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
 .stat{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:7px 12px;}
-.stat-val{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--accent);}
+.stat-val{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:var(--accent);letter-spacing:1px;font-variant-numeric:tabular-nums;}
 .stat-lbl{font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;}
 .moon-bar{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:10px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
 .moon-phase{font-size:26px;line-height:1;}
@@ -138,7 +140,12 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
       <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6</div>
     </div>
-    <button id="langToggle" onclick="toggleLang()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:4px;cursor:pointer;letter-spacing:1px;margin-top:2px;flex-shrink:0" title="Switch language / Dil değiştir">🇹🇷 TR</button>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
+      <button id="themeToggle" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Tema değiştir">☀️</button>
+      <button id="langToggle" onclick="toggleLang()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer;letter-spacing:1px" title="Switch language / Dil değiştir">🇬🇧 EN</button>
+      <div id="downloadText" style="font-size:9px;color:var(--text2);text-align:right">internetsiz<br>kullanım için</div>
+      <a href="https://github.com/okeania11/astro-hedef-atlasi/raw/main/index.html" download="AstroHedefAtlasi.html" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;text-decoration:none;display:block;text-align:center" title="İnternetsiz kullanmak için bilgisayarınıza kaydedin" id="downloadBtn">⬇ İndir</a>
+    </div>
   </header>
 
   <!-- Konum & Bortle -->
@@ -246,6 +253,9 @@ tbody tr:last-child td{border-bottom:none;}
       </td></tr></tbody>
     </table>
   </div>
+  <div style="margin-top:7px;font-size:10px;color:#3a4060;font-family:'Space Mono',monospace;padding:0 2px">
+    ★ Puan = Yükseklik (%35) · Çekim süresi (%30) · Ay mesafesi (%20) · Parlaklık / magnitude (%15)
+  </div>
 </div>
 
 <!-- Kurulum Modalı -->
@@ -299,14 +309,14 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid #1a1e36;margin-top:4px;">
-  <div style="font-family:'Syne',sans-serif;font-size:11px;color:#2e3455;letter-spacing:2px;text-transform:uppercase">
+<footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
+  <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
     Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6
   </div>
-  <div style="font-size:11px;color:#2a3050;margin-top:5px;font-family:'Space Mono',monospace;">
-    <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:#3d4870">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
+  <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
+    <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
   </div>
-  <div style="font-size:10px;color:#1c2238;margin-top:3px;font-family:'Space Mono',monospace;">
+  <div style="font-size:10px;color:var(--text2);opacity:0.6;margin-top:3px;font-family:'Space Mono',monospace;">
     <span class="footer-calc">Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez</span>
   </div>
 </footer>
@@ -364,7 +374,7 @@ const _L={
     filterNoSetup:'— kurulum seçin', filterNone:'— Filtre yok',
     footerDesign:'Tasarım & konsept:', footerCity:'Antalya, Türkiye',
     footerCalc:'Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez',
-    langBtn:'🇬🇧 EN',
+    langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download',
   },
   EN:{
     subtitle:'Astrophotography Night Planner',
@@ -411,7 +421,7 @@ const _L={
     filterNoSetup:'— select setup', filterNone:'— No filter',
     footerDesign:'Design & concept:', footerCity:'Antalya, Turkey',
     footerCalc:'All calculations run in real-time in the browser · No server or internet connection required',
-    langBtn:'🇹🇷 TR',
+    langBtn:'🇬🇧 EN', downloadText:'internetsiz<br>kullanım için', downloadBtn:'⬇ İndir',
   }
 };
 function L(k){return(_L[_lang]&&_L[_lang][k]!==undefined)?_L[_lang][k]:(_L['TR'][k]||k);}
@@ -423,6 +433,10 @@ function renderMoonBar(){
 function toggleLang(){
   _lang=_lang==='TR'?'EN':'TR';
   applyLang();
+  setTimeout(()=>{
+    const btn=document.getElementById('langToggle');
+    if(btn)btn.innerHTML=_lang==='TR'?'🇬🇧 EN':'🇹🇷 TR';
+  },10);
   renderMoonBar();
   if(!results.length)showMsg(L('initMsg'),'info');
   if(results.length)applySort();
@@ -467,7 +481,8 @@ function applyLang(){
   const s=id=>{try{return document.getElementById(id);}catch(e){return null;}};
   const q=sel=>{try{return document.querySelector(sel);}catch(e){return null;}};
   const set=(el,fn)=>{try{if(el)fn(el);}catch(e){}};
-  set(s('langToggle'),el=>el.textContent=L('langBtn'));
+  set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
+  set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
   set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
@@ -565,7 +580,181 @@ const CAT=[
   ["NGC 869","h Per","Cluster",2.320,57.13,30,4.3],["NGC 884","χ Per","Cluster",2.377,57.12,30,4.4],
   ["NGC 752","","Cluster",1.958,37.68,50,5.7],["NGC 1502","","Cluster",4.113,62.33,20,5.7],
   ["NGC 6939","","Cluster",20.533,60.65,7,7.8],["NGC 7789","Karolina Gülü","Cluster",23.957,56.72,25,6.7],
+
+  // EK GÖKADALAR
+  ["NGC 55","","Galaxy",0.233,-39.20,32,7.9],["NGC 134","","Galaxy",0.513,-33.25,8,10.4],
+  ["NGC 147","","Galaxy",0.549,48.51,13,9.5],["NGC 185","","Galaxy",0.649,48.34,12,9.2],
+  ["NGC 205","M110 comp","Galaxy",0.673,41.69,17,8.5],["NGC 247","","Galaxy",0.787,-20.76,20,9.1],
+  ["NGC 253","Sculptor Gal.","Galaxy",0.792,-25.29,25,7.2],["NGC 300","","Galaxy",0.915,-37.68,22,8.7],
+  ["NGC 524","","Galaxy",1.397,9.53,3,10.3],["NGC 598","M33 comp","Galaxy",1.564,30.66,63,5.7],
+  ["NGC 672","","Galaxy",1.799,27.43,7,10.9],["NGC 891","","Galaxy",2.382,42.35,14,9.9],
+  ["NGC 925","","Galaxy",2.432,33.58,10,10.1],["NGC 1022","","Galaxy",2.670,10.65,2,11.4],
+  ["NGC 1055","","Galaxy",2.715,0.44,7,10.6],["NGC 1068","M77","Galaxy",2.712,-0.01,7,8.9],
+  ["NGC 1169","","Galaxy",3.006,46.39,4,11.6],["NGC 1232","","Galaxy",3.162,-20.58,8,9.9],
+  ["NGC 1300","","Galaxy",3.192,-19.41,6,10.4],["NGC 1365","","Galaxy",3.562,-36.14,11,9.6],
+  ["NGC 1380","","Galaxy",3.609,-34.98,4,10.0],["NGC 1399","","Galaxy",3.639,-35.45,3,9.9],
+  ["NGC 1421","","Galaxy",3.697,-13.49,3,11.4],["NGC 1512","","Galaxy",4.066,-43.35,9,10.6],
+  ["NGC 1560","","Galaxy",4.316,71.88,10,11.0],["NGC 1637","","Galaxy",4.681,-2.86,4,11.0],
+  ["NGC 1672","","Galaxy",4.758,-59.25,6,9.7],["NGC 2403","","Galaxy",7.617,65.60,22,8.4],
+  ["NGC 2500","","Galaxy",7.983,50.73,3,11.6],["NGC 2535","","Galaxy",8.165,25.21,3,12.0],
+  ["NGC 2683","","Galaxy",8.879,33.43,9,9.7],["NGC 2787","","Galaxy",9.196,69.20,3,10.8],
+  ["NGC 2841","","Galaxy",9.375,50.98,8,9.2],["NGC 2976","","Galaxy",9.476,67.90,6,10.2],
+  ["NGC 3031","M81","Galaxy",9.928,69.07,21,6.9],["NGC 3034","M82","Galaxy",9.931,69.68,11,8.4],
+  ["NGC 3077","","Galaxy",10.047,68.73,5,9.9],["NGC 3115","Spindle Gal.","Galaxy",10.086,-7.72,8,9.0],
+  ["NGC 3184","","Galaxy",10.310,41.42,7,9.8],["NGC 3190","","Galaxy",10.318,21.83,4,11.0],
+  ["NGC 3227","","Galaxy",10.490,19.87,4,10.3],["NGC 3351","M95","Galaxy",10.703,11.70,7,9.7],
+  ["NGC 3368","M96","Galaxy",10.747,11.82,7,9.2],["NGC 3379","M105","Galaxy",10.800,12.58,4,9.3],
+  ["NGC 3486","","Galaxy",11.006,28.97,7,10.3],["NGC 3593","","Galaxy",11.147,12.82,5,11.0],
+  ["NGC 3623","M65","Galaxy",11.319,13.09,10,9.3],["NGC 3627","M66","Galaxy",11.340,12.99,9,8.9],
+  ["NGC 3718","","Galaxy",11.529,53.07,8,10.6],["NGC 3726","","Galaxy",11.532,47.03,6,10.4],
+  ["NGC 3810","","Galaxy",11.614,11.47,4,10.8],["NGC 4026","","Galaxy",11.981,50.96,5,10.8],
+  ["NGC 4088","","Galaxy",12.088,50.54,5,10.6],["NGC 4111","","Galaxy",12.097,43.07,4,10.8],
+
+  // EK BULUTSULAR
+  ["NGC 896","","Nebula",2.388,61.88,20,10.0],["IC 59","","Nebula",0.960,60.88,10,10.0],
+  ["IC 63","","Nebula",0.968,60.90,10,10.0],["NGC 1333","","Nebula",3.485,31.37,6,10.0],
+  ["NGC 1491","","Nebula",4.077,51.32,25,11.0],["NGC 1554","","Nebula",4.222,19.53,3,10.0],
+  ["NGC 1579","","Nebula",4.378,35.27,12,10.0],["NGC 1624","","Nebula",4.540,50.47,5,10.0],
+  ["NGC 1788","","Nebula",5.067,-3.35,8,10.0],["NGC 1931","","Nebula",5.514,34.24,3,10.0],
+  ["NGC 1952","M1","Nebula",5.578,22.02,6,8.4],["NGC 2024","Alev Neb.","Nebula",5.680,-1.90,30,10.0],
+  ["IC 418","Radyatör Neb.","Nebula",5.783,-12.07,0.2,9.0],["NGC 2175","","Nebula",6.100,20.30,40,10.0],
+  ["NGC 2185","","Nebula",6.117,-6.22,4,10.0],["NGC 2194","","Nebula",6.138,12.81,10,10.0],
+  ["IC 2120","","Nebula",6.300,-6.30,20,10.0],["NGC 2261","Hubble Neb.","Nebula",6.639,8.74,2,10.0],
+  ["NGC 2264","Konifer Neb.","Nebula",6.683,9.87,20,3.9],["NGC 2346","","Nebula",7.094,-0.80,1,11.0],
+  ["NGC 2371","","Nebula",7.424,29.49,1,11.0],["NGC 2440","","Nebula",7.692,-18.21,0.5,9.4],
+  ["NGC 2467","","Nebula",7.874,-26.43,15,7.1],["NGC 2477","","Nebula",7.873,-38.55,27,5.8],
+  ["NGC 2579","","Nebula",8.228,-36.20,10,10.0],["NGC 2736","Kalem Neb.","Nebula",8.984,-45.94,20,10.0],
+  ["NGC 3199","","Nebula",10.265,-57.95,22,10.0],["NGC 3324","","Nebula",10.616,-58.63,16,6.7],
+  ["NGC 3372","Eta Carinae","Nebula",10.745,-59.87,120,3.0],["NGC 3576","","Nebula",11.175,-61.30,6,10.0],
+  ["IC 2944","","Nebula",11.614,-63.04,75,4.5],["NGC 3918","Mavi Gezegen","Nebula",11.882,-57.11,0.3,8.4],
+  ["NGC 4038","Anten","Nebula",12.016,-18.87,3,10.3],["IC 4406","","Nebula",14.225,-44.09,1,10.6],
+  ["NGC 5189","","Nebula",13.566,-65.97,3,9.5],["IC 4628","Karides Neb.","Nebula",16.897,-40.32,90,7.0],
+  ["NGC 6164","","Nebula",16.557,-48.10,6,10.0],["NGC 6334","Kedi Pençesi","Nebula",17.200,-35.78,35,10.0],
+  ["NGC 6559","","Nebula",18.077,-24.10,9,10.0],["NGC 6604","","Nebula",18.298,-12.23,6,10.0],
+  ["NGC 6611","Kartal Neb.","Nebula",18.314,-13.79,35,6.4],["NGC 6618","Omega","Nebula",18.346,-16.18,11,6.0],
+  ["NGC 6726","","Nebula",19.017,-36.92,9,10.0],["NGC 6729","","Nebula",19.018,-36.96,1,10.0],
+  ["NGC 6751","","Nebula",19.129,-5.99,0.5,11.9],["NGC 6781","","Nebula",19.181,6.53,1,11.4],
+  ["NGC 6823","","Nebula",19.713,23.30,40,7.1],["NGC 6888","Hilal Neb.","Nebula",20.200,38.35,20,10.0],
+  ["NGC 6960","Perde Neb.","Nebula",20.745,30.72,70,7.0],["NGC 6979","","Nebula",20.794,32.12,60,10.0],
+  ["NGC 6992","Perde Neb.","Nebula",20.933,31.73,60,7.0],["NGC 7008","","Nebula",21.017,54.55,1,10.7],
+  ["NGC 7023","Iris Neb.","Nebula",21.028,68.17,18,6.8],["NGC 7129","","Nebula",21.740,66.10,7,11.5],
+  ["NGC 7133","","Nebula",21.743,66.08,5,10.0],["NGC 7331","","Nebula",22.618,34.42,11,9.5],
+  ["IC 5117","","Nebula",21.675,44.65,0.2,11.6],["Sh2-101","Tulip Neb.","Nebula",20.022,35.27,16,10.0],
+  ["Sh2-106","","Nebula",20.303,37.35,3,10.0],["Sh2-119","","Nebula",21.250,47.30,60,10.0],
+  ["Sh2-129","","Nebula",21.817,60.00,180,10.0],["Sh2-171","","Nebula",0.047,67.07,40,10.0],
+  ["Sh2-188","","Nebula",1.430,58.55,8,12.0],["Sh2-200","","Nebula",2.282,72.38,20,10.0],
+
+  // EK GEZEGENİMSİ BULUTSULAR
+  ["NGC 40","","PN",0.213,72.53,1,10.7],["NGC 650","M76","PN",1.704,51.58,2.7,10.1],
+  ["NGC 1360","","PN",3.534,-25.87,6,9.4],["NGC 1501","","PN",4.113,60.55,0.9,11.5],
+  ["NGC 1514","","PN",4.150,30.78,2,9.4],["NGC 1535","","PN",4.201,-12.44,0.75,9.6],
+  ["NGC 2022","","PN",5.643,9.05,0.5,11.6],["NGC 2438","","PN",7.700,-14.73,1.1,10.1],
+  ["NGC 2440","","PN",7.692,-18.21,0.5,9.4],["NGC 2452","","PN",7.793,-27.48,0.5,12.0],
+  ["NGC 2610","","PN",8.549,-16.15,0.8,12.0],["NGC 2792","","PN",9.175,-42.42,0.3,11.6],
+  ["NGC 2818","","PN",9.265,-36.62,0.8,11.9],["NGC 2867","","PN",9.361,-58.31,0.3,9.7],
+  ["NGC 3132","Sekiz Patlama","PN",10.124,-40.44,0.8,8.2],["NGC 3195","","PN",10.295,-65.64,0.7,11.0],
+  ["NGC 3211","","PN",10.329,-62.67,0.3,11.8],["NGC 3699","","PN",11.460,-60.64,1.6,11.0],
+  ["NGC 4361","","PN",12.371,-18.79,1.3,10.3],["NGC 5882","","PN",15.231,-45.65,0.3,10.5],
+  ["NGC 6026","","PN",16.037,-34.55,0.7,11.3],["NGC 6072","","PN",16.198,-36.23,0.8,11.3],
+  ["NGC 6153","","PN",16.518,-40.25,0.5,10.9],["NGC 6309","","PN",17.120,-12.92,0.3,11.5],
+  ["NGC 6326","","PN",17.175,-51.74,0.3,11.1],["NGC 6337","","PN",17.222,-38.49,0.9,12.0],
+  ["NGC 6369","","PN",17.430,-23.76,0.5,11.4],["NGC 6439","","PN",17.790,-16.47,0.3,12.0],
+  ["NGC 6445","","PN",17.821,-20.00,0.6,11.2],["NGC 6537","","PN",18.063,-19.85,0.1,12.0],
+  ["NGC 6563","","PN",18.192,-33.87,0.8,11.0],["NGC 6567","","PN",18.210,-19.07,0.2,11.5],
+  ["NGC 6572","","PN",18.194,6.85,0.1,8.1],["NGC 6620","","PN",18.371,-26.73,0.3,13.0],
+  ["NGC 6629","","PN",18.436,-23.25,0.3,10.9],["NGC 6644","","PN",18.465,-25.13,0.1,11.6],
+  ["NGC 6741","","PN",19.039,-0.45,0.1,11.4],["NGC 6765","","PN",19.109,30.53,0.7,12.9],
+  ["NGC 6778","","PN",19.172,-1.58,0.2,12.3],["NGC 6804","","PN",19.317,9.22,0.8,12.0],
+  ["NGC 6807","","PN",19.325,17.65,0.1,13.0],["NGC 6818","","PN",19.832,-14.09,0.4,9.9],
+  ["NGC 6833","","PN",19.861,48.83,0.1,13.0],["NGC 6842","","PN",19.915,29.29,0.8,13.0],
+  ["NGC 6853","M27","PN",19.993,22.72,8,7.4],["NGC 6884","","PN",20.117,46.46,0.1,12.6],
+  ["NGC 6886","","PN",20.130,19.99,0.1,12.2],["NGC 6891","","PN",20.188,12.70,0.3,10.5],
+  ["NGC 6894","","PN",20.229,30.56,0.9,12.3],["NGC 6905","","PN",20.362,20.12,0.7,11.1],
+  ["NGC 7009","Satürn","PN",21.067,-11.37,0.7,8.0],["NGC 7026","","PN",21.075,47.85,0.3,11.0],
+  ["NGC 7048","","PN",21.149,46.28,1.0,12.1],["NGC 7094","","PN",21.530,12.79,1.5,13.4],
+  ["NGC 7139","","PN",21.793,63.75,1.2,13.3],["NGC 7293","Heliks","PN",22.494,-20.84,16,7.3],
+  ["NGC 7354","","PN",22.679,61.28,0.6,12.9],["NGC 7662","Mavi Kar","PN",23.433,42.55,0.5,8.3],
+  ["NGC 7008","","PN",21.017,54.55,1.4,10.7],["IC 289","","PN",3.369,61.32,0.8,13.0],
+  ["IC 351","","PN",3.666,34.97,0.2,12.4],["IC 2003","","PN",3.551,33.86,0.2,11.4],
+  ["IC 2165","","PN",6.121,-12.98,0.2,12.0],["IC 2448","","PN",9.222,-69.95,0.2,11.5],
+  ["IC 3568","","PN",12.382,82.57,0.3,11.3],["IC 4593","","PN",16.222,12.07,0.2,10.7],
+  ["IC 4634","","PN",17.015,-21.83,0.2,10.9],["IC 4673","","PN",17.238,-44.68,0.3,12.0],
+  ["IC 4776","","PN",18.617,-33.38,0.2,12.0],["IC 4846","","PN",19.286,9.53,0.1,11.0],
+  ["IC 5117","","PN",21.675,44.65,0.2,11.6],["IC 5148","","PN",21.983,-39.76,2,11.0],
+
+  // EK AÇIK KÜMELER
+  ["NGC 103","","Cluster",0.439,61.33,5,10.4],["NGC 129","","Cluster",0.488,60.23,12,6.5],
+  ["NGC 133","","Cluster",0.502,63.32,3,9.4],["NGC 146","","Cluster",0.547,63.32,7,9.1],
+  ["NGC 188","","Cluster",0.788,85.26,13,8.1],["NGC 225","","Cluster",0.704,61.78,12,7.0],
+  ["NGC 366","","Cluster",1.083,62.22,4,9.9],["NGC 381","","Cluster",1.111,61.58,6,9.3],
+  ["NGC 433","","Cluster",1.213,60.11,3,9.8],["NGC 436","","Cluster",1.218,58.82,6,8.8],
+  ["NGC 457","Baykuş Küm.","Cluster",1.327,58.28,13,6.4],["NGC 559","","Cluster",1.475,63.30,7,9.5],
+  ["NGC 581","M103","Cluster",1.558,60.66,6,7.4],["NGC 637","","Cluster",1.647,64.00,4,8.2],
+  ["NGC 654","","Cluster",1.667,61.87,6,6.5],["NGC 659","","Cluster",1.678,60.67,5,7.9],
+  ["NGC 663","","Cluster",1.762,61.23,16,7.1],["NGC 744","","Cluster",1.971,55.47,11,7.9],
+  ["NGC 957","","Cluster",2.537,57.55,11,7.6],["NGC 1039","M34","Cluster",2.702,42.75,35,5.2],
+  ["NGC 1220","","Cluster",3.138,53.35,2,11.8],["NGC 1245","","Cluster",3.238,47.23,10,8.4],
+  ["NGC 1342","","Cluster",3.480,37.38,14,6.7],["NGC 1444","","Cluster",3.807,52.67,4,6.6],
+  ["NGC 1528","","Cluster",4.175,51.22,18,6.4],["NGC 1545","","Cluster",4.222,50.25,12,6.2],
+  ["NGC 1647","","Cluster",4.591,19.12,45,6.4],["NGC 1664","","Cluster",4.690,43.68,18,7.6],
+  ["NGC 1746","","Cluster",5.027,23.80,42,6.1],["NGC 1778","","Cluster",5.095,37.02,7,7.7],
+  ["NGC 1807","","Cluster",5.167,16.48,17,7.0],["NGC 1817","","Cluster",5.183,16.70,16,7.7],
+  ["NGC 1893","","Cluster",5.354,33.43,11,7.5],["NGC 1907","","Cluster",5.467,35.33,7,8.2],
+  ["NGC 1960","M36","Cluster",5.601,34.13,12,6.0],["NGC 2099","M37","Cluster",5.873,32.55,24,5.6],
+  ["NGC 2168","M35","Cluster",6.153,24.33,28,5.1],["NGC 2169","","Cluster",6.157,13.96,7,5.9],
+  ["NGC 2194","","Cluster",6.138,12.81,10,8.5],["NGC 2204","","Cluster",6.241,-18.67,13,8.6],
+  ["NGC 2215","","Cluster",6.309,-7.28,11,8.4],["NGC 2232","","Cluster",6.430,-4.75,30,3.9],
+  ["NGC 2236","","Cluster",6.445,6.83,7,8.5],["NGC 2251","","Cluster",6.493,8.37,10,7.3],
+  ["NGC 2252","","Cluster",6.498,5.38,20,7.7],["NGC 2264","Konifer","Cluster",6.683,9.87,20,3.9],
+  ["NGC 2281","","Cluster",6.806,41.08,15,5.4],["NGC 2301","","Cluster",6.849,0.46,12,6.0],
+  ["NGC 2302","","Cluster",6.852,-7.08,4,8.9],["NGC 2309","","Cluster",6.955,-7.17,4,9.6],
+  ["NGC 2311","","Cluster",6.960,-4.60,7,9.6],["NGC 2323","M50","Cluster",7.040,-8.37,16,5.9],
+  ["NGC 2343","","Cluster",7.090,-10.62,7,6.7],["NGC 2345","","Cluster",7.102,-13.18,12,7.7],
+  ["NGC 2354","","Cluster",7.227,-25.72,20,6.5],["NGC 2355","","Cluster",7.222,13.77,9,9.7],
+  ["NGC 2360","","Cluster",7.286,-15.63,13,7.2],["NGC 2362","","Cluster",7.316,-24.95,8,3.8],
+  ["NGC 2374","","Cluster",7.349,-13.27,19,8.0],["NGC 2380","","Cluster",7.383,-11.50,6,9.5],
+  ["NGC 2384","","Cluster",7.389,-21.02,4,7.4],["NGC 2395","","Cluster",7.445,13.55,12,8.0],
+  ["NGC 2414","","Cluster",7.582,-15.47,4,7.9],["NGC 2421","","Cluster",7.615,-20.60,10,8.3],
+  ["NGC 2422","M47","Cluster",7.612,-14.50,30,4.4],["NGC 2423","","Cluster",7.617,-13.87,19,6.7],
+  ["NGC 2428","","Cluster",7.640,-16.87,20,10.0],["NGC 2439","","Cluster",7.687,-31.68,10,6.9],
+  ["NGC 2447","M93","Cluster",7.740,-23.85,22,6.2],["NGC 2451","","Cluster",7.795,-37.97,45,2.8],
+  ["NGC 2453","","Cluster",7.792,-27.20,5,8.3],["NGC 2455","","Cluster",7.793,-21.28,5,11.0],
+  ["NGC 2516","","Cluster",7.974,-60.85,22,3.8],["NGC 2527","","Cluster",8.073,-28.13,22,6.5],
+  ["NGC 2533","","Cluster",8.121,-29.90,4,7.6],["NGC 2546","","Cluster",8.164,-37.62,41,6.3],
+  ["NGC 2547","","Cluster",8.174,-49.17,20,4.7],["NGC 2548","M48","Cluster",8.227,-5.80,54,5.5],
+  ["NGC 2571","","Cluster",8.243,-29.73,13,7.0],["NGC 2580","","Cluster",8.253,-30.30,8,9.7],
+  ["NGC 2587","","Cluster",8.268,-29.52,10,9.2],["NGC 2627","","Cluster",8.594,-29.95,11,8.4],
+  ["NGC 2658","","Cluster",8.730,-32.65,12,9.2],["NGC 2670","","Cluster",8.775,-48.78,8,7.8],
   // KÜRESEL KÜMELER
+  ["NGC 288","","Globular",0.878,-26.59,13,8.1],["NGC 362","","Globular",1.053,-70.85,13,6.4],
+  ["NGC 1261","","Globular",3.202,-55.22,7,8.3],["NGC 1851","","Globular",5.234,-40.05,11,7.1],
+  ["NGC 1904","M79","Globular",5.406,-24.52,9,7.7],["NGC 2298","","Globular",6.815,-36.00,6,9.3],
+  ["NGC 2419","","Globular",7.638,38.88,4,10.4],["NGC 2808","","Globular",9.200,-64.86,14,6.2],
+  ["NGC 3201","","Globular",10.296,-46.41,18,6.7],["NGC 4590","M68","Globular",12.659,-26.74,12,7.3],
+  ["NGC 5024","M53","Globular",13.215,18.17,13,7.6],["NGC 5053","","Globular",13.264,17.70,10,9.9],
+  ["NGC 5139","Omega Cen","Globular",13.447,-47.48,36,3.9],["NGC 5272","M3","Globular",13.703,28.37,18,6.2],
+  ["NGC 5466","","Globular",14.057,28.52,11,9.1],["NGC 5634","","Globular",14.474,-5.98,4,9.5],
+  ["NGC 5897","","Globular",15.289,-21.01,13,8.4],["NGC 5904","M5","Globular",15.309,2.08,20,5.6],
+  ["NGC 5986","","Globular",15.785,-37.79,10,7.1],["NGC 6093","M80","Globular",16.284,-22.97,9,7.3],
+  ["NGC 6121","M4","Globular",16.393,-26.53,26,5.6],["NGC 6171","M107","Globular",16.543,-13.05,10,7.8],
+  ["NGC 6205","M13","Globular",16.695,36.46,20,5.8],["NGC 6218","M12","Globular",16.786,-1.95,16,6.7],
+  ["NGC 6254","M10","Globular",16.952,-4.10,15,6.6],["NGC 6266","M62","Globular",17.018,-30.11,14,6.5],
+  ["NGC 6273","M19","Globular",17.044,-26.27,17,6.8],["NGC 6333","M9","Globular",17.300,-18.51,9,7.7],
+  ["NGC 6341","M92","Globular",17.286,43.14,14,6.4],["NGC 6352","","Globular",17.423,-48.42,7,8.1],
+  ["NGC 6388","","Globular",17.600,-44.73,9,6.7],["NGC 6397","","Globular",17.677,-53.67,26,5.7],
+  ["NGC 6402","M14","Globular",17.630,-3.25,12,7.6],["NGC 6441","","Globular",17.836,-37.05,8,7.2],
+  ["NGC 6496","","Globular",17.984,-44.27,7,8.6],["NGC 6522","","Globular",18.060,-30.03,5,8.3],
+  ["NGC 6541","","Globular",18.134,-43.71,13,6.3],["NGC 6553","","Globular",18.167,-25.91,9,8.3],
+  ["NGC 6584","","Globular",18.311,-52.22,8,8.0],["NGC 6626","M28","Globular",18.409,-24.87,11,6.8],
+  ["NGC 6637","M69","Globular",18.523,-32.35,10,7.6],["NGC 6656","M22","Globular",18.607,-23.90,24,5.1],
+  ["NGC 6681","M70","Globular",18.719,-32.29,8,7.9],["NGC 6712","","Globular",18.884,-8.71,7,8.1],
+  ["NGC 6715","M54","Globular",18.917,-30.48,9,7.6],["NGC 6723","","Globular",18.991,-36.63,11,7.3],
+  ["NGC 6752","","Globular",19.181,-59.99,20,5.4],["NGC 6779","M56","Globular",19.275,30.18,7,8.3],
+  ["NGC 6809","M55","Globular",19.667,-30.96,19,6.3],["NGC 6838","M71","Globular",19.897,18.78,7,8.2],
+  ["NGC 6864","M75","Globular",20.099,-21.92,6,8.5],["NGC 6934","","Globular",20.573,7.40,7,8.8],
+  ["NGC 6981","M72","Globular",20.890,-12.53,6,9.3],["NGC 7006","","Globular",21.023,16.19,3,10.6],
+  ["NGC 7078","M15","Globular",21.500,12.17,18,6.2],["NGC 7089","M2","Globular",21.558,-0.82,13,6.5],
+  ["NGC 7099","M30","Globular",21.672,-23.18,11,7.2],
   ["M2","","Globular",21.558,-0.82,13,6.5],["M3","","Globular",13.703,28.37,18,6.2],
   ["M4","","Globular",16.393,-26.53,26,5.6],["M5","","Globular",15.309,2.08,20,5.6],
   ["M12","","Globular",16.786,-1.95,16,6.7],["M13","Herkül Küm.","Globular",16.695,36.46,20,5.8],
@@ -1082,11 +1271,30 @@ document.getElementById('hznFile').addEventListener('change',function(e){
 function showMsg(t,type){document.getElementById('msgArea').innerHTML='<div class="msg msg-'+(type==='warn'?'warn':'info')+'">'+t+'</div>';}
 function clearMsg(){document.getElementById('msgArea').innerHTML='';}
 
+
+// ─── Tema ─────────────────────────────────────────────────────────────────────
+let _theme='dark';
+function loadTheme(){
+  try{const t=localStorage.getItem('astro_theme');if(t==='light'||t==='dark')_theme=t;}catch(e){}
+  applyTheme();
+}
+function applyTheme(){
+  document.body.classList.toggle('light-theme',_theme==='light');
+  const btn=document.getElementById('themeToggle');
+  if(btn)btn.innerHTML=_theme==='dark'?'☀️':'🌙';
+}
+function toggleTheme(){
+  _theme=_theme==='dark'?'light':'dark';
+  try{localStorage.setItem('astro_theme',_theme);}catch(e){}
+  applyTheme();
+  if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}
+}
+
 // ─── Init ─────────────────────────────────────────────────────────────────────
 (function(){
   const today=new Date(),y=today.getFullYear(),m=String(today.getMonth()+1).padStart(2,'0'),d=String(today.getDate()).padStart(2,'0');
   document.getElementById('dateInput').value=y+'-'+m+'-'+d;
-  loadLocation();loadBortle();
+  loadLocation();loadBortle();loadTheme();
   renderSetupSelect();
   updateSubtitle();
   showMsg(L('initMsg'),'info');
