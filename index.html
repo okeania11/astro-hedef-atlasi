@@ -59,7 +59,8 @@ header{margin-bottom:20px;}
 .sitem-actions{display:flex;gap:6px;}
 .controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;margin-bottom:10px;align-items:end;}
 .field label{display:block;color:var(--text2);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
-.field input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:13px;padding:10px 12px;border-radius:4px;outline:none;transition:border-color .2s;}
+.field input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:13px;padding:10px 12px;border-radius:4px;outline:none;transition:border-color .2s;color-scheme:dark;}
+input[type=date],input[type=time],input[type=file]{color-scheme:dark;color:var(--text);}
 .field input:focus{border-color:var(--accent);}
 .field input[type="file"]{cursor:pointer;padding:8px 12px;font-size:11px;}
 .btn{background:var(--accent);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;padding:10px 22px;border-radius:4px;cursor:pointer;transition:background .2s,transform .1s;white-space:nowrap;}
@@ -72,7 +73,7 @@ canvas{width:100%;display:block;border-radius:3px;}
 .stat-val{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:var(--accent);letter-spacing:1px;font-variant-numeric:tabular-nums;}
 .stat-lbl{font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;}
 .moon-bar{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:10px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
-.moon-phase{font-size:26px;line-height:1;}
+.moon-phase{font-size:26px;line-height:1;display:flex;align-items:center;}
 .moon-info,.moon-rise{font-size:12px;line-height:1.8;}
 .moon-info strong{color:var(--gold);}
 .moon-rise{border-left:1px solid var(--border);padding-left:20px;}
@@ -127,6 +128,62 @@ tbody tr:last-child td{border-bottom:none;}
 .note-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:10px;border-radius:4px;resize:vertical;outline:none;min-height:100px;}
 .note-textarea:focus{border-color:var(--accent);}
 @media(max-width:700px){.controls{grid-template-columns:1fr 1fr;}.controls .btn{grid-column:1/-1;}}
+
+@media(max-width:600px){
+  body{font-size:13px;}
+  .container{padding:14px 12px 40px;}
+  .logo{font-size:15px;}
+  .logo span{display:block;font-size:12px;margin-top:2px;}
+  .subtitle{font-size:9px;}
+  header{flex-wrap:wrap;gap:8px;}
+  header>div:first-child{flex:1;min-width:0;}
+  header>div:last-child{flex-shrink:0;}
+  /* Topbar */
+  .topbar{flex-direction:column;align-items:flex-start;gap:8px;padding:10px;}
+  .bortle-wrap{margin-left:0;width:100%;justify-content:flex-start;}
+  .bortle-desc{min-width:unset;font-size:9px;}
+  .setup-bar{flex-direction:column;align-items:flex-start;gap:6px;}
+  .setup-select{width:100%;}
+  /* Controls */
+  .controls{grid-template-columns:1fr 1fr;gap:8px;}
+  .controls .btn{grid-column:1/-1;padding:12px;}
+  .field label{font-size:9px;}
+  .field input{font-size:12px;padding:8px 10px;}
+  /* Stats */
+  .stats-bar{gap:6px;}
+  .stat{padding:5px 8px;}
+  .stat-val{font-size:16px;}
+  .stat-lbl{font-size:9px;}
+  /* Filter buttons */
+  .filter-row{gap:5px;}
+  .filter-btn{font-size:10px;padding:4px 8px;}
+  /* Moon bar */
+  .moon-bar{flex-direction:column;gap:10px;padding:10px;}
+  .moon-rise{border-left:none;padding-left:0;border-top:1px solid var(--border);padding-top:8px;}
+  /* Table — yatay kaydırma */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{min-width:700px;font-size:11px;}
+  th{padding:6px 6px;font-size:9px;}
+  td{padding:5px 6px;}
+  .name-cell{font-size:12px;}
+  .name-cell .common{font-size:9px;}
+  .type-badge{font-size:8px;padding:2px 5px;}
+  .size-cell{font-size:10px;min-width:100px;}
+  .filter-rec{font-size:10px;}
+  /* Canvas */
+  canvas{height:180px!important;}
+  /* Modals */
+  .modal{width:95vw;padding:16px;}
+  /* Search row */
+  #searchRow{flex-direction:column;align-items:flex-start;}
+  #searchInput{width:100%!important;}
+  /* Sağ üst butonlar */
+  header>div:last-child button{font-size:10px;padding:4px 8px;}
+  /* Site link */
+  #siteLink{font-size:10px;}
+  #downloadText{font-size:8px;}
+  #downloadBtn{font-size:10px;padding:4px 8px;}
+}
 
 </style>
 </head>
@@ -843,7 +900,15 @@ const DEF_SETUPS=[
   {id:'s3',name:'EdgeHD 8" — f/7',  fratio:7,focalLength:1422,sensorW:23.5,sensorH:15.7,camera:'ASI2600MM Pro',filters:['L','R','G','B','Ha','OIII','SII']},
   {id:'s4',name:'Gezegen — EdgeHD+2.5x',fratio:17.5,focalLength:3500,sensorW:4.8,sensorH:3.6,camera:'ZWO 224',filters:['UV-IR']},
 ];
-function loadSetups(){try{const s=JSON.parse(localStorage.getItem('astro_setups'));return(s&&s.length)?s:DEF_SETUPS;}catch(e){return DEF_SETUPS;}}
+function loadSetups(){
+  try{
+    const s=JSON.parse(localStorage.getItem('astro_setups'));
+    if(s&&s.length)return s;
+    // İlk açılış — varsayılanları kaydet
+    saveSetups(DEF_SETUPS);
+    return DEF_SETUPS;
+  }catch(e){return DEF_SETUPS;}
+}
 function saveSetups(a){try{localStorage.setItem('astro_setups',JSON.stringify(a));}catch(e){}}
 let setups=loadSetups();
 function renderSetupSelect(){const sel=document.getElementById('setupSelect');const cur=sel.value;sel.innerHTML='<option value="">— Kurulum seçin —</option>';setups.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name+' ('+s.camera+')';sel.appendChild(o);});if(cur)sel.value=cur;}
@@ -973,7 +1038,22 @@ function mPhase(j){const k=(j-2451550.1)/29.530588;return((k%1)+1)%1;}
 function mPos(j){const L=(218.316+13.176396*86400*(j-2451545)/86400)%360,M=R((134.963+13.064993*86400*(j-2451545)/86400)%360),lon=R(L+6.289*Math.sin(M)),ob=R(23.439);const ra=D(Math.atan2(Math.sin(lon)*Math.cos(ob),Math.cos(lon))),dec=D(Math.asin(Math.sin(ob)*Math.sin(lon)));return{ra:((ra/15)+24)%24,dec};}
 function mRise(d0,mp){let prev=null,r=null;for(let t=0;t<=24;t+=10/60){const p=aa(mp.ra,mp.dec,jd(d0)+t/24,OBS_LAT,OBS_LON);if(prev!==null&&prev<0&&p.alt>=0){r=t;break;}prev=p.alt;}return r;}
 function angD(r1,d1,r2,d2){return D(Math.acos(Math.max(-1,Math.min(1,Math.sin(R(d1))*Math.sin(R(d2))+Math.cos(R(d1))*Math.cos(R(d2))*Math.cos(R((r1-r2)*15))))));}
-function pEmoji(p){return['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'][Math.round(p*8)%8];}
+function pEmoji(p){
+  const illum=(1-Math.cos(2*Math.PI*p))/2;
+  const R=16,cx=R,cy=R,r=R-2;
+  // rx: hilalde küçük, dolunayda büyük
+  // Büyüyen (p<0.5): sağ aydınlık; Küçülen (p>=0.5): sol aydınlık
+  const waxing=p<0.5;
+  // Elipsin x yarıçapı: illum 0→0.5 arası 0→r, 0.5→1 arası r→0
+  const ex=illum<=0.5?illum*2*r:(1-illum)*2*r;
+  // Sweep: aydınlık tarafın yönü
+  const sweep1=waxing?1:0; // ana yarım daire yönü
+  const sweep2=illum<=0.5?(waxing?0:1):(waxing?1:0); // elips yönü
+  const path=illum<0.01?''
+    :illum>0.99?`<circle cx="${cx}" cy="${cy}" r="${r}" fill="rgba(255,230,100,0.9)"/>`
+    :`<path d="M ${cx} ${cy-r} A ${r} ${r} 0 0 ${sweep1} ${cx} ${cy+r} A ${ex} ${r} 0 0 ${sweep2} ${cx} ${cy-r} Z" fill="rgba(255,230,100,0.9)"/>`;
+  return `<svg width="${2*R}" height="${2*R}" viewBox="0 0 ${2*R} ${2*R}" style="vertical-align:middle;display:inline-block"><circle cx="${cx}" cy="${cy}" r="${r}" fill="#080c18" stroke="rgba(255,220,80,0.5)" stroke-width="1.5"/>${path}</svg>`;
+}
 function pText(p){if(p<0.03||p>0.97)return L('moonNew');if(p<0.22)return L('moonCrescent');if(p<0.28)return L('moonFirstQ');if(p<0.47)return L('moonWaxing');if(p<0.53)return L('moonFull');if(p<0.72)return L('moonWaning');if(p<0.78)return L('moonLastQ');return L('moonDecCrescent');}
 function parseUFUK(txt){const pts=[];for(const ln of txt.split('\n')){const t=ln.trim();if(!t||t.startsWith('#')||t.startsWith('[')||/^[lL]/.test(t))continue;const p=t.split(/[\s,]+/);if(p.length>=2){const az=parseFloat(p[0]),al=parseFloat(p[1]);if(!isNaN(az)&&!isNaN(al))pts.push({az,alt:al});}}return pts.sort((a,b)=>a.az-b.az);}
 
@@ -1175,19 +1255,21 @@ function drawFrame(utcHour){
     const obj=results.find(r=>r.name===selectedObj);
     if(obj){
       const color=TYPE_COLOR[obj.type]||'#fff';
-      let prevX=null,prevY=null,prevAbove=null;
-      for(let t=currentObsStartUTC;t<=currentObsStartUTC+7;t+=15/60){
+      let prevX=null,prevY=null,prevAbove=null,prevAz=null;
+      for(let t=currentObsStartUTC;t<=currentObsStartUTC+10;t+=15/60){
         const jt=jd(currentDateUTC0h)+t/24;
         const pos=aa(obj.ra,obj.dec,jt,OBS_LAT,OBS_LON);
         const above=pos.alt>hAlt(pos.az);
         const x=canvasAzX(pos.az,W),y=canvasAltY(pos.alt,H);
-        if(prevX!==null){
+        // Azimut 0/360 sınırını geçince çizgiyi kes
+        const azJump=prevAz!==null&&Math.abs(pos.az-prevAz)>180;
+        if(prevX!==null&&!azJump){
           ctx.beginPath();ctx.moveTo(prevX,prevY);ctx.lineTo(x,y);
           if(above&&prevAbove){ctx.strokeStyle=color;ctx.setLineDash([]);ctx.lineWidth=2;ctx.globalAlpha=0.55;}
           else{ctx.strokeStyle='#ff5370';ctx.setLineDash([3,3]);ctx.lineWidth=1;ctx.globalAlpha=0.25;}
           ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
         }
-        prevX=x;prevY=y;prevAbove=above;
+        prevX=x;prevY=y;prevAbove=above;prevAz=pos.az;
       }
     }
   }
@@ -1217,6 +1299,47 @@ function drawFrame(utcHour){
       if(isSel||favorites.has(r.name)){ctx.font='bold 10px monospace';ctx.fillStyle='#fff';ctx.fillText(r.name,x+r2+3,y+3);}
     }
   });
+  // Ay konumu
+  if(_moonCache){
+    const mp=mPos(j2);
+    const mpos=aa(mp.ra,mp.dec,j2,OBS_LAT,OBS_LON);
+    const mHoriAlt=hAlt(mpos.az);
+    const mx=canvasAzX(mpos.az,W);
+    const phase=_moonCache.mpv;
+    const MR=9;
+    if(mpos.alt>mHoriAlt){
+      const my=canvasAltY(mpos.alt,H);
+      ctx.strokeStyle='rgba(255,220,100,0.2)';ctx.lineWidth=0.5;ctx.setLineDash([2,3]);
+      ctx.beginPath();ctx.moveTo(mx,my+MR);ctx.lineTo(mx,canvasAltY(mHoriAlt,H));ctx.stroke();
+      ctx.setLineDash([]);
+      // Daire arka plan
+      ctx.beginPath();ctx.arc(mx,my,MR,0,Math.PI*2);
+      ctx.fillStyle='rgba(15,15,30,0.9)';ctx.fill();
+      ctx.strokeStyle='rgba(255,220,80,0.8)';ctx.lineWidth=1.5;ctx.stroke();
+      // Faz çizimi
+      const illum=(1-Math.cos(2*Math.PI*phase))/2;
+      ctx.save();ctx.beginPath();ctx.arc(mx,my,MR,0,Math.PI*2);ctx.clip();
+      ctx.fillStyle='rgba(15,15,35,0.8)';ctx.fillRect(mx-MR,my-MR,MR*2,MR*2);
+      const ex=MR*(Math.abs(illum*2-1));
+      ctx.beginPath();
+      if(illum<=0.5){
+        ctx.arc(mx,my,MR,-Math.PI/2,Math.PI/2,false);
+        ctx.ellipse(mx,my,ex,MR,0,Math.PI/2,-Math.PI/2,true);
+      } else {
+        ctx.arc(mx,my,MR,Math.PI/2,-Math.PI/2,false);
+        ctx.ellipse(mx,my,ex,MR,0,-Math.PI/2,Math.PI/2,true);
+      }
+      ctx.closePath();
+      ctx.fillStyle='rgba(255,230,120,0.9)';ctx.fill();
+      ctx.restore();
+      ctx.font='bold 9px monospace';ctx.fillStyle='rgba(255,220,80,0.9)';
+      ctx.fillText('Ay',mx-7,my-MR-3);
+    } else {
+      const my=canvasAltY(Math.max(mHoriAlt+3,2),H);
+      ctx.globalAlpha=0.3;ctx.font='11px monospace';ctx.fillStyle='#ffdc50';
+      ctx.fillText('☽',mx-5,my);ctx.globalAlpha=1;
+    }
+  }
 }
 
 function setupCanvasInteraction(){
