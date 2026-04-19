@@ -1,12 +1,10 @@
-const CACHE = 'astro-atlas-v067';
-const FILES = [
-  '/astro-hedef-atlasi/',
-  '/astro-hedef-atlasi/index.html',
-];
+const CACHE = 'astro-atlas-v068';
+const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting())
+    caches.open(CACHE).then(cache => cache.addAll(FILES).catch(() => {}))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -19,7 +17,14 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('/astro-hedef-atlasi/')))
+    fetch(e.request)
+      .then(resp => {
+        const clone = resp.clone();
+        caches.open(CACHE).then(cache => cache.put(e.request, clone)).catch(() => {});
+        return resp;
+      })
+      .catch(() => caches.match(e.request).then(r => r || caches.match('./')))
   );
 });
