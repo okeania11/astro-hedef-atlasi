@@ -77,6 +77,10 @@ input[type=date],input[type=time],input[type=file]{color-scheme:dark;color:var(-
 canvas{width:100%;display:block;border-radius:3px;}
 .stats-bar{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
 .stat{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:7px 12px;}
+
+.stat-clickable{cursor:pointer;transition:all .15s;}
+.stat-clickable:hover{background:var(--bg3);border-color:var(--accent);}
+.stat-clickable.active{background:var(--bg3);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
 .stat-val{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:var(--accent);letter-spacing:1px;font-variant-numeric:tabular-nums;}
 .stat-lbl{font-size:11px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;}
 .moon-bar{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:10px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
@@ -134,6 +138,14 @@ tbody tr:last-child td{border-bottom:none;}
 .msg-info{background:rgba(79,195,247,.1);border:1px solid rgba(79,195,247,.3);color:var(--accent);}
 .note-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:10px;border-radius:4px;resize:vertical;outline:none;min-height:100px;}
 .note-textarea:focus{border-color:var(--accent);}
+
+.score-label{display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.5px;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle;}
+.sl-excellent{background:rgba(255,100,80,0.18);color:#ff6450;}
+.sl-verygood{background:rgba(137,221,255,0.18);color:#89ddff;}
+.sl-good{background:rgba(199,146,234,0.18);color:#c792ea;}
+.sl-risky{background:rgba(255,203,107,0.18);color:#ffcb6b;}
+.sl-skip{background:rgba(255,83,112,0.18);color:#ff5370;}
+
 @media(max-width:700px){.controls{grid-template-columns:1fr 1fr;}.controls .btn{grid-column:1/-1;}}
 
 @media(max-width:600px){
@@ -291,7 +303,7 @@ tbody tr:last-child td{border-bottom:none;}
   <div id="moonBar" style="display:none" class="moon-bar"></div>
   <div id="statsBar" class="stats-bar" style="display:none"></div>
 
-  <div id="filterRow" class="filter-row" style="display:none">
+  <div id="filterRow" class="filter-row" style="display:none!important">
     <span id="filterLabel" style="color:var(--text2);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-right:4px;">Filtre:</span>
     <button class="filter-btn fav-btn" data-type="FAV" onclick="setFilter(this,'FAV')" title="Sadece favori objeleri göster">★ Favoriler</button>
     <button class="filter-btn active" data-type="ALL" onclick="setFilter(this,'ALL')" title="Tüm objeleri göster">Tümü</button>
@@ -371,15 +383,10 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="form-row"><label>Kamera</label><input type="text" id="sfCamera" placeholder="örn: ASI2600MM Pro"></div>
       <div class="form-row">
         <label>Mevcut Filtreler</label>
-        <div class="filter-checks" id="sfFilters">
-          <label class="fcheck" onclick="tcheck(this)"><input type="checkbox" value="L"> L</label>
-          <label class="fcheck" onclick="tcheck(this)"><input type="checkbox" value="R"> R</label>
-          <label class="fcheck" onclick="tcheck(this)"><input type="checkbox" value="G"> G</label>
-          <label class="fcheck" onclick="tcheck(this)"><input type="checkbox" value="B"> B</label>
-          <label class="fcheck" onclick="tcheck(this)"><input type="checkbox" value="Ha"> Ha</label>
-          <label class="fcheck" onclick="tcheck(this)"><input type="checkbox" value="OIII"> OIII</label>
-          <label class="fcheck" onclick="tcheck(this)"><input type="checkbox" value="SII"> SII</label>
-          <label class="fcheck" onclick="tcheck(this)"><input type="checkbox" value="UV-IR"> UV-IR</label>
+        <div class="filter-checks" id="sfFilters"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <input type="text" id="sfCustomFilter" placeholder="Kendi filtrenizi ekleyin (örn: L-eXtreme, L-Pro)" style="flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:6px 10px;border-radius:4px;outline:none">
+          <button class="btn-sm" onclick="addCustomFilter()" style="padding:6px 14px">+ Ekle</button>
         </div>
       </div>
       <input type="hidden" id="sfEditId">
@@ -396,7 +403,8 @@ tbody tr:last-child td{border-bottom:none;}
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
   </div>
-  <div style="font-size:10px;color:var(--text2);opacity:0.6;margin-top:3px;font-family:'Space Mono',monospace;">
+  <div style="margin-top:10px"><a href="#" target="_blank" style="display:inline-block;background:#FFDD00;color:#000;padding:6px 14px;border-radius:4px;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-decoration:none;" title="Bir kahve ısmarla">☕ Buy Me a Coffee</a></div>
+  <div style="font-size:10px;color:var(--text2);opacity:0.6;margin-top:8px;font-family:'Space Mono',monospace;">
     <span class="footer-calc">Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez</span>
   </div>
 </footer>
@@ -454,7 +462,7 @@ const _L={
     filterNoSetup:'— kurulum seçin', filterNone:'— Filtre yok',
     footerDesign:'Tasarım & konsept:', footerCity:'Antalya, Türkiye',
     footerCalc:'Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez',
-    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz kullanım için', downloadBtn:'⬇ İndir', searchPh:'Obje ara... (M97, NGC 891...)', searchClearTitle:'Temizle', addObjBtn:'🔍 Katalogdan Obje Ekle', addObjTitle:'Dışarıdan Obje Ekle', addObjWarn:'⚠ Bu özellik internet bağlantısı gerektirir', addObjLabel:'Obje Adı', addObjPh:'örn: LBN 438, Barnard 33, vdB 141', addObjSearch:'Ara', addObjAdd:'Listeye Ekle', addObjCancel:'İptal', chooseFile:'📁 Dosya Seç',
+    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz kullanım için', downloadBtn:'⬇ İndir', searchPh:'Obje ara... (M97, NGC 891...)', searchClearTitle:'Temizle', addObjBtn:'🔍 Katalogdan Obje Ekle', addObjTitle:'Dışarıdan Obje Ekle', addObjWarn:'⚠ Bu özellik internet bağlantısı gerektirir', addObjLabel:'Obje Adı', addObjPh:'örn: LBN 438, Barnard 33, vdB 141', addObjSearch:'Ara', addObjAdd:'Listeye Ekle', addObjCancel:'İptal', chooseFile:'📁 Dosya Seç', slExcellent:'Çok Net', slVeryGood:'Çok İyi', slGood:'İyi', slRisky:'Riskli', slSkip:'Geç',
   },
   EN:{
     subtitle:'Astrophotography Night Planner',
@@ -501,7 +509,7 @@ const _L={
     filterNoSetup:'— select setup', filterNone:'— No filter',
     footerDesign:'Design & concept:', footerCity:'Antalya, Turkey',
     footerCalc:'All calculations run in real-time in the browser · No server or internet connection required',
-    siteLink:'📖 About this app — click for details', langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download', searchPh:'Search objects... (M97, NGC 891...)', searchClearTitle:'Clear', addObjBtn:'🔍 Add Object from Catalog', addObjTitle:'Add External Object', addObjWarn:'⚠ This feature requires an internet connection', addObjLabel:'Object Name', addObjPh:'e.g. LBN 438, Barnard 33, vdB 141', addObjSearch:'Search', addObjAdd:'Add to List', addObjCancel:'Cancel', chooseFile:'📁 Choose File',
+    siteLink:'📖 About this app — click for details', langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download', searchPh:'Search objects... (M97, NGC 891...)', searchClearTitle:'Clear', addObjBtn:'🔍 Add Object from Catalog', addObjTitle:'Add External Object', addObjWarn:'⚠ This feature requires an internet connection', addObjLabel:'Object Name', addObjPh:'e.g. LBN 438, Barnard 33, vdB 141', addObjSearch:'Search', addObjAdd:'Add to List', addObjCancel:'Cancel', chooseFile:'📁 Choose File', slExcellent:'Excellent', slVeryGood:'Very Good', slGood:'Good', slRisky:'Risky', slSkip:'Skip',
   }
 };
 function L(k){return(_L[_lang]&&_L[_lang][k]!==undefined)?_L[_lang][k]:(_L['TR'][k]||k);}
@@ -519,7 +527,7 @@ function toggleLang(){
   },10);
   renderMoonBar();
   if(!results.length)showMsg(L('initMsg'),'info');
-  if(results.length)applySort();
+  if(results.length){applySort();}
   try{const ei=document.getElementById('emptyInitText');if(ei)ei.innerHTML=L('emptyInit');}catch(e){}
   try{const fl=document.getElementById('filterLabel');if(fl)fl.textContent=L('filterLabel');}catch(e){}
   // Legend
@@ -927,9 +935,10 @@ function getSetup(){const id=document.getElementById('setupSelect').value;return
 function openSetupManager(){renderSetupList();document.getElementById('setupForm').style.display='none';document.getElementById('setupModalClose').style.display='flex';document.getElementById('setupModal').classList.add('open');}
 function closeSetupManager(){document.getElementById('setupModal').classList.remove('open');renderSetupSelect();}
 function renderSetupList(){const el=document.getElementById('setupList');el.innerHTML=setups.map(s=>'<div class="sitem"><div><div class="sitem-name">'+s.name+'</div><div class="sitem-detail">f/'+s.fratio+' · '+s.focalLength+'mm · '+s.sensorW+'×'+s.sensorH+'mm · '+s.camera+' · '+s.filters.join(', ')+'</div></div><div class="sitem-actions"><button class="btn-sm" onclick="editSetup(\''+s.id+'\')">Düzenle</button><button class="btn-danger" onclick="deleteSetup(\''+s.id+'\')">Sil</button></div></div>').join('')||'<p style="color:var(--text2);font-size:12px">'+L('noSetups')+'</p>';}
+
 function tcheck(lbl){const cb=lbl.querySelector('input');cb.checked=!cb.checked;lbl.classList.toggle('checked',cb.checked);}
-function openAddSetup(){['sfName','sfFratio','sfFocal','sfSensorW','sfSensorH','sfCamera','sfEditId'].forEach(id=>document.getElementById(id).value='');document.querySelectorAll('#sfFilters input').forEach(cb=>{cb.checked=false;cb.closest('label').classList.remove('checked');});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
-function editSetup(id){const s=setups.find(x=>x.id===id);if(!s)return;document.getElementById('sfName').value=s.name;document.getElementById('sfFratio').value=s.fratio;document.getElementById('sfFocal').value=s.focalLength||'';document.getElementById('sfSensorW').value=s.sensorW||'';document.getElementById('sfSensorH').value=s.sensorH||'';document.getElementById('sfCamera').value=s.camera;document.getElementById('sfEditId').value=id;document.querySelectorAll('#sfFilters input').forEach(cb=>{cb.checked=s.filters.includes(cb.value);cb.closest('label').classList.toggle('checked',cb.checked);});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
+function openAddSetup(){['sfName','sfFratio','sfFocal','sfSensorW','sfSensorH','sfCamera','sfEditId'].forEach(id=>document.getElementById(id).value='');renderFilterChecks([]);document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
+function editSetup(id){const s=setups.find(x=>x.id===id);if(!s)return;document.getElementById('sfName').value=s.name;document.getElementById('sfFratio').value=s.fratio;document.getElementById('sfFocal').value=s.focalLength||'';document.getElementById('sfSensorW').value=s.sensorW||'';document.getElementById('sfSensorH').value=s.sensorH||'';document.getElementById('sfCamera').value=s.camera;document.getElementById('sfEditId').value=id;renderFilterChecks(s.filters||[]);document.querySelectorAll('#sfFilters .fcheck').forEach(lbl=>{const cb=lbl.querySelector('input');lbl.classList.toggle('checked',cb.checked);});document.getElementById('setupForm').style.display='block';document.getElementById('setupModalClose').style.display='none';}
 function deleteSetup(id){if(!confirm(L('deleteConfirm')))return;setups=setups.filter(s=>s.id!==id);saveSetups(setups);renderSetupList();renderSetupSelect();}
 function closeAddSetup(){document.getElementById('setupForm').style.display='none';document.getElementById('setupModalClose').style.display='flex';}
 function saveSetup(){const name=document.getElementById('sfName').value.trim();const fratio=parseFloat(document.getElementById('sfFratio').value);const focalLength=parseFloat(document.getElementById('sfFocal').value)||null;const sensorW=parseFloat(document.getElementById('sfSensorW').value)||null;const sensorH=parseFloat(document.getElementById('sfSensorH').value)||null;const camera=document.getElementById('sfCamera').value.trim();const filters=[...document.querySelectorAll('#sfFilters input:checked')].map(cb=>cb.value);if(!name||!fratio||!camera){alert('Lütfen en azından ad, f/ oranı ve kamera giriniz.');return;}const editId=document.getElementById('sfEditId').value;const obj={name,fratio,focalLength,sensorW,sensorH,camera,filters};if(editId){const idx=setups.findIndex(s=>s.id===editId);if(idx>=0)setups[idx]={id:editId,...obj};}else setups.push({id:'u'+Date.now(),...obj});saveSetups(setups);renderSetupList();closeAddSetup();}
@@ -1128,7 +1137,7 @@ function calculate(){
   }
   const seen=new Set();results=results.filter(r=>{if(seen.has(r.name))return false;seen.add(r.name);return true;});
   document.getElementById('statsBar').style.display='flex';
-  document.getElementById('filterRow').style.display='flex';
+  // filterRow removed - stats are clickable instead
   document.getElementById('searchRow').style.display='flex';
   document.getElementById('ufukWrap').style.display='block';
   clearMsg();showMsg(results.length+' '+L('calcResult')+' — '+setup.name+' · f/'+setup.fratio+' · Bortle '+OBS_BORTLE,'info');
@@ -1136,6 +1145,19 @@ function calculate(){
 }
 
 // ─── Filtre & Sıralama ────────────────────────────────────────────────────────
+
+function setFilterByType(type){
+  activeType=type;_showAll=false;
+  // Update stat cards
+  document.querySelectorAll('.stat-clickable').forEach(s=>s.classList.remove('active'));
+  const cards=document.querySelectorAll('.stat-clickable');
+  const order=['ALL','FAV','Galaxy','Nebula','PN','Cluster','Globular','Gezegen'];
+  const idx=order.indexOf(type);
+  if(idx>=0&&cards[idx])cards[idx].classList.add('active');
+  applySort();
+  if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}
+}
+
 function setFilter(btn,type){activeType=type;_showAll=false;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applySort();if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}}
 function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}_showAll=false;applySort();}
 function applySort(){
@@ -1146,15 +1168,16 @@ function applySort(){
   filtered.sort((a,b)=>{let va=a[sortCol],vb=b[sortCol];if(typeof va==='string')return va.localeCompare(vb)*sortDir;return(va-vb)*sortDir;});
   const cnt=t=>results.filter(r=>r.type===t).length;
   const fav=results.filter(r=>favorites.has(r.name)).length;
+  function _st(type,val,color){const isActive=activeType===type?' active':'';const extra=color?' style="color:'+color+'"':'';return '<div class="stat stat-clickable'+isActive+'" onclick="setFilterByType(\''+type+'\')"><div class="stat-val"'+extra+'>'+val+'</div><div class="stat-lbl">'+L(type==='ALL'?'statTotal':type==='FAV'?'statFav':type==='Gezegen'?'statPlanet':'stat'+type)+'</div></div>';}
   document.getElementById('statsBar').innerHTML=
-    '<div class="stat"><div class="stat-val">'+results.length+'</div><div class="stat-lbl">'+L('statTotal')+'</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--gold)">★ '+fav+'</div><div class="stat-lbl">'+L('statFav')+'</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--accent2)">'+cnt('Galaxy')+'</div><div class="stat-lbl">'+L('statGalaxy')+'</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--green)">'+cnt('Nebula')+'</div><div class="stat-lbl">'+L('statNebula')+'</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:#ff9a6c">'+cnt('PN')+'</div><div class="stat-lbl">'+L('statPN')+'</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--accent3)">'+cnt('Cluster')+'</div><div class="stat-lbl">'+L('statCluster')+'</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:var(--gold)">'+cnt('Globular')+'</div><div class="stat-lbl">'+L('statGlobular')+'</div></div>'+
-    '<div class="stat"><div class="stat-val" style="color:#ffe566">'+cnt('Gezegen')+'</div><div class="stat-lbl">'+L('statPlanet')+'</div></div>';
+    _st('ALL',results.length,'')+
+    _st('FAV','★ '+fav,'var(--gold)')+
+    _st('Galaxy',cnt('Galaxy'),'var(--accent2)')+
+    _st('Nebula',cnt('Nebula'),'var(--green)')+
+    _st('PN',cnt('PN'),'#ff9a6c')+
+    _st('Cluster',cnt('Cluster'),'var(--accent3)')+
+    _st('Globular',cnt('Globular'),'var(--gold)')+
+    _st('Gezegen',cnt('Gezegen'),'#ffe566');
   renderTable();
 }
 
@@ -1162,6 +1185,15 @@ function fmtH(h){const hh=Math.floor(((h%24)+24)%24),mm=Math.round((h%1)*60);ret
 
 const PAGE_SIZE=50;
 let _showAll=false;
+
+
+function scoreLabel(s){
+  if(s>=85)return{t:L('slExcellent'),c:'sl-excellent'};
+  if(s>=75)return{t:L('slVeryGood'),c:'sl-verygood'};
+  if(s>=65)return{t:L('slGood'),c:'sl-good'};
+  if(s>=50)return{t:L('slRisky'),c:'sl-risky'};
+  return{t:L('slSkip'),c:'sl-skip'};
+}
 
 function renderTable(){
   const tb=document.getElementById('tableBody');
@@ -1199,7 +1231,7 @@ function renderTable(){
       +'<td class="window-cell">'+r.window+L('hourUnit')+'</td>'
       +'<td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td>'
       +'<td><span class="filter-rec '+fr.c+'" title="'+(fr.d||'')+'">'+fr.t+'</span></td>'
-      +'<td><span style="font-size:14px;color:var(--text);font-weight:700">'+r.score+'</span></td>'
+      +'<td><span style="font-size:14px;color:var(--text);font-weight:700">'+r.score+'</span><br><span class="score-label '+scoreLabel(r.score).c+'">'+scoreLabel(r.score).t+'</span></td>'
       +'</tr>';
   }).join('');
   // Show all button
@@ -1448,6 +1480,50 @@ function toggleTheme(){
   if(currentDateUTC0h){const slVal=parseInt(document.getElementById('timeSlider').value);drawFrame(currentObsStartUTC+slVal/60);}
 }
 
+
+
+// ─── Custom Filters ──────────────────────────────────────────────────────────
+const DEFAULT_FILTERS=['L','R','G','B','Ha','OIII','SII','UV-IR','CLS','L-Pro','L-eXtreme','L-Ultimate','L-eNhance'];
+function getCustomFilters(){try{return JSON.parse(localStorage.getItem('astro_custom_filters'))||[];}catch(e){return[];}}
+function saveCustomFilters(arr){localStorage.setItem('astro_custom_filters',JSON.stringify(arr));}
+function getAllFilters(){return[...DEFAULT_FILTERS,...getCustomFilters()];}
+
+function renderFilterChecks(selectedFilters){
+  const div=document.getElementById('sfFilters');
+  if(!div)return;
+  const sel=selectedFilters||[];
+  const all=getAllFilters();
+  const custom=getCustomFilters();
+  div.innerHTML=all.map(f=>{
+    const checked=sel.includes(f)?'checked':'';
+    const cls=sel.includes(f)?'fcheck checked':'fcheck';
+    const isCustom=custom.includes(f);
+    return '<label class="'+cls+'" onclick="tcheck(this)"><input type="checkbox" value="'+f+'" '+checked+'> '+f+(isCustom?' <span onclick="event.stopPropagation();removeCustomFilter(\''+f+'\')" style="color:var(--danger);cursor:pointer;margin-left:4px;font-weight:700" title="Filtreyi sil">✕</span>':'')+'</label>';
+  }).join('');
+}
+
+function addCustomFilter(){
+  const input=document.getElementById('newFilterName');
+  const name=input.value.trim();
+  if(!name)return;
+  if(name.length>20){alert('Filtre adı çok uzun (max 20 karakter)');return;}
+  const all=getAllFilters();
+  if(all.includes(name)){alert('Bu filtre zaten var');return;}
+  const custom=getCustomFilters();
+  custom.push(name);
+  saveCustomFilters(custom);
+  input.value='';
+  const sel=[...document.querySelectorAll('#sfFilters input:checked')].map(i=>i.value);
+  renderFilterChecks(sel);
+}
+
+function removeCustomFilter(name){
+  if(!confirm('"'+name+'" filtresini silmek istediğinize emin misiniz?'))return;
+  const custom=getCustomFilters().filter(f=>f!==name);
+  saveCustomFilters(custom);
+  const sel=[...document.querySelectorAll('#sfFilters input:checked')].map(i=>i.value).filter(v=>v!==name);
+  renderFilterChecks(sel);
+}
 
 // ─── Arama & SIMBAD ───────────────────────────────────────────────────────────
 let _searchTerm='';
