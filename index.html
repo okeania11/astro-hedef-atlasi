@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Astro Atlas">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#07080f">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Astro Hedef Atlası — Astro Target Planner</title>
 <style>
 
@@ -247,7 +254,10 @@ tbody tr:last-child td{border-bottom:none;}
   <div class="controls">
     <div class="field"><label>Tarih</label><input type="date" id="dateInput"></div>
     <div class="field"><label>Gözlem Başlangıcı</label><input type="time" id="startTime" value="21:00"></div>
-    <div class="field"><label>Ufuk Dosyası (.hrz) <span style="color:var(--accent3);font-weight:400">— opsiyonel</span></label><input type="file" id="hznFile" accept=".hrz,.hzn,.txt"></div>
+    <div class="field"><label>Ufuk Dosyası (.hrz, .txt) <span style="color:var(--accent3);font-weight:400">— opsiyonel</span></label>
+      <input type="file" id="hznFile" accept=".hrz,.hzn,.txt" style="display:none">
+      <label for="hznFile" id="hznLabel" style="display:block;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:10px 12px;border-radius:4px;cursor:pointer;text-align:center">📁 Dosya Seç</label>
+    </div>
     <button class="btn" onclick="calculate()" title="Seçilen gece için görüntülenebilir objeleri hesapla">▶ HESAPLA</button>
   </div>
 
@@ -334,7 +344,7 @@ tbody tr:last-child td{border-bottom:none;}
         <th onclick="sortBy('score')" title="Yükseklik, çekim süresi, ay mesafesi ve parlaklık faktörlerine göre hesaplanan genel uygunluk puanı (0-100)">Puan ↕</th>
       </tr></thead>
       <tbody id="tableBody"><tr><td colspan="10">
-        <div class="empty-state"><div class="icon">🔭</div><p id="emptyInitText">Kurulum ve tarih seçip Hesapla'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.</p></div>
+        <div class="empty-state"><div class="icon">🔭</div><p id="emptyInitText">Kurulum ve tarih seçip Hesapla'ya bas.<br>Ufuk dosyası (.hrz, .txt) opsiyoneldir.</p></div>
       </td></tr></tbody>
     </table>
   </div>
@@ -405,7 +415,7 @@ const _L={
     customOpt:'✏ Özel Koordinat', latPh:'Enlem', lonPh:'Boylam', applyBtn:'Uygula',
     setupLabel:'Teleskop / Kurulum:', setupManageBtn:'⚙ Kurulum Yönet',
     setupPh:'— Kurulum seçin —', dateLabel:'Tarih', startLabel:'Gözlem Başlangıcı',
-    ufukFileLabel:'Ufuk Dosyası (.hrz)', ufukOpt:'— opsiyonel', calcBtn:'▶ HESAPLA',
+    ufukFileLabel:'Ufuk Dosyası (.hrz, .txt)', ufukOpt:'— opsiyonel', calcBtn:'▶ HESAPLA',
     ufukTitle:'Ufuk Profili — Obje Konumları', timeLabel:'Saat:',
     legendGalaxy:'Gökada', legendNebula:'Bulutsu', legendPN:'Gezegenimsi Bulutsu', legendCluster:'Açık Küme', legendGlobular:'Küresel / Gezegen', legendNear:'Ufka yakın',
     filterLabel:'Filtre:', favBtn:'★ Favoriler', allBtn:'Tümü',
@@ -425,10 +435,10 @@ const _L={
     illuminated:'aydınlık',
     calcResult:'hedef listelendi', noSetup:'Lütfen bir kurulum seçin.', noDate:'Tarih seçilmedi.',
     ufukLoaded:'Ufuk yüklendi:', ufukPoints:'nokta.', ufukError:'Geçerli ufuk verisi okunamadı.',
-    initMsg:"Kurulum ve tarih seçip Hesapla'ya basın. Ufuk dosyası (.hrz) opsiyoneldir.",
+    initMsg:"Kurulum ve tarih seçip Hesapla'ya basın. Ufuk dosyası (.hrz, .txt) opsiyoneldir.",
     emptyFav:'Henüz favori obje seçmediniz — ★ ikonuna tıklayın.',
     emptyNight:'Bu gece bu kriterlerde görüntülenebilir hedef yok.',
-    emptyInit:'Kurulum ve tarih seçip Hesapla\'ya bas.<br>Ufuk dosyası (.hrz) opsiyoneldir.',
+    emptyInit:'Kurulum ve tarih seçip Hesapla\'ya bas.<br>Ufuk dosyası (.hrz, .txt) opsiyoneldir.',
     setupMgrTitle:'⚙ Kurulum Yöneticisi', setupAddBtn:'+ Yeni Kurulum Ekle',
     setupNameLabel:'Kurulum Adı', setupFratioLabel:'Odak Oranı (f/)',
     setupFocalLabel:'Odak Uzunluğu (mm)', setupSensorLabel:'Sensör Boyutu (mm)',
@@ -444,7 +454,7 @@ const _L={
     filterNoSetup:'— kurulum seçin', filterNone:'— Filtre yok',
     footerDesign:'Tasarım & konsept:', footerCity:'Antalya, Türkiye',
     footerCalc:'Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez',
-    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz kullanım için', downloadBtn:'⬇ İndir', searchPh:'Obje ara... (M97, NGC 891...)', searchClearTitle:'Temizle', addObjBtn:'🔍 Katalogdan Obje Ekle', addObjTitle:'Dışarıdan Obje Ekle', addObjWarn:'⚠ Bu özellik internet bağlantısı gerektirir', addObjLabel:'Obje Adı', addObjPh:'örn: LBN 438, Barnard 33, vdB 141', addObjSearch:'Ara', addObjAdd:'Listeye Ekle', addObjCancel:'İptal',
+    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz kullanım için', downloadBtn:'⬇ İndir', searchPh:'Obje ara... (M97, NGC 891...)', searchClearTitle:'Temizle', addObjBtn:'🔍 Katalogdan Obje Ekle', addObjTitle:'Dışarıdan Obje Ekle', addObjWarn:'⚠ Bu özellik internet bağlantısı gerektirir', addObjLabel:'Obje Adı', addObjPh:'örn: LBN 438, Barnard 33, vdB 141', addObjSearch:'Ara', addObjAdd:'Listeye Ekle', addObjCancel:'İptal', chooseFile:'📁 Dosya Seç',
   },
   EN:{
     subtitle:'Astrophotography Night Planner',
@@ -452,7 +462,7 @@ const _L={
     customOpt:'✏ Custom Coords', latPh:'Latitude', lonPh:'Longitude', applyBtn:'Apply',
     setupLabel:'Telescope / Setup:', setupManageBtn:'⚙ Manage Setup',
     setupPh:'— Select setup —', dateLabel:'Date', startLabel:'Observation Start',
-    ufukFileLabel:'Horizon File (.hrz)', ufukOpt:'— optional', calcBtn:'▶ CALCULATE',
+    ufukFileLabel:'Horizon File (.hrz, .txt)', ufukOpt:'— optional', calcBtn:'▶ CALCULATE',
     ufukTitle:'Horizon Profile — Object Positions', timeLabel:'Time:',
     legendGalaxy:'Galaxy', legendNebula:'Nebula', legendPN:'Planetary Neb.', legendCluster:'Open Cluster', legendGlobular:'Globular / Planet', legendNear:'Near horizon',
     filterLabel:'Filter:', favBtn:'★ Favorites', allBtn:'All',
@@ -472,10 +482,10 @@ const _L={
     illuminated:'illuminated',
     calcResult:'targets listed', noSetup:'Please select a setup.', noDate:'No date selected.',
     ufukLoaded:'Horizon loaded:', ufukPoints:'points.', ufukError:'Could not read horizon data.',
-    initMsg:'Select a setup and date, then press Calculate. Horizon file (.hrz) is optional.',
+    initMsg:'Select a setup and date, then press Calculate. Horizon file (.hrz, .txt) is optional.',
     emptyFav:'No favorites yet — click the ★ icon.',
     emptyNight:'No visible targets matching criteria tonight.',
-    emptyInit:'Select a setup and date, then press Calculate.<br>Horizon file (.hrz) is optional.',
+    emptyInit:'Select a setup and date, then press Calculate.<br>Horizon file (.hrz, .txt) is optional.',
     setupMgrTitle:'⚙ Setup Manager', setupAddBtn:'+ Add New Setup',
     setupNameLabel:'Setup Name', setupFratioLabel:'Focal Ratio (f/)',
     setupFocalLabel:'Focal Length (mm)', setupSensorLabel:'Sensor Size (mm)',
@@ -491,7 +501,7 @@ const _L={
     filterNoSetup:'— select setup', filterNone:'— No filter',
     footerDesign:'Design & concept:', footerCity:'Antalya, Turkey',
     footerCalc:'All calculations run in real-time in the browser · No server or internet connection required',
-    siteLink:'📖 About this app — click for details', langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download', searchPh:'Search objects... (M97, NGC 891...)', searchClearTitle:'Clear', addObjBtn:'🔍 Add Object from Catalog', addObjTitle:'Add External Object', addObjWarn:'⚠ This feature requires an internet connection', addObjLabel:'Object Name', addObjPh:'e.g. LBN 438, Barnard 33, vdB 141', addObjSearch:'Search', addObjAdd:'Add to List', addObjCancel:'Cancel',
+    siteLink:'📖 About this app — click for details', langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download', searchPh:'Search objects... (M97, NGC 891...)', searchClearTitle:'Clear', addObjBtn:'🔍 Add Object from Catalog', addObjTitle:'Add External Object', addObjWarn:'⚠ This feature requires an internet connection', addObjLabel:'Object Name', addObjPh:'e.g. LBN 438, Barnard 33, vdB 141', addObjSearch:'Search', addObjAdd:'Add to List', addObjCancel:'Cancel', chooseFile:'📁 Choose File',
   }
 };
 function L(k){return(_L[_lang]&&_L[_lang][k]!==undefined)?_L[_lang][k]:(_L['TR'][k]||k);}
@@ -559,6 +569,7 @@ function applyLang(){
   try{document.querySelector('#simbadModal .msg-warn').textContent=L('addObjWarn');}catch(e){}
   try{const fl=document.querySelectorAll('#simbadModal .form-row label');if(fl[0])fl[0].textContent=L('addObjLabel');}catch(e){}
   set(s('simbadInput'),el=>el.placeholder=L('addObjPh'));
+  try{const hl=document.getElementById('hznLabel');if(hl&&!hl.textContent.startsWith('✓'))hl.textContent=L('chooseFile');}catch(e){}
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
@@ -1409,6 +1420,8 @@ function selectObjFromTable(name){
 
 document.getElementById('hznFile').addEventListener('change',function(e){
   const file=e.target.files[0];if(!file)return;
+  document.getElementById('hznLabel').textContent='✓ '+file.name;
+  document.getElementById('hznLabel').style.color='var(--green)';
   const rd=new FileReader();
   rd.onload=ev=>{const d=parseUFUK(ev.target.result);if(d.length<3){showMsg(L('ufukError'),'warn');ufukData=null;}else{ufukData=d;showMsg(L('ufukLoaded')+' '+d.length+' '+L('ufukPoints'),'info');if(currentDateUTC0h)drawUfuk();}};
   rd.readAsText(file);
@@ -1608,6 +1621,14 @@ function addSimbadObj(){
   if(favorites.size>0){activeType='FAV';document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type==='FAV')b.classList.add('active');});}
 })();
 
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>
