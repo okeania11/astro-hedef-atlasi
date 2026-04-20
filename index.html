@@ -22,8 +22,8 @@ body.light-theme::before{opacity:0.4;}
 body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:15px;min-height:100vh;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 70%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 50% 15%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 70% 50%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 20% 90%,rgba(200,220,255,0.5) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 80% 10%,rgba(200,220,255,0.4) 0%,transparent 100%);}
 .container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:28px 20px 60px;}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff;letter-spacing:-0.5px;}
-.logo span{color:var(--accent);}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:28px;color:#fff;letter-spacing:1px;line-height:1.3;text-transform:uppercase;}
+.logo span{color:var(--accent);display:block;font-size:13px;font-weight:700;letter-spacing:3px;margin-top:4px;opacity:0.85;}
 .subtitle{color:var(--text2);margin-top:4px;font-size:11px;letter-spacing:2px;text-transform:uppercase;}
 header{margin-bottom:20px;}
 .topbar{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
@@ -212,14 +212,7 @@ tbody tr:last-child td{border-bottom:none;}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.7</div>
-      <div style="font-size:11px;margin-top:5px;font-family:'Space Mono',monospace;">
-        <a href="https://okanizma.wordpress.com/astro-hedef-atlas-uygulamasi-astro-target-planner/" target="_blank" style="color:var(--accent);text-decoration:none;opacity:0.7" id="siteLink">📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın</a>
-      </div>
-      <div style="font-size:9px;margin-top:4px;font-family:'Space Mono',monospace;">
-        <span id="downloadText" style="color:var(--text2)">internetsiz kullanım için</span><br>
-        <a id="downloadBtn" href="https://github.com/okeania11/astro-hedef-atlasi/releases/latest/download/AstroHedefAtlasi.html" download="AstroHedefAtlasi.html" style="display:inline-block;margin-top:4px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;text-decoration:none">⬇ İndir</a>
-      </div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.8</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <button id="themeToggle" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Tema değiştir">☀️</button>
@@ -398,12 +391,18 @@ tbody tr:last-child td{border-bottom:none;}
 
 <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.7
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.8
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
   </div>
-  <div style="margin-top:10px"><a href="#" target="_blank" style="display:inline-block;background:#FFDD00;color:#000;padding:6px 14px;border-radius:4px;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-decoration:none;" title="Bir kahve ısmarla">☕ Buy Me a Coffee</a></div>
+  <div style="margin-top:10px;font-size:11px;font-family:'Space Mono',monospace;">
+    <a href="https://okanizma.wordpress.com/astro-hedef-atlas-uygulamasi-astro-target-planner/" target="_blank" style="color:var(--accent);text-decoration:none" id="siteLink">📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın</a>
+  </div>
+  <div style="margin-top:8px;font-size:10px;font-family:'Space Mono',monospace;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap">
+    <span id="downloadText" style="color:var(--text2)">internetsiz kullanım için</span>
+    <a id="downloadBtn" href="https://github.com/okeania11/astro-hedef-atlasi/releases/latest/download/AstroHedefAtlasi.html" download="AstroHedefAtlasi.html" style="display:inline-block;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;text-decoration:none">⬇ İndir</a>
+  </div>
   <div style="font-size:10px;color:var(--text2);opacity:0.6;margin-top:8px;font-family:'Space Mono',monospace;">
     <span class="footer-calc">Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez</span>
   </div>
@@ -433,7 +432,7 @@ const _L={
     colAlt:'Tepe Nokta ↕', colWindow:'Çekim Süresi ↕', colMoon:'Ay Mes. ↕',
     colFilter:'Filtre Önerisi', colScore:'Puan ↕',
     statTotal:'Toplam', statFav:'Favori', statGalaxy:'Gökada', statNebula:'Bulutsu',
-    statPN:'Gez. Bul.', statCluster:'Açık Küme', statGlobular:'Küresel', statPlanet:'Gezegen',
+    statPN:'Gezegenimsi', statCluster:'Açık Küme', statGlobular:'Küresel', statPlanet:'Gezegen', scoreTitle:'Puan Nasıl Hesaplanır?', scoreFormula:'Yükseklik %35 · Çekim %30<br>Ay %20 · Parlaklık %15',
     moonRiseTitle:'Ay Doğuşu', moonRiseDaytime:'Gündüz doğuyor',
     moonRiseClean:"'e kadar temiz gökyüzü", moonRiseAll:'→ Gece boyunca gökyüzünde', moonRiseNone:'→ Geceye etkisi yok',
     moonAlt:'Gece ortası yüksekliği',
@@ -462,7 +461,7 @@ const _L={
     filterNoSetup:'— kurulum seçin', filterNone:'— Filtre yok',
     footerDesign:'Tasarım & konsept:', footerCity:'Antalya, Türkiye',
     footerCalc:'Tüm hesaplamalar tarayıcıda gerçek zamanlı yapılır · Sunucu veya internet bağlantısı gerekmez',
-    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz kullanım için', downloadBtn:'⬇ İndir', searchPh:'Obje ara... (M97, NGC 891...)', searchClearTitle:'Temizle', addObjBtn:'🔍 Katalogdan Obje Ekle', addObjTitle:'Dışarıdan Obje Ekle', addObjWarn:'⚠ Bu özellik internet bağlantısı gerektirir', addObjLabel:'Obje Adı', addObjPh:'örn: LBN 438, Barnard 33, vdB 141', addObjSearch:'Ara', addObjAdd:'Listeye Ekle', addObjCancel:'İptal', chooseFile:'📁 Dosya Seç', slExcellent:'Çok Net', slVeryGood:'Çok İyi', slGood:'İyi', slRisky:'Riskli', slSkip:'Geç',
+    siteLink:'📖 Uygulama hakkında bilgi ve açıklamalar için tıklayın', langBtn:'🇬🇧 EN', downloadText:'internetsiz kullanım için', downloadBtn:'⬇ İndir', searchPh:'Obje ara... (M97, NGC 891...)', searchClearTitle:'Temizle', addObjBtn:'🔍 Katalogdan Obje Ekle', addObjTitle:'Dışarıdan Obje Ekle', addObjWarn:'⚠ Bu özellik internet bağlantısı gerektirir', addObjLabel:'Obje Adı', addObjPh:'örn: LBN 438, Barnard 33, vdB 141', addObjSearch:'Ara', addObjAdd:'Listeye Ekle', addObjCancel:'İptal', chooseFile:'📁 Dosya Seç', wxTitle:'Hava Durumu (Gece)', wxCloud:'Bulut', wxTemp:'Sıcaklık', wxWind:'Rüzgâr', wxHum:'Nem', wxExcellent:'Mükemmel', wxGood:'İyi', wxOK:'Kabul edilebilir', wxPoor:'Zayıf', wxBad:'Kötü', wxLoading:'Hava durumu alınıyor...', scoreTitle:'Puan Nasıl Hesaplanır?', scoreLine1:'Yükseklik %35 · Çekim %30', scoreLine2:'Ay %20 · Parlaklık %15', slExcellent:'Çok Net', slVeryGood:'Çok İyi', slGood:'İyi', slRisky:'Riskli', slSkip:'Geç',
   },
   EN:{
     subtitle:'Astrophotography Night Planner',
@@ -472,15 +471,15 @@ const _L={
     setupPh:'— Select setup —', dateLabel:'Date', startLabel:'Observation Start',
     ufukFileLabel:'Horizon File (.hrz, .txt)', ufukOpt:'— optional', calcBtn:'▶ CALCULATE',
     ufukTitle:'Horizon Profile — Object Positions', timeLabel:'Time:',
-    legendGalaxy:'Galaxy', legendNebula:'Nebula', legendPN:'Planetary Neb.', legendCluster:'Open Cluster', legendGlobular:'Globular / Planet', legendNear:'Near horizon',
+    legendGalaxy:'Galaxy', legendNebula:'Nebula', legendPN:'Planetary Nebula', legendCluster:'Open Cluster', legendGlobular:'Globular / Planet', legendNear:'Near horizon',
     filterLabel:'Filter:', favBtn:'★ Favorites', allBtn:'All',
-    galaxyBtn:'Galaxy', nebulaBtn:'Nebula', pnBtn:'Planetary Neb.',
+    galaxyBtn:'Galaxy', nebulaBtn:'Nebula', pnBtn:'Planetary Nebula',
     clusterBtn:'Open Cluster', globularBtn:'Globular', planetBtn:'Planet',
     colObj:'Object ↕', colType:'Type', colSize:'Size ↕', colPeak:'Transit ↕',
     colAlt:'Max Alt ↕', colWindow:'Shoot Time ↕', colMoon:'Moon Dist ↕',
     colFilter:'Filter Rec.', colScore:'Score ↕',
     statTotal:'Total', statFav:'Favorite', statGalaxy:'Galaxy', statNebula:'Nebula',
-    statPN:'Plan.Neb.', statCluster:'Open Cl.', statGlobular:'Globular', statPlanet:'Planet',
+    statPN:'Planetary Nebula', statCluster:'Open Clusters', statGlobular:'Globular Clusters', statPlanet:'Planets', scoreTitle:'How is the score calculated?', scoreFormula:'Altitude 35% · Shoot time 30%<br>Moon 20% · Brightness 15%',
     moonRiseTitle:'Moonrise', moonRiseDaytime:'Rises during daytime',
     moonRiseClean:' — clear until then', moonRiseAll:'→ In sky all night', moonRiseNone:'→ No effect on night',
     moonAlt:'Midnight altitude',
@@ -509,14 +508,19 @@ const _L={
     filterNoSetup:'— select setup', filterNone:'— No filter',
     footerDesign:'Design & concept:', footerCity:'Antalya, Turkey',
     footerCalc:'All calculations run in real-time in the browser · No server or internet connection required',
-    siteLink:'📖 About this app — click for details', langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download', searchPh:'Search objects... (M97, NGC 891...)', searchClearTitle:'Clear', addObjBtn:'🔍 Add Object from Catalog', addObjTitle:'Add External Object', addObjWarn:'⚠ This feature requires an internet connection', addObjLabel:'Object Name', addObjPh:'e.g. LBN 438, Barnard 33, vdB 141', addObjSearch:'Search', addObjAdd:'Add to List', addObjCancel:'Cancel', chooseFile:'📁 Choose File', slExcellent:'Excellent', slVeryGood:'Very Good', slGood:'Good', slRisky:'Risky', slSkip:'Skip',
+    siteLink:'📖 About this app — click for details', langBtn:'🇹🇷 TR', downloadText:'for offline use', downloadBtn:'⬇ Download', searchPh:'Search objects... (M97, NGC 891...)', searchClearTitle:'Clear', addObjBtn:'🔍 Add Object from Catalog', addObjTitle:'Add External Object', addObjWarn:'⚠ This feature requires an internet connection', addObjLabel:'Object Name', addObjPh:'e.g. LBN 438, Barnard 33, vdB 141', addObjSearch:'Search', addObjAdd:'Add to List', addObjCancel:'Cancel', chooseFile:'📁 Choose File', wxTitle:'Weather (Night)', wxCloud:'Cloud', wxTemp:'Temp', wxWind:'Wind', wxHum:'Humidity', wxExcellent:'Excellent', wxGood:'Good', wxOK:'Acceptable', wxPoor:'Poor', wxBad:'Bad', wxLoading:'Fetching weather...', scoreTitle:'How is Score Calculated?', scoreLine1:'Altitude 35% · Duration 30%', scoreLine2:'Moon 20% · Brightness 15%', slExcellent:'Excellent', slVeryGood:'Very Good', slGood:'Good', slRisky:'Risky', slSkip:'Skip',
   }
 };
 function L(k){return(_L[_lang]&&_L[_lang][k]!==undefined)?_L[_lang][k]:(_L['TR'][k]||k);}
 function renderMoonBar(){
   if(!_moonCache)return;
   const{mpv,mi,mac,mrl,mrNote}=_moonCache;
-  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' '+L('illuminated')+'<br>'+L('moonAlt')+': <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?L('moonBright'):mi>25?L('moonMid'):L('moonDark'))+'</div><div class="moon-rise"><strong>'+L('moonRiseTitle')+'</strong><br>'+(mrl!==null?fmtH(mrl)+' ('+(_lang==='TR'?'yerel':'local')+')':L('moonRiseDaytime'))+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div><div style="border-left:1px solid var(--border);padding-left:20px;font-size:11px;line-height:2;color:var(--text2)"><strong style="color:var(--accent2)">Puan Nasıl Hesaplanır?</strong><br>Yükseklik %35 · Çekim %30<br>Ay %20 · Parlaklık %15</div>';
+  let wxSection='';
+  if(_weatherCache){
+    const wa=weatherAssessment(_weatherCache);
+    wxSection='<div style="border-left:1px solid var(--border);padding-left:20px;font-size:11px;line-height:1.8;color:var(--text2)"><strong style="color:var(--accent3)">☁ '+L('wxTitle')+'</strong><br>'+L('wxCloud')+': <strong>%'+_weatherCache.cloud+'</strong> <span class="score-label '+wa.c+'" style="font-size:9px">'+wa.t+'</span><br>'+L('wxTemp')+': <strong>'+_weatherCache.temp+'°C</strong> · '+L('wxWind')+': <strong>'+_weatherCache.wind+' km/h</strong><br>'+L('wxHum')+': <strong>%'+_weatherCache.hum+'</strong></div>';
+  }
+  document.getElementById('moonBar').innerHTML='<div class="moon-phase">'+pEmoji(mpv)+'</div><div class="moon-info"><strong>'+pText(mpv)+'</strong> — %'+mi+' '+L('illuminated')+'<br>'+L('moonAlt')+': <strong>'+mac.alt.toFixed(1)+'°</strong><br>'+(mi>60?L('moonBright'):mi>25?L('moonMid'):L('moonDark'))+'</div><div class="moon-rise"><strong>'+L('moonRiseTitle')+'</strong><br>'+(mrl!==null?fmtH(mrl)+' ('+(_lang==='TR'?'yerel':'local')+')':L('moonRiseDaytime'))+'<br><span style="color:var(--text2);font-size:11px">'+mrNote+'</span></div>'+wxSection+'<div style="border-left:1px solid var(--border);padding-left:20px;font-size:11px;line-height:2;color:var(--text2)"><strong style="color:var(--accent2)">'+L('scoreTitle')+'</strong><br>'+L('scoreFormula')+'</div>';
 }
 function toggleLang(){
   _lang=_lang==='TR'?'EN':'TR';
@@ -581,7 +585,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.7');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.8');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -612,6 +616,7 @@ let OBS_BORTLE=7;
 let ufukData=null,results=[],filtered=[],activeType='ALL',sortCol='score',sortDir=-1;
 let currentDateUTC0h=null,currentObsStartUTC=0,selectedObj=null,_canvasSetup=false;
 let _moonCache=null;
+let _weatherCache=null;
 
 // ─── Katalog ──────────────────────────────────────────────────────────────────
 // [isim, yaygınIsim, tür, ra_s, dec_d, boyut_açıkdak, büyüklük]
@@ -955,7 +960,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.7';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.8';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1098,7 +1103,10 @@ function calculate(){
   if(mrl!==null){if(mrl>obsLocal)mrNote='→ '+fmtH(mrl)+L('moonRiseClean');else mrNote=L('moonRiseAll');}
   document.getElementById('moonBar').style.display='flex';
   _moonCache={mpv,mi,mac,mrl,mrNote,obsLocal:sh+sm/60};
+  _weatherCache=null;
   renderMoonBar();
+  // Hava durumu çek
+  fetchWeather(OBS_LAT,OBS_LON,dv).then(w=>{_weatherCache=w;renderMoonBar();});
   results=[];
   // DSO hesabı
   for(const o of CAT){
@@ -1200,8 +1208,8 @@ function renderTable(){
   if(!filtered.length){const msg=activeType==='FAV'?L('emptyFav'):L('emptyNight');tb.innerHTML='<tr><td colspan="10"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
   const tC={Galaxy:'tg',Nebula:'tn',Cluster:'tc',Globular:'tgl',PN:'tpn',Gezegen:'tpl'};
   const tL=_lang==='TR'?
-    {Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL',PN:'GEZ. BUL.',Gezegen:'GEZEGEN'}:
-    {Galaxy:'GALAXY',Nebula:'NEBULA',Cluster:'OPEN CL.',Globular:'GLOBULAR',PN:'PLAN. NEB.',Gezegen:'PLANET'};
+    {Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL KÜME',PN:'GEZEGENİMSİ',Gezegen:'GEZEGEN'}:
+    {Galaxy:'GALAXY',Nebula:'NEBULA',Cluster:'OPEN CLUSTER',Globular:'GLOBULAR',PN:'PLANETARY NEBULA',Gezegen:'PLANET'};
   const setup=getSetup();
   const dv=document.getElementById('dateInput').value;
   const toShow=_showAll?filtered:filtered.slice(0,PAGE_SIZE);
@@ -1523,6 +1531,54 @@ function removeCustomFilter(name){
   saveCustomFilters(custom);
   const sel=[...document.querySelectorAll('#sfFilters input:checked')].map(i=>i.value).filter(v=>v!==name);
   renderFilterChecks(sel);
+}
+
+
+// ─── Hava Durumu ──────────────────────────────────────────────────────────────
+async function fetchWeather(lat,lon,dateStr){
+  try{
+    // Bugün ile tarih arasındaki fark (gelecek kaç gün)
+    const today=new Date();today.setHours(0,0,0,0);
+    const target=new Date(dateStr+'T00:00:00');
+    const daysAhead=Math.round((target-today)/(1000*60*60*24));
+    if(daysAhead<0||daysAhead>15){console.log('Weather: tarih aralığı dışında',daysAhead);return null;}
+    const url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&hourly=cloud_cover,temperature_2m,wind_speed_10m,relative_humidity_2m&forecast_days='+(daysAhead+1)+'&timezone=auto';
+    console.log('Weather fetch:',url);
+    const r=await fetch(url);
+    const d=await r.json();
+    console.log('Weather response:',d);
+    if(!d.hourly||!d.hourly.time)return null;
+    // Sadece istenen tarihin gece saatlerini al
+    const hours=d.hourly.time;
+    const clouds=d.hourly.cloud_cover;
+    const temps=d.hourly.temperature_2m;
+    const winds=d.hourly.wind_speed_10m;
+    const hums=d.hourly.relative_humidity_2m;
+    const nightIdx=[];
+    hours.forEach((h,i)=>{
+      const [dPart,tPart]=h.split('T');
+      const hr=parseInt(tPart.split(':')[0]);
+      if(dPart===dateStr&&(hr>=20||hr<=6))nightIdx.push(i);
+      // Sonraki sabah (00-06) da bu gecenin bir parçası
+      const nextDate=new Date(target.getTime()+86400000).toISOString().split('T')[0];
+      if(dPart===nextDate&&hr<=6)nightIdx.push(i);
+    });
+    if(!nightIdx.length){console.log('Weather: gece saati bulunamadı');return null;}
+    const avgCloud=Math.round(nightIdx.reduce((s,i)=>s+clouds[i],0)/nightIdx.length);
+    const avgTemp=Math.round(nightIdx.reduce((s,i)=>s+temps[i],0)/nightIdx.length);
+    const avgWind=Math.round(nightIdx.reduce((s,i)=>s+winds[i],0)/nightIdx.length);
+    const avgHum=Math.round(nightIdx.reduce((s,i)=>s+hums[i],0)/nightIdx.length);
+    console.log('Weather OK:',{cloud:avgCloud,temp:avgTemp,wind:avgWind,hum:avgHum});
+    return{cloud:avgCloud,temp:avgTemp,wind:avgWind,hum:avgHum};
+  }catch(e){console.error('Weather error:',e);return null;}
+}
+function weatherAssessment(w){
+  if(!w)return null;
+  if(w.cloud>=80)return{t:L('wxBad'),c:'sl-skip'};
+  if(w.cloud>=50)return{t:L('wxPoor'),c:'sl-risky'};
+  if(w.cloud>=25)return{t:L('wxOK'),c:'sl-good'};
+  if(w.cloud>=10)return{t:L('wxGood'),c:'sl-verygood'};
+  return{t:L('wxExcellent'),c:'sl-excellent'};
 }
 
 // ─── Arama & SIMBAD ───────────────────────────────────────────────────────────
