@@ -1269,7 +1269,7 @@ function renderTable(){
     sizeCell+='</td>';
     return '<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
       +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
-            +'<td class="name-cell"><img class="obj-thumb" loading="lazy" src="'+aladinThumb(r.ra,r.dec,r.size||10,40)+'" onclick="event.stopPropagation();showThumbBig('+r.ra+','+r.dec+','+(r.size||10)+',\''+r.name.replace(/'/g,"")+'\')" onerror="this.style.display=\'none\'"><span style="display:inline-block;vertical-align:middle">'+r.name+(()=>{const en=getCommonName(r.name);const nm=en||r.common;return nm?'<span class="common">'+nm+'</span>':''})()+'</span></td>'
+            +'<td class="name-cell"><img class="obj-thumb" loading="lazy" src="'+aladinThumb(r.ra,r.dec,r.size||10,40,r.type)+'" onclick="event.stopPropagation();showThumbBig('+r.ra+','+r.dec+','+(r.size||10)+',\''+r.name.replace(/'/g,"")+'\',\''+r.type+'\')" onerror="this.style.display=\'none\'"><span style="display:inline-block;vertical-align:middle">'+r.name+(()=>{const en=getCommonName(r.name);const nm=en||r.common;return nm?'<span class="common">'+nm+'</span>':''})()+'</span></td>'
       +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
       +sizeCell
       +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
@@ -1574,14 +1574,15 @@ function removeCustomFilter(name){
 
 
 // ─── Aladin Thumbnail ────────────────────────────────────────────────────────
-function aladinThumb(ra,dec,sizeArcmin,px){
-  // sizeArcmin: obje boyutu (arcmin), FOV bunun ~1.5x'i olacak (görsel için)
-  const fov=Math.max(0.05,Math.min(5,sizeArcmin*1.5/60)); // derece, min 0.05° max 5°
-  const raDeg=ra*15; // RA saatten dereceye
-  return 'https://alasky.cds.unistra.fr/hips-image-services/hips2fits?hips=CDS%2FP%2FDSS2%2Fcolor&ra='+raDeg.toFixed(4)+'&dec='+dec.toFixed(4)+'&fov='+fov.toFixed(3)+'&width='+px+'&height='+px+'&format=jpg';
+function aladinThumb(ra,dec,sizeArcmin,px,type){
+  const fov=Math.max(0.05,Math.min(5,sizeArcmin*1.5/60));
+  const raDeg=ra*15;
+  let hips='CDS%2FP%2FDSS2%2Fcolor';
+  if(type==='Nebula'||type==='PN')hips='CDS%2FP%2FDSS2%2Fred';
+  return 'https://alasky.cds.unistra.fr/hips-image-services/hips2fits?hips='+hips+'&ra='+raDeg.toFixed(4)+'&dec='+dec.toFixed(4)+'&fov='+fov.toFixed(3)+'&width='+px+'&height='+px+'&format=jpg';
 }
-function showThumbBig(ra,dec,sizeArcmin,name){
-  const url=aladinThumb(ra,dec,sizeArcmin,400);
+function showThumbBig(ra,dec,sizeArcmin,name,type){
+  const url=aladinThumb(ra,dec,sizeArcmin,400,type);
   const m=document.getElementById('thumbModal');
   m.querySelector('.thumb-name').textContent=name;
   m.querySelector('.thumb-img').src=url;
