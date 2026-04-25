@@ -139,6 +139,9 @@ tbody tr:last-child td{border-bottom:none;}
 .note-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:10px;border-radius:4px;resize:vertical;outline:none;min-height:100px;}
 .note-textarea:focus{border-color:var(--accent);}
 
+
+.obj-thumb{display:inline-block;width:40px;height:40px;border-radius:4px;border:1px solid var(--border);background:#000 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="2" fill="%23445"/><circle cx="10" cy="15" r="1" fill="%23445"/><circle cx="30" cy="25" r="1" fill="%23445"/></svg>') center center no-repeat;cursor:pointer;vertical-align:middle;margin-right:8px;transition:border-color .15s;object-fit:cover;}
+.obj-thumb:hover{border-color:var(--accent);}
 .score-label{display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.5px;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle;}
 .sl-excellent{background:rgba(255,100,80,0.18);color:#ff6450;}
 .sl-verygood{background:rgba(137,221,255,0.18);color:#89ddff;}
@@ -212,7 +215,7 @@ tbody tr:last-child td{border-bottom:none;}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.8</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.9</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <button id="themeToggle" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Tema değiştir">☀️</button>
@@ -389,9 +392,22 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
+
+  <!-- Thumbnail Büyük Görüntü -->
+  <div class="modal-overlay" id="thumbModal" onclick="closeThumb()">
+    <div class="modal" style="max-width:460px;text-align:center" onclick="event.stopPropagation()">
+      <h3 class="thumb-name" style="margin-bottom:10px"></h3>
+      <img class="thumb-img" style="width:400px;height:400px;max-width:100%;border:1px solid var(--border);border-radius:6px;display:block;margin:0 auto;background:#000">
+      <div style="margin-top:10px;font-size:11px;color:var(--text2)">DSS2 Color · Aladin Sky Atlas (CDS)</div>
+      <div class="modal-actions" style="justify-content:center">
+        <button class="btn-cancel" onclick="closeThumb()">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.8
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.9
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -585,7 +601,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.8');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.9');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -960,7 +976,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.8';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.9';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1253,7 +1269,7 @@ function renderTable(){
     sizeCell+='</td>';
     return '<tr data-objname="'+r.name+'" onclick="selectObjFromTable(\''+r.name+'\')" style="cursor:pointer'+(selectedObj===r.name?';background:rgba(79,195,247,0.12)':'')+'">'
       +'<td><button class="fav-star '+(favorites.has(r.name)?'active':'')+'" onclick="event.stopPropagation();toggleFav(\''+r.name+'\')">'+(favorites.has(r.name)?'★':'☆')+'</button></td>'
-            +'<td class="name-cell">'+r.name+(()=>{const en=getCommonName(r.name);const nm=en||r.common;return nm?'<span class="common">'+nm+'</span>':''})()+'</td>'
+            +'<td class="name-cell"><img class="obj-thumb" loading="lazy" src="'+aladinThumb(r.ra,r.dec,r.size||10,40)+'" onclick="event.stopPropagation();showThumbBig('+r.ra+','+r.dec+','+(r.size||10)+',\''+r.name.replace(/'/g,"")+'\')" onerror="this.style.display=\'none\'"><span style="display:inline-block;vertical-align:middle">'+r.name+(()=>{const en=getCommonName(r.name);const nm=en||r.common;return nm?'<span class="common">'+nm+'</span>':''})()+'</span></td>'
       +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
       +sizeCell
       +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
@@ -1555,6 +1571,23 @@ function removeCustomFilter(name){
   renderFilterChecks(sel);
 }
 
+
+
+// ─── Aladin Thumbnail ────────────────────────────────────────────────────────
+function aladinThumb(ra,dec,sizeArcmin,px){
+  // sizeArcmin: obje boyutu (arcmin), FOV bunun ~1.5x'i olacak (görsel için)
+  const fov=Math.max(0.05,Math.min(5,sizeArcmin*1.5/60)); // derece, min 0.05° max 5°
+  const raDeg=ra*15; // RA saatten dereceye
+  return 'https://alasky.cds.unistra.fr/hips-image-services/hips2fits?hips=CDS%2FP%2FDSS2%2Fcolor&ra='+raDeg.toFixed(4)+'&dec='+dec.toFixed(4)+'&fov='+fov.toFixed(3)+'&width='+px+'&height='+px+'&format=jpg';
+}
+function showThumbBig(ra,dec,sizeArcmin,name){
+  const url=aladinThumb(ra,dec,sizeArcmin,400);
+  const m=document.getElementById('thumbModal');
+  m.querySelector('.thumb-name').textContent=name;
+  m.querySelector('.thumb-img').src=url;
+  m.classList.add('open');
+}
+function closeThumb(){document.getElementById('thumbModal').classList.remove('open');}
 
 // ─── Hava Durumu ──────────────────────────────────────────────────────────────
 async function fetchWeather(lat,lon,dateStr){
