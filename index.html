@@ -1975,6 +1975,10 @@ if('serviceWorker' in navigator){
       </details>
       <div class="sky-listhead"><span id="skyCount"></span>
         <span><button class="sky-mini" onclick="SKY.showAll(true)" data-tr="Hepsi" data-en="All">Hepsi</button><button class="sky-mini" onclick="SKY.showAll(false)" data-tr="Hiçbiri" data-en="None">Hiçbiri</button></span></div>
+      <div class="sky-listhead" style="border-top:none;padding-top:0">
+        <span></span>
+        <span><button class="sky-mini" onclick="SKY.exportGallery()" data-tr="💾 Dosyaya kaydet" data-en="💾 Save to file" data-trt="Galeriyi (görüntüler + konumlar) bilgisayarına bir dosya olarak indir" data-ent="Download the gallery (images + positions) as a file">💾 Dosyaya kaydet</button><label class="sky-mini" for="skyGalFile" style="display:inline-block" data-tr="📂 Dosyadan yükle" data-en="📂 Load file">📂 Dosyadan yükle</label></span></div>
+      <input type="file" id="skyGalFile" accept=".json" style="display:none">
       <div id="skyList" class="sky-list"></div>
     </aside>
     <main class="sky-main">
@@ -2661,6 +2665,9 @@ function plateSolve(job) {
   const smin = scaleHint ? scaleHint * 0.6 : 0.05, smax = scaleHint ? scaleHint * 1.6 : 400;
   const diag = Math.hypot(w, h);
   let best = null, tried = 0;
+  ti.sort((a, b) => b.a - a.a); // büyük üçgenler önce (daha kararlı)
+  const img15 = img.slice(0, 15), catQ = cat.slice(0, 120);
+  outer:
   for (const t of ti) {
     if (t.a < diag * 0.08) continue;
     const kx = Math.round(t.r1 / Q), ky = Math.round(t.r2 / Q);
@@ -2671,9 +2678,11 @@ function plateSolve(job) {
         const scale = c.a / t.a; if (scale < smin || scale > smax) continue;
         const par = c.s === t.s ? 1 : -1;
         const T = simil(t.v.map(i => img[i]), c.v.map(j => cat[j]), par);
-        if (++tried > 40000) break;
+        if (++tried > 200000) break outer;
         const tol = Math.max(3 * T.scale, 1.5);
-        const r = countIn(T, img.slice(0, 45), cat.slice(0, 120), tol);
+        // hızlı ön eleme: en parlak 15 yıldızdan en az 4'ü tutmalı
+        if (countIn(T, img15, catQ, tol).n < 4) continue;
+        const r = countIn(T, img.slice(0, 45), catQ, tol);
         if (!best || r.n > best.n) best = { n: r.n, T, pairs: r.pairs };
       }
     }
@@ -2781,6 +2790,7 @@ const SKY = (() => {
     return dbp;
   }
   async function dbAll() { const d = await db(); return new Promise((res, rej) => { const q = d.transaction(STORE).objectStore(STORE).getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }); }
+  try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) { } // tarayıcı yer açmak için silmesin
   async function dbPut(it) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction(STORE, 'readwrite'); t.objectStore(STORE).put(it); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
   async function dbDel(id) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction(STORE, 'readwrite'); t.objectStore(STORE).delete(id); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
 
@@ -3545,6 +3555,43 @@ const SKY = (() => {
   }
   function setGround(v) { S.ground = v; saveS(); drawGround(); }
 
+  // ═══ Galeriyi dosyaya kaydet / dosyadan geri yükle ═══
+  const b64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); });
+  const unb64 = (s, type) => { const bin = atob(s), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type }); };
+  async function exportGallery() {
+    if (!items.length) { status(T('Galeri boş', 'Gallery is empty'), 'warn'); return; }
+    status(T('Galeri dosyası hazırlanıyor…', 'Preparing gallery file…'), 'info', 30);
+    const out = { app: 'Astro Hedef Atlası · Gökyüzüm', version: 1, saved: new Date().toISOString(), items: [] };
+    for (const it of items) {
+      const o = strip(it); delete o.blob; delete o.thumb;
+      o.jpeg = await b64(it.blob); o.thumbJpeg = it.thumb ? await b64(it.thumb) : null;
+      out.items.push(o);
+    }
+    const blob = new Blob([JSON.stringify(out)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'gokyuzum-galeri-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    status(T('Kaydedildi: ', 'Saved: ') + items.length + T(' görüntü · ', ' images · ') + (blob.size / 1048576).toFixed(1) + ' MB', 'ok');
+  }
+  async function importGallery(file) {
+    if (!file) return;
+    try {
+      const d = JSON.parse(await file.text());
+      if (!d || !Array.isArray(d.items)) throw new Error(T('Gökyüzüm galeri dosyası değil', 'Not a My Sky gallery file'));
+      await loadAladin();
+      let n = 0;
+      for (const o of d.items) {
+        if (items.some(i => i.id === o.id || (i.name === o.name && i.created === o.created))) continue;
+        const it = Object.assign({}, o, { blob: unb64(o.jpeg, 'image/jpeg'), thumb: o.thumbJpeg ? unb64(o.thumbJpeg, 'image/jpeg') : null });
+        delete it.jpeg; delete it.thumbJpeg;
+        it._thumbUrl = it.thumb ? URL.createObjectURL(it.thumb) : '';
+        await dbPut(strip(it)); items.push(it); if (it.wcs && it.visible) await showLayer(it); n++;
+      }
+      renderList(); drawFootprints();
+      status(n + T(' görüntü geri yüklendi', ' images restored'), 'ok');
+    } catch (e) { status(T('Okunamadı: ', 'Could not read: ') + e.message, 'err'); }
+  }
+
   // ═══ Takımyıldızlar (d3-celestial verisi, ilk açılışta indirilir) ═══
   let conOverlay = null, conCat = null, conData = null;
   async function drawConstellations() {
@@ -3830,6 +3877,7 @@ const SKY = (() => {
     v.addEventListener('drop', e => { z.classList.remove('hover'); if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
     $('skyFile').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
     $('skyHzFile').addEventListener('change', e => { loadHzFile(e.target.files[0]); e.target.value = ''; });
+    $('skyGalFile').addEventListener('change', e => { importGallery(e.target.files[0]); e.target.value = ''; });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('skyView').classList.contains('open')) { if ($('skyLight').style.display === 'flex') lightClose(); else if (placing) placeCancel(); else if (cardId) cardClose(); else close(); } });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initDrop); else initDrop();
@@ -3838,7 +3886,7 @@ const SKY = (() => {
     open, close, addFiles, select, toggle, opacity, remove, place, showAll, goto,
     placePreview, placeRot, placeNudge, placeFromView, placeResolve, placeSave, placeCancel,
     solve: solveItem, placeSolve, verify, scaleTouched: () => { if (placing) placing.scaleTouched = true; },
-    statusHide, card: showCard, cardVerify, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
+    statusHide, exportGallery, card: showCard, cardVerify, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
     setHorizon, setHorizonUp, setAltaz, setGround, setPlanets, setConstellations,
     setSurvey, setProjection, setFrame, setGrid, setAtlas, setFootprints, setFov, setFovRot, setOpt, applyLabels,
     _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now, fetchCat, lumOf, runSolve, autoSolve })
