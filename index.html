@@ -3408,7 +3408,7 @@ const SKY = (() => {
       const pri = [];
       try { for (const st of (typeof setups !== 'undefined' ? setups : [])) if (st.focalLength && st.sensorW) { const hd = Math.hypot(st.sensorW, st.sensorH || st.sensorW * 0.66) / st.focalLength * R2D / 2; pri.push(hd * 1.1, hd * 0.75); } } catch (e) { }
       radii = [];
-      for (const r0 of pri.concat([0.3, 0.6, 1.2, 1.8, 2.5, 3.5, 5, 10])) if (r0 > 0.08 && r0 < 15 && radii.every(q => Math.abs(q - r0) / r0 > 0.2)) radii.push(r0);
+      for (const r0 of pri.concat([0.15, 0.22, 0.3, 0.45, 0.65, 0.9, 1.3, 1.8, 2.5, 3.5, 5, 10])) if (r0 > 0.08 && r0 < 15 && radii.every(q => Math.abs(q - r0) / r0 > 0.15)) radii.push(r0);
     }
     let last = null;
     for (const r of radii) {
