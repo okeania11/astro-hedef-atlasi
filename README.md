@@ -17,7 +17,7 @@ Astro Target Planner is a free, browser-based night planning tool specifically d
 - **Bortle Warning System:** Identifies targets that might be too faint for your local light pollution levels.
 - **Planetary Tracking:** Real-time orbit mechanics for Venus, Mars, Jupiter, Saturn, Uranus, and Neptune.
 - **Custom Equipment Profiles:** Save multiple telescope and camera combinations to your browser's local storage.
-- **My Sky (new in v0.7.0):** Drop your plate‑solved XISF/FITS files (PixInsight ImageSolver, ASTAP, astrometry.net) and see them placed on a real sky atlas (Aladin Lite / DSS2, Pan‑STARRS, Mellinger…), TheSky‑style. Unsolved files and JPGs can be placed manually. Images stay in your browser.
+- **My Sky (new in v0.7.0):** Drop your plate‑solved XISF/FITS files (PixInsight ImageSolver, ASTAP, astrometry.net) and see them placed on a real sky atlas (Aladin Lite / DSS2, Pan‑STARRS, Mellinger…), TheSky‑style. Unsolved files and JPGs can be placed manually. Shows the live sky for your location (horizon, cardinal points, time slider, "use my location"); your photos appear as thumbnail rings — click for details and a full-size view. Images stay in your browser.
 - **Multi-Language Support:** Seamlessly switch between English and Turkish.
 
 ## 🛠 Technical Details
@@ -53,7 +53,7 @@ Astro Hedef Atlası, astrofotoğrafçılar için geliştirilmiş, tamamen taray�
 - **Bortle Uyarı Sistemi:** Işık kirliliği seviyenize göre çok sönük kalacak hedefler için uyarı alın.
 - **Gezegen Takibi:** Venüs, Mars, Jüpiter, Satürn, Uranüs ve Neptün konumlarını gerçek yörünge mekaniğiyle takip edin.
 - **Kişisel Kurulum Profilleri:** Birden fazla teleskop-kamera kombinasyonunu tarayıcınıza kaydedin.
-- **Gökyüzüm (v0.7.0 ile yeni):** Plate solve edilmiş XISF/FITS dosyalarınızı (PixInsight ImageSolver, ASTAP, astrometry.net) bırakın; gerçek gökyüzü atlasının (Aladin Lite / DSS2, Pan‑STARRS, Mellinger…) üzerinde TheSky gibi yerine otursun. Çözümsüz dosyalar ve JPG'ler elle yerleştirilebilir. Görüntüler tarayıcınızda kalır.
+- **Gökyüzüm (v0.7.0 ile yeni):** Plate solve edilmiş XISF/FITS dosyalarınızı (PixInsight ImageSolver, ASTAP, astrometry.net) bırakın; gerçek gökyüzü atlasının (Aladin Lite / DSS2, Pan‑STARRS, Mellinger…) üzerinde TheSky gibi yerine otursun. Çözümsüz dosyalar ve JPG'ler elle yerleştirilebilir. Konumunuza göre o anki gökyüzünü gösterir (ufuk, yönler, saat kaydırıcısı, "konumumu bul"); fotoğraflarınız küçük resimli halkalar olarak görünür, tıklayınca bilgi kartı ve büyük görüntü açılır. Görüntüler tarayıcınızda kalır.
 - **Çoklu Dil Desteği:** Türkçe ve İngilizce arasında tek tıkla geçiş yapın.
 
 ## 🛠 Teknik Detaylar
