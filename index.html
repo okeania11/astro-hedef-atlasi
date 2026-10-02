@@ -2585,7 +2585,13 @@ function detectStars(lum, w, h, maxN) {
     if (ring / rn > 0.6 * v) continue; // geniş, yayılmış yapı (bulutsu düğümü)
     let sx = 0, sy = 0, sf = 0;
     for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const q = res[(y + dy) * w + x + dx]; if (q > 0) { sx += q * (x + dx); sy += q * (y + dy); sf += q; } }
-    stars.push({ x: sx / sf, y: sy / sf, f: sf, p: v });
+    const cx = sx / sf, cy = sy / sf;
+    // yuvarlaklık: yazı/logo çizgileri ve uydu izleri uzun, yıldızlar yuvarlak
+    let mxx = 0, myy = 0, mxy = 0;
+    for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const q = res[(y + dy) * w + x + dx]; if (q > 0) { const ux = x + dx - cx, uy = y + dy - cy; mxx += q * ux * ux; myy += q * uy * uy; mxy += q * ux * uy; } }
+    const el = Math.sqrt((mxx - myy) ** 2 + 4 * mxy * mxy) / Math.max(1e-9, mxx + myy);
+    if (el > 0.45) continue;
+    stars.push({ x: cx, y: cy, f: sf, p: v });
   }
   stars.sort((a, b) => b.f - a.f);
   const out = [];
@@ -2666,7 +2672,7 @@ function plateSolve(job) {
   const diag = Math.hypot(w, h);
   let best = null, tried = 0;
   ti.sort((a, b) => b.a - a.a); // büyük üçgenler önce (daha kararlı)
-  const img15 = img.slice(0, 15), catQ = cat.slice(0, 120);
+  const img15 = img.slice(0, 25), catQ = cat.slice(0, 120);
   outer:
   for (const t of ti) {
     if (t.a < diag * 0.08) continue;
@@ -2681,7 +2687,7 @@ function plateSolve(job) {
         if (++tried > 200000) break outer;
         const tol = Math.max(3 * T.scale, 1.5);
         // hızlı ön eleme: en parlak 15 yıldızdan en az 4'ü tutmalı
-        if (countIn(T, img15, catQ, tol).n < 4) continue;
+        if (countIn(T, img15, catQ, tol).n < 3) continue;
         const r = countIn(T, img.slice(0, 45), catQ, tol);
         if (!best || r.n > best.n) best = { n: r.n, T, pairs: r.pairs };
       }
