@@ -2948,6 +2948,8 @@ const SKY = (() => {
   };
 })();
 
+window.SKY = SKY; // konsoldan/eklentilerden erişim için
+
 // Dil değişince Gökyüzüm etiketlerini de güncelle
 (function () {
   if (typeof toggleLang !== 'function') return;
