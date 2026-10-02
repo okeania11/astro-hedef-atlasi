@@ -3202,7 +3202,7 @@ const SKY = (() => {
     await dbPut(strip(it)); placeClose(true);
     await showLayer(it); renderList(); drawFootprints(); select(it.id, false);
   }
-  function placeCancel() { const it = items.find(i => i.id === placing.id); placeClose(false); if (it && it.wcs && it.visible) showLayer(it); }
+  function placeCancel() { if (!placing) return; const it = items.find(i => i.id === placing.id); placeClose(false); if (it && it.wcs && it.visible) showLayer(it); }
   function placeClose() { const it = placing && items.find(i => i.id === placing.id); if (it) hideLayer(it); placing = null; $('skyPlace').style.display = 'none'; }
 
   // ─── Durum çubuğu ───
@@ -3349,6 +3349,12 @@ const SKY = (() => {
         const w0 = { NAXIS: 2, NAXIS1: base.w, NAXIS2: base.h, CTYPE1: 'RA---TAN', CTYPE2: 'DEC--TAN', CRVAL1: hint.ra, CRVAL2: hint.dec, CRPIX1: res.crpix[0], CRPIX2: res.crpix[1], CD1_1: res.cd[0][0], CD1_2: res.cd[0][1], CD2_1: res.cd[1][0], CD2_2: res.cd[1][1], RADESYS: 'ICRS', EQUINOX: 2000 };
         const wcs = rescaleWcs(w0, base.w, base.h, it.width, it.height);
         wcs._source = T('Gökyüzüm plate solve', 'My Sky plate solve') + ' · ' + res.matched + T(' yıldız', ' stars') + ' · rms ' + res.rmsPx.toFixed(1) + ' px';
+        // İpucu görüntü merkezinden uzaksa teğet noktası yanlış yerde kalır: merkezle bir kez daha çöz
+        const c = center(wcs), off = Math.hypot((c[0] - hint.ra) * Math.cos(c[1] * D2R), c[1] - hint.dec);
+        if (!hint._refined && off > 0.02 * Math.max(1, fovDeg(wcs))) {
+          const r2 = await autoSolve(it, { ra: c[0], dec: c[1], scale: pixScale(wcs), _refined: true }, say);
+          if (r2.ok) return r2;
+        }
         return { ok: true, wcs, res };
       }
       last = res.why;
