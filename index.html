@@ -2627,12 +2627,16 @@ function simil(src, dst, par) { // karmaşık benzerlik: dst = α·src' + β (sr
   return { ar, ai, par, bx: wx - (ar * zx - ai * zy), by: wy - (ai * zx + ar * zy), scale: Math.hypot(ar, ai) };
 }
 const applyS = (T, x, y) => { const yy = T.par * y; return [T.ar * x - T.ai * yy + T.bx, T.ai * x + T.ar * yy + T.by]; };
-function countIn(T, img, cat, tol) {
-  let n = 0; const used = new Set(), pairs = [];
+// katalog x'e göre sıralı tutulur → en yakın komşu araması ikili arama ile
+function sortedCat(cat) { const idx = cat.map((c, i) => i).sort((i, j) => cat[i][0] - cat[j][0]); return { idx, xs: idx.map(i => cat[i][0]), cat }; }
+function countIn(T, img, sc, tol) {
+  const { idx, xs, cat } = sc; let n = 0; const used = new Set(), pairs = [];
   for (let i = 0; i < img.length; i++) {
     const [u, v] = applyS(T, img[i][0], img[i][1]);
+    let lo = 0, hi = xs.length; const x0 = u - tol;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (xs[m] < x0) lo = m + 1; else hi = m; }
     let bj = -1, bd = tol * tol;
-    for (let j = 0; j < cat.length; j++) { const dd = (cat[j][0] - u) ** 2 + (cat[j][1] - v) ** 2; if (dd < bd && !used.has(j)) { bd = dd; bj = j; } }
+    for (let k = lo; k < xs.length && xs[k] <= u + tol; k++) { const j = idx[k]; const dd = (cat[j][0] - u) ** 2 + (cat[j][1] - v) ** 2; if (dd < bd && !used.has(j)) { bd = dd; bj = j; } }
     if (bj >= 0) { used.add(bj); n++; pairs.push([i, bj]); }
   }
   return { n, pairs };
@@ -2673,7 +2677,7 @@ function plateSolve(job) {
   const diag = Math.hypot(w, h);
   let best = null, tried = 0;
   ti.sort((a, b) => b.a - a.a); // büyük üçgenler önce (daha kararlı)
-  const img15 = img.slice(0, 25), catQ = cat.slice(0, 120);
+  const img15 = img.slice(0, 25), catQ = sortedCat(cat.slice(0, 120));
   outer:
   for (const t of ti) {
     if (t.a < diag * 0.08) continue;
@@ -2685,7 +2689,7 @@ function plateSolve(job) {
         const scale = c.a / t.a; if (scale < smin || scale > smax) continue;
         const par = c.s === t.s ? 1 : -1;
         const T = simil(t.v.map(i => img[i]), c.v.map(j => cat[j]), par);
-        if (++tried > 200000) break outer;
+        if (++tried > 120000) break outer;
         const tol = Math.max(3 * T.scale, 1.5);
         // hızlı ön eleme: en parlak 15 yıldızdan en az 4'ü tutmalı
         if (countIn(T, img15, catQ, tol).n < 3) continue;
