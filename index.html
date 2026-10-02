@@ -3708,7 +3708,9 @@ const SKY = (() => {
   }
   function timeShift(min) { timeOffset = +min; refreshTime(); }
   function timeNow() { timeOffset = 0; $('skyTimeSl').value = 0; refreshTime(); }
-  function setHorizon(v) { S.horizon = v; saveS(); refreshTime(); if (!v && aladin) aladin.setRotation(0); }
+  function setHorizon(v) { S.horizon = v; saveS(); syncHzUi(); refreshTime(); drawGround(); if (!v && aladin) aladin.setRotation(0); }
+  // Ufuk kapalıyken zemin ve ufka bağlı seçenekler de kapalı görünsün
+  function syncHzUi() { ['skyGround', 'skyHzUp', 'skyAltaz'].forEach(id => { const el = $(id); if (el) { el.disabled = !S.horizon; el.parentElement.style.opacity = S.horizon ? '' : '.45'; } }); }
   function setHorizonUp(v) { S.horizonUp = v; saveS(); if (v) orient(); else if (aladin) aladin.setRotation(0); }
   function setAltaz(v) { S.altaz = v; saveS(); drawHorizon(); }
   // Konum
@@ -3814,7 +3816,7 @@ const SKY = (() => {
     $('skyGrid').checked = S.grid; $('skyAtlas').checked = S.atlas; $('skyFp').checked = S.footprints; $('skyFovChk').checked = S.fov;
     $('skyMax').value = S.maxDim; $('skyStretch').value = S.stretch; $('skyLinked').checked = S.linked;
     $('skyCon').checked = S.constellations !== false; $('skyGround').checked = S.ground; $('skyPlanets').checked = S.planets;
-    $('skyHz').checked = S.horizon; $('skyHzUp').checked = S.horizonUp; $('skyAltaz').checked = S.altaz;
+    $('skyHz').checked = S.horizon; syncHzUi(); $('skyHzUp').checked = S.horizonUp; $('skyAltaz').checked = S.altaz;
     if (aladin) refreshTime();
     $('skyFovRot').value = S.fovRot; $('skyFovRotV').textContent = S.fovRot + '°'; $('skyFovRow').style.display = S.fov ? 'flex' : 'none';
     renderList();
