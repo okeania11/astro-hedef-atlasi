@@ -2588,9 +2588,10 @@ function detectStars(lum, w, h, maxN) {
     const cx = sx / sf, cy = sy / sf;
     // yuvarlaklık: yazı/logo çizgileri ve uydu izleri uzun, yıldızlar yuvarlak
     let mxx = 0, myy = 0, mxy = 0;
-    for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const q = res[(y + dy) * w + x + dx]; if (q > 0) { const ux = x + dx - cx, uy = y + dy - cy; mxx += q * ux * ux; myy += q * uy * uy; mxy += q * ux * uy; } }
-    const el = Math.sqrt((mxx - myy) ** 2 + 4 * mxy * mxy) / Math.max(1e-9, mxx + myy);
-    if (el > 0.45) continue;
+    let mn = 0;
+    for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const q = res[(y + dy) * w + x + dx]; if (q > 2 * sig) { const ux = x + dx - cx, uy = y + dy - cy; mxx += q * ux * ux; myy += q * uy * uy; mxy += q * ux * uy; mn++; } }
+    const el = mn >= 5 ? Math.sqrt((mxx - myy) ** 2 + 4 * mxy * mxy) / Math.max(1e-9, mxx + myy) : 0;
+    if (el > 0.6) continue;
     stars.push({ x: cx, y: cy, f: sf, p: v });
   }
   stars.sort((a, b) => b.f - a.f);
