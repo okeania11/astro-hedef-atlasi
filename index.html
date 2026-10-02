@@ -2651,7 +2651,7 @@ function plateSolve(job) {
   if (init) { // bilinen yaklaşık çözümden başla (derin katalogla iyileştirme)
     A = init; pairs = null;
   } else {
-  const NI = Math.min(25, img.length), NC = Math.min(50, cat.length);
+  const NI = Math.min(30, img.length), NC = Math.min(60, cat.length);
   const ti = triangles(img, NI), tc = triangles(cat, NC);
   const Q = 0.01, hash = new Map();
   for (const t of tc) { const k = Math.round(t.r1 / Q) + ',' + Math.round(t.r2 / Q); (hash.get(k) || hash.set(k, []).get(k)).push(t); }
@@ -2670,7 +2670,7 @@ function plateSolve(job) {
         const T = simil(t.v.map(i => img[i]), c.v.map(j => cat[j]), par);
         if (++tried > 40000) break;
         const tol = Math.max(3 * T.scale, 1.5);
-        const r = countIn(T, img.slice(0, 40), cat.slice(0, 90), tol);
+        const r = countIn(T, img.slice(0, 45), cat.slice(0, 120), tol);
         if (!best || r.n > best.n) best = { n: r.n, T, pairs: r.pairs };
       }
     }
@@ -3312,13 +3312,15 @@ const SKY = (() => {
   }
   async function fetchCat(ra, dec, rad, deep) {
     const c = encodeURIComponent(ra.toFixed(5) + ' ' + (dec >= 0 ? '+' : '') + dec.toFixed(5));
-    if (deep && rad > 2.5) deep = false; // geniş alanda Gaia çok yavaş: Tycho-2 yeter
-    const url = deep
+    if (deep && rad > 1.0) deep = 'tyc'; // geniş alanda Gaia çok yavaş: Tycho-2 yeter
+    const url = deep === 'tyc'
+      ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/259/tyc2&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=_RAJ2000,_DEJ2000,VTmag&-sort=VTmag&-out.max=2500'
+      : deep
       ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/355/gaiadr3&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=RA_ICRS,DE_ICRS,Gmag&Gmag=%3C' + (rad > 1.2 ? 13 : rad > 0.6 ? 15 : rad > 0.3 ? 16 : 17) + '&-out.max=4000'
       : rad <= 0.7
       ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/355/gaiadr3&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=RA_ICRS,DE_ICRS,Gmag&Gmag=%3C' + (rad < 0.35 ? 16 : 14.5) + '&-out.max=3000'
       : 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/259/tyc2&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=_RAJ2000,_DEJ2000,VTmag&-sort=VTmag&-out.max=400';
-    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 30000); // VizieR takılırsa bekleme
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000); // VizieR takılırsa bekleme
     let t; try { t = await (await fetch(url, { signal: ctl.signal })).text(); } finally { clearTimeout(to); }
     const rows = [];
     for (const l of t.split('\n')) { const p = l.trim().split('\t'); if (p.length >= 3 && /^[\d.]+$/.test(p[0])) { const m = parseFloat(p[2]); rows.push([+p[0], +p[1], isFinite(m) ? m : 99]); } }
@@ -3366,7 +3368,13 @@ const SKY = (() => {
           const w0 = { NAXIS: 2, NAXIS1: base.w, NAXIS2: base.h, CTYPE1: 'RA---TAN', CTYPE2: 'DEC--TAN', CRVAL1: ra0, CRVAL2: dec0, CRPIX1: r.crpix[0], CRPIX2: r.crpix[1], CD1_1: r.cd[0][0], CD1_2: r.cd[0][1], CD2_1: r.cd[1][0], CD2_2: r.cd[1][1], RADESYS: 'ICRS', EQUINOX: 2000 };
           return w0;
         };
-        let w0 = mk(res, hint.ra, hint.dec), fin = res;
+        let w0 = mk(res, hint.ra, hint.dec), fin = null;
+        // Akla yatkınlık: alan, aranan yarıçapa uymalı ve merkez ipucuna yakın olmalı
+        {
+          const hd = Math.hypot(base.w, base.h) / 2 * pixScale(w0) / 3600, c0 = pix2sky(w0, (base.w + 1) / 2, (base.h + 1) / 2);
+          const off = Math.hypot((c0[0] - hint.ra) * Math.cos(c0[1] * D2R), c0[1] - hint.dec);
+          if (hd > 2.2 * r || hd < 0.12 * r || off > r) { last = T('Eşleşme tutarsız', 'Inconsistent match'); continue; }
+        }
         // Doğrulama + iyileştirme: görüntü merkezinde, derin Gaia kataloğuyla, bilinen çözümden başlayarak
         try {
           const c = pix2sky(w0, (base.w + 1) / 2, (base.h + 1) / 2), sc = pixScale(w0);
@@ -3377,10 +3385,11 @@ const SKY = (() => {
             const xc = (base.w + 1) / 2, yc = (base.h + 1) / 2, A0 = { a: w0.CD1_1 * 3600, b: w0.CD1_2 * 3600, d: w0.CD2_1 * 3600, e: w0.CD2_2 * 3600 };
             A0.c = -(A0.a * xc + A0.b * yc); A0.f = -(A0.d * xc + A0.e * yc);
             const r2 = await runSolve({ lum: new Float32Array(base.lum), w: base.w, h: base.h, cat: deep.slice(0, 1500).map(q => project(c[0], c[1], q[0], q[1]).concat([q[2]])), scaleHint: sc, init: A0 });
-            if (r2.ok && r2.matched >= Math.max(10, res.matched)) { w0 = mk(r2, c[0], c[1]); fin = r2; }
+            if (r2.ok && r2.matched >= Math.max(12, res.matched)) { w0 = mk(r2, c[0], c[1]); fin = r2; }
           }
         } catch (e) { console.warn('verify', e); }
-        if (fin.weak || fin.matched < 8) { last = T('Çözüm doğrulanamadı', 'Solution could not be verified') + ' (' + fin.matched + T(' yıldız)', ' stars)'); continue; }
+        // Yalnızca derin katalogla doğrulanmış çözüm kabul edilir — yanlış yere koymaktansa çözmemek iyidir
+        if (!fin) { last = T('Çözüm doğrulanamadı', 'Solution could not be verified') + ' (' + res.matched + T(' yıldız)', ' stars)'); continue; }
         const wcs = rescaleWcs(w0, base.w, base.h, it.width, it.height);
         wcs._source = T('Gökyüzüm plate solve', 'My Sky plate solve') + ' · ' + fin.matched + T(' yıldız', ' stars') + ' · rms ' + fin.rmsPx.toFixed(1) + ' px';
         return { ok: true, wcs, res: fin };
