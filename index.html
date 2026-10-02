@@ -3368,7 +3368,7 @@ const SKY = (() => {
       : rad <= 0.7
       ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/355/gaiadr3&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=RA_ICRS,DE_ICRS,Gmag&Gmag=%3C' + (rad < 0.35 ? 16 : 14.5) + '&-out.max=3000'
       : 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/259/tyc2&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=_RAJ2000,_DEJ2000,VTmag&-sort=VTmag&-out.max=400';
-    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000); // VizieR takılırsa bekleme
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 10000); // VizieR takılırsa bekleme
     let t; try { t = await (await fetch(url, { signal: ctl.signal })).text(); } finally { clearTimeout(to); }
     const rows = [];
     for (const l of t.split('\n')) { const p = l.trim().split('\t'); if (p.length >= 3 && /^[\d.]+$/.test(p[0])) { const m = parseFloat(p[2]); rows.push([+p[0], +p[1], isFinite(m) ? m : 99]); } }
@@ -3424,6 +3424,7 @@ const SKY = (() => {
           const w0 = { NAXIS: 2, NAXIS1: base.w, NAXIS2: base.h, CTYPE1: 'RA---TAN', CTYPE2: 'DEC--TAN', CRVAL1: ra0, CRVAL2: dec0, CRPIX1: r.crpix[0], CRPIX2: r.crpix[1], CD1_1: r.cd[0][0], CD1_2: r.cd[0][1], CD2_1: r.cd[1][0], CD2_2: r.cd[1][1], RADESYS: 'ICRS', EQUINOX: 2000 };
           return w0;
         };
+        if (res.matched < 8) { last = T('Zayıf eşleşme', 'Weak match') + ' (' + res.matched + ')'; continue; } // doğrulamaya değmez
         let w0 = mk(res, hint.ra, hint.dec), fin = null;
         // Akla yatkınlık: alan, aranan yarıçapa uymalı ve merkez ipucuna yakın olmalı
         {
