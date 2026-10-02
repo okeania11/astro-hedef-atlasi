@@ -1919,7 +1919,7 @@ if('serviceWorker' in navigator){
         <div style="font-size:22px">⤓</div>
         <div data-tr="FITS / XISF / JPG bırak<br><small>ya da tıkla ve seç</small>" data-en="Drop FITS / XISF / JPG<br><small>or click to choose</small>">FITS / XISF / JPG bırak<br><small>ya da tıkla ve seç</small></div>
       </label>
-      <input type="file" id="skyFile" multiple accept=".fits,.fit,.fts,.xisf,.jpg,.jpeg,.png,.webp" style="display:none">
+      <input type="file" id="skyFile" multiple accept=".fits,.fit,.fts,.xisf,.wcs,.jpg,.jpeg,.png,.webp" style="display:none">
       <details class="sky-opts">
         <summary data-tr="İçe aktarma ayarları" data-en="Import settings">İçe aktarma ayarları</summary>
         <div class="sky-row"><span data-tr="Maks. boyut" data-en="Max size">Maks. boyut</span>
@@ -2685,7 +2685,7 @@ const SKY = (() => {
 
   // ─── Dosya alma ───
   const isRaster = n => /\.(jpe?g|png|webp|gif|bmp|avif)$/i.test(n);
-  const isAstro = n => /\.(fits?|fts|xisf)$/i.test(n);
+  const isAstro = n => /\.(fits?|fts|xisf|wcs)$/i.test(n); // .wcs: ASTAP / astrometry.net başlık dosyası
   const stem = n => n.replace(/\.[^.]+$/, '').toLowerCase();
 
   async function addFiles(fileList) {
