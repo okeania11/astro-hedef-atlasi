@@ -3016,7 +3016,7 @@ const SKY = (() => {
     const el = $('skyList');
     $('skyCount').textContent = items.length ? items.length + ' ' + T('görüntü', 'images') : '';
     if (!items.length) {
-      el.innerHTML = '<div class="sky-empty">' + T('Henüz görüntü yok.<br>Plate solve edilmiş <b>XISF</b> ya da <b>FITS</b> dosyalarını yukarıya bırak.<br><br>Çözümsüz dosyaları (APP, ASIAIR) veya <b>JPG</b>\'leri de bırakabilirsin — elle yerleştirirsin.', 'No images yet.<br>Drop plate‑solved <b>XISF</b> or <b>FITS</b> files above.<br><br>Unsolved files or <b>JPG</b>s can be placed manually.') + '</div>';
+      el.innerHTML = '<div class="sky-empty">' + T('Henüz görüntü yok.<br>İşlenmiş <b>JPG / TIFF</b> ya da <b>XISF / FITS</b> dosyalarını yukarıya bırak.<br><br>Konum bilgisi olmayanlar otomatik plate solve edilir; obje adı dosya adından tahmin edilir. Olmazsa elle yerleştirebilirsin.<br><br>Görüntüler bu tarayıcıda saklanır, hiçbir yere yüklenmez.', 'No images yet.<br>Drop finished <b>JPG / TIFF</b> or <b>XISF / FITS</b> files above.<br><br>Files without a position are plate‑solved automatically; the object is guessed from the file name. Otherwise place them manually.<br><br>Images stay in this browser and are not uploaded anywhere.') + '</div>';
       return;
     }
     const sorted = items.slice().sort((a, b) => (b.created || 0) - (a.created || 0));
@@ -3161,7 +3161,7 @@ const SKY = (() => {
     const it = items.find(i => i.id === id); if (!it) return;
     const b = document.querySelector('.sky-item[data-id="' + id + '"] .sky-del');
     if (b && !b.classList.contains('confirm')) { b.classList.add('confirm'); b.textContent = T('Sil?', 'Delete?'); setTimeout(() => { if (b.isConnected) { b.classList.remove('confirm'); b.textContent = '✕'; } }, 2500); return; }
-    hideLayer(it); await dbDel(id); items = items.filter(i => i.id !== id); statusHide(); if (cardId === id) cardClose();
+    hideLayer(it); await dbDel(id); items = items.filter(i => i.id !== id); statusHide(); $('skyInfo').innerHTML = ''; if (cardId === id) cardClose();
     if (urls.has(id)) { URL.revokeObjectURL(urls.get(id)); urls.delete(id); }
     if (selectedId === id) selectedId = null;
     renderList(); drawFootprints();
