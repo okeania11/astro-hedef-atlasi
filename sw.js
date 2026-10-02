@@ -1,4 +1,4 @@
-const CACHE = 'astro-atlas-v070';
+const CACHE = 'astro-atlas-v075';
 const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 // Gökyüzüm için Aladin Lite kitaplığı da önbelleğe alınır; gökyüzü karoları (HiPS) alınmaz,
 // yoksa önbellek sınırsız büyür.

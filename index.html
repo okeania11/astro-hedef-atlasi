@@ -125,6 +125,7 @@ tbody tr:last-child td{border-bottom:none;}
 .score-bar{width:44px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
 .score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));}
 .moon-cell{font-size:12px;}.moon-ok{color:#89ddff;}.moon-warn{color:var(--warning);}.moon-bad{color:var(--danger);}
+.curve-cell{cursor:zoom-in;padding-top:4px!important;padding-bottom:4px!important;white-space:nowrap}.curve-cell svg{display:block}.curve-cell:hover svg{outline:1px solid var(--accent)}.spark-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text2);margin-top:1px}.curve-th span{cursor:pointer}.curve-th span:hover{color:var(--accent)}.curve-big{max-width:100%;height:auto}
 .window-cell{color:var(--accent3);font-size:12px;}.peak-cell{color:var(--text);font-size:12px;}.alt-cell{color:var(--accent);font-size:12px;}
 .fav-star{background:none!important;border:none;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;transition:transform .15s,color .15s;color:#7a84a8!important;-webkit-appearance:none;}
 .fav-star:hover{transform:scale(1.3);color:#c0c8e8!important;}
@@ -318,7 +319,7 @@ body.sky-open{overflow:hidden}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.4</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.5</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
@@ -378,13 +379,14 @@ body.sky-open{overflow:hidden}
   <!-- Ufuk Canvas -->
   <div class="ufuk-wrap" id="ufukWrap" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div class="section-label" style="margin:0">Ufuk Profili — Obje Konumları</div>
+      <div style="display:flex;align-items:center;gap:10px"><button class="btn-sm" id="ufukToggle" onclick="toggleUfuk()" title="Ana ufuk grafiğini aç/kapat">▸ Grafik</button><div class="section-label" style="margin:0">Ufuk Profili — Obje Konumları</div></div>
       <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text2)">
         <span>Saat:</span>
         <input type="range" id="timeSlider" min="0" max="420" value="0" step="10" style="width:140px" oninput="onTimeSlider(this.value)">
         <span id="timeSliderLabel" style="font-family:'Space Mono',monospace;color:var(--accent);min-width:42px">—</span>
       </div>
     </div>
+    <div id="ufukBody">
     <div style="position:relative">
       <canvas id="ufukCanvas" height="220"></canvas>
       <div id="objIpucu" style="display:none;position:absolute;background:#131628;border:1px solid #4fc3f7;border-radius:4px;padding:6px 10px;font-size:11px;font-family:'Space Mono',monospace;pointer-events:none;z-index:10;white-space:nowrap"></div>
@@ -397,6 +399,7 @@ body.sky-open{overflow:hidden}
       <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffd700;margin-right:3px"></span><span class="ufuk-legend-item">Küresel / Gezegen</span></span>
       <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffcb6b;margin-right:3px;outline:1px solid #ffcb6b"></span><span class="ufuk-legend-item">Ufka yakın</span></span>
       <span style="color:#ff5370" class="ufuk-legend-below">✕ Ufkun altında</span>
+    </div>
     </div>
   </div>
 
@@ -448,14 +451,13 @@ body.sky-open{overflow:hidden}
                 <th onclick="sortBy('name')" title="Katalog adı — M, NGC, IC, Sh2 vb. Tıklayarak sırala">Obje ↕</th>
         <th onclick="sortBy('type')" title="Obje türü: Gökada, Bulutsu, Gezegenimsi Bulutsu, Açık/Küresel Küme, Gezegen">Tür</th>
         <th onclick="sortBy('size')" title="Açısal boyut (arcmin). M51 referansıyla kıyaslanır. Kurulum girilmişse kareye sığıp sığmadığı gösterilir.">Boyut ↕</th>
-        <th onclick="sortBy('peak')" title="Objenin o gece meridiani geçtiği yerel saat — en yüksek noktaya ulaştığı an">En Yüksek ↕</th>
-        <th onclick="sortBy('maxAlt')" title="Objenin o gece ulaştığı maksimum yükseklik açısı (derece). Yüksek olması daha iyi görüntü demektir.">Tepe Nokta ↕</th>
+        <th class="curve-th" title="Gece boyunca yükseklik eğrisi. Dikey kesikli çizgi: meridyen (en yüksek an). Parlak nokta: şu an / kaydırıcıdaki saat. Büyütmek için grafiğe tıkla."><span onclick="sortBy('peak')">Saat ↕</span> · <span onclick="sortBy('maxAlt')">Tepe ↕</span></th>
         <th onclick="sortBy('window')" title="Objenin ufuk üstünde ve meridian sınırı içinde kaldığı toplam süre (saat cinsinden)">Çekim Süresi ↕</th>
         <th onclick="sortBy('moonDist')" title="Obje ile Ay arasındaki açısal mesafe (derece). 30° altı kırmızı, 60° altı sarı uyarı verir.">Ay Mes. ↕</th>
         <th title="Seçilen kurulum filtreleri ve ay fazına göre önerilen filtre kombinasyonu ve pozlama süresi">Filtre Önerisi</th>
         <th onclick="sortBy('score')" title="Yükseklik, çekim süresi, ay mesafesi ve parlaklık faktörlerine göre hesaplanan genel uygunluk puanı (0-100)">Puan ↕</th>
       </tr></thead>
-      <tbody id="tableBody"><tr><td colspan="10">
+      <tbody id="tableBody"><tr><td colspan="9">
         <div class="empty-state"><div class="icon">🔭</div><p id="emptyInitText">Kurulum ve tarih seçip Hesapla'ya bas.<br>Ufuk dosyası (.hrz, .txt) opsiyoneldir.</p></div>
       </td></tr></tbody>
     </table>
@@ -497,12 +499,24 @@ body.sky-open{overflow:hidden}
 </div>
 
 
+  <!-- Gece eğrisi büyük -->
+  <div class="modal-overlay" id="curveModal" onclick="closeCurve()">
+    <div class="modal" style="max-width:690px;text-align:center" onclick="event.stopPropagation()">
+      <h3 class="curve-name" style="margin-bottom:10px"></h3>
+      <div class="curve-host"></div>
+      <div style="margin-top:8px;font-size:11px;color:var(--text2);line-height:1.6">Mavi: ufkun üstünde · gri: ufkun/engelin altında · kahverengi: yerel ufuk profili · sarı kesikli: meridyen (en yüksek an) · kesikli yatay: 30° · bantlar: alacakaranlık · <span style="color:#69ff8a">●</span> şu an / kaydırıcı saati</div>
+      <div class="modal-actions" style="justify-content:center">
+        <button class="btn-cancel" onclick="closeCurve()">Kapat</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Thumbnail Büyük Görüntü -->
   <div class="modal-overlay" id="thumbModal" onclick="closeThumb()">
     <div class="modal" style="max-width:460px;text-align:center" onclick="event.stopPropagation()">
       <h3 class="thumb-name" style="margin-bottom:10px"></h3>
       <img class="thumb-img" style="width:400px;height:400px;max-width:100%;border:1px solid var(--border);border-radius:6px;display:block;margin:0 auto;background:#000">
-      <div style="margin-top:10px;font-size:11px;color:var(--text2)">DSS2 Color · Aladin Sky Atlas (CDS)</div>
+      <div style="margin-top:10px;font-size:11px;color:var(--text2)">DSS2 / Pan-STARRS · Aladin Sky Atlas (CDS)</div>
       <div class="modal-actions" style="justify-content:center">
         <button class="btn-cancel" onclick="closeThumb()">Kapat</button>
       </div>
@@ -511,7 +525,7 @@ body.sky-open{overflow:hidden}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.4
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.5
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -548,8 +562,8 @@ const _L={
     filterLabel:'Filtre:', favBtn:'★ Favoriler', allBtn:'Tümü',
     galaxyBtn:'Gökada', nebulaBtn:'Bulutsu', pnBtn:'Gezegenimsi Bulutsu',
     clusterBtn:'Açık Küme', globularBtn:'Küresel Küme', planetBtn:'Gezegen',
-    colObj:'Obje ↕', colType:'Tür', colSize:'Boyut ↕', colPeak:'En Yüksek ↕',
-    colAlt:'Tepe Nokta ↕', colWindow:'Çekim Süresi ↕', colMoon:'Ay Mes. ↕',
+    colObj:'Obje ↕', colType:'Tür', colSize:'Boyut ↕', colPeak:'Saat ↕',
+    colAlt:'Tepe ↕', colWindow:'Çekim Süresi ↕', colMoon:'Ay Mes. ↕',
     colFilter:'Filtre Önerisi', colScore:'Puan ↕',
     statTotal:'Toplam', statFav:'Favori', statGalaxy:'Gökada', statNebula:'Bulutsu',
     statPN:'Gezegenimsi', statCluster:'Açık Küme', statGlobular:'Küresel', statPlanet:'Gezegen', scoreTitle:'Puan Nasıl Hesaplanır?', scoreFormula:'Yükseklik %35 · Çekim %30<br>Ay %20 · Parlaklık %15',
@@ -705,7 +719,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.4');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.5');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -726,8 +740,8 @@ function applyLang(){
   const fkeys=['favBtn','allBtn','galaxyBtn','nebulaBtn','pnBtn','clusterBtn','globularBtn','planetBtn'];
   fb.forEach((b,i)=>{if(fkeys[i])b.textContent=L(fkeys[i]);});
   const ths=document.querySelectorAll('thead th');
-  const hkeys=['','','colObj','colType','colSize','colPeak','colAlt','colWindow','colMoon','colFilter','colScore'];
-  ths.forEach((th,i)=>{if(hkeys[i])th.textContent=L(hkeys[i]);});
+  const hkeys=['','colObj','colType','colSize','colCurve','colWindow','colMoon','colFilter','colScore'];
+  ths.forEach((th,i)=>{if(hkeys[i]==='colCurve')th.innerHTML='<span onclick="sortBy(\'peak\')">'+L('colPeak')+'</span> · <span onclick="sortBy(\'maxAlt\')">'+L('colAlt')+'</span>';else if(hkeys[i])th.textContent=L(hkeys[i]);});
 }
 
 
@@ -743,244 +757,244 @@ let _weatherCache=null;
 const CAT=[
   // GÖKADALAR
   ["M31","Andromeda","Galaxy",0.712,41.27,178,3.4],["M32","","Galaxy",0.712,40.87,8,8.7],
-  ["M33","Üçgen Gal.","Galaxy",1.564,30.66,63,5.7],["M51","Girdap Gal.","Galaxy",13.496,47.20,11,8.4],
-  ["M63","Ayçiçeği Gal.","Galaxy",13.264,42.03,12,8.6],["M64","Kara Göz Gal.","Galaxy",12.943,21.68,9,8.5],
+  ["M33","Üçgen Gal.","Galaxy",1.564,30.66,63,5.7],["M51","Girdap Gal.","Galaxy",13.4980,47.195,11,8.4],
+  ["M63","Ayçiçeği Gal.","Galaxy",13.264,42.03,12,8.6],["M64","Kara Göz Gal.","Galaxy",12.9455,21.683,9,8.5],
   ["M74","","Galaxy",1.612,15.78,10,9.4],["M77","","Galaxy",2.712,-0.01,7,8.9],
   ["M81","Bode Gal.","Galaxy",9.928,69.07,21,6.9],["M82","Puro Gal.","Galaxy",9.931,69.68,11,8.4],
   ["M83","Güney Rüzgargülü","Galaxy",13.617,-29.87,13,7.5],["M84","","Galaxy",12.418,12.89,5,9.1],
   ["M85","","Galaxy",12.423,18.19,7,9.2],["M86","","Galaxy",12.436,12.95,7,8.9],
   ["M87","Virgo A","Galaxy",12.514,12.39,7,8.6],["M88","","Galaxy",12.532,14.42,7,9.6],
-  ["M90","","Galaxy",12.615,13.16,10,9.5],["M94","","Galaxy",12.851,41.12,11,8.2],
-  ["M95","","Galaxy",10.703,11.70,7,9.7],["M96","","Galaxy",10.747,11.82,7,9.2],
-  ["M98","","Galaxy",12.229,14.90,10,10.1],["M99","","Galaxy",12.315,14.42,5,9.9],
+  ["M90","","Galaxy",12.6138,13.163,10,9.5],["M94","","Galaxy",12.8481,41.120,11,8.2],
+  ["M95","","Galaxy",10.7327,11.704,7,9.7],["M96","","Galaxy",10.7794,11.820,7,9.2],
+  ["M98","","Galaxy",12.229,14.90,10,10.1],["M99","","Galaxy",12.3138,14.416,5,9.9],
   ["M100","","Galaxy",12.382,15.82,7,9.3],["M101","Rüzgargülü Gal.","Galaxy",14.054,54.35,22,7.9],
   ["M104","Sombrero","Galaxy",12.666,-11.62,9,8.0],["M106","","Galaxy",12.316,47.30,19,8.4],
-  ["M108","","Galaxy",11.189,55.67,8,10.0],["M109","","Galaxy",11.962,53.37,8,9.8],
-  ["M110","","Galaxy",0.673,41.69,17,8.5],["NGC 891","","Galaxy",2.382,42.35,14,9.9],
+  ["M108","","Galaxy",11.1919,55.674,8,10.0],["M109","","Galaxy",11.9600,53.375,8,9.8],
+  ["M110","","Galaxy",0.673,41.69,17,8.5],["NGC 891","","Galaxy",2.3758,42.348,14,9.9],
   ["NGC 1023","","Galaxy",2.673,39.07,8,9.5],["NGC 2683","","Galaxy",8.879,33.43,9,9.7],
-  ["NGC 2903","","Galaxy",9.524,21.50,13,9.0],["NGC 3521","","Galaxy",11.107,-0.04,11,8.9],
-  ["NGC 3628","","Galaxy",11.340,13.59,14,9.5],["NGC 4038","Anten Gal.","Galaxy",12.016,-18.87,3,10.3],
-  ["NGC 4236","","Galaxy",12.284,69.47,22,9.7],["NGC 4244","","Galaxy",12.296,37.81,16,10.2],
-  ["NGC 4565","Iğne Gal.","Galaxy",12.609,25.99,16,9.6],["NGC 4631","Ringa Gal.","Galaxy",12.702,32.54,15,9.2],
-  ["NGC 5128","Centaurus A","Galaxy",13.426,-43.02,18,6.8],["NGC 5907","","Galaxy",15.279,56.33,13,10.4],
-  ["NGC 6946","Havai Fişek","Galaxy",20.577,60.15,11,8.9],["NGC 7331","","Galaxy",22.618,34.42,11,9.5],
-  ["NGC 7814","","Galaxy",0.052,16.15,6,10.5],["IC 342","","Galaxy",3.767,68.08,21,9.1],
+  ["NGC 2903","","Galaxy",9.5361,21.501,13,9.0],["NGC 3521","","Galaxy",11.0968,-0.036,11,8.9],
+  ["NGC 3628","","Galaxy",11.3381,13.589,14,9.5],["NGC 4038","Anten Gal.","Galaxy",12.0314,-18.868,3,10.3],
+  ["NGC 4236","","Galaxy",12.2784,69.463,22,9.7],["NGC 4244","","Galaxy",12.2916,37.807,16,10.2],
+  ["NGC 4565","Iğne Gal.","Galaxy",12.6058,25.987,16,9.6],["NGC 4631","Ringa Gal.","Galaxy",12.702,32.54,15,9.2],
+  ["NGC 5128","Centaurus A","Galaxy",13.4243,-43.019,18,6.8],["NGC 5907","","Galaxy",15.2649,56.329,13,10.4],
+  ["NGC 6946","Havai Fişek","Galaxy",20.5812,60.154,11,8.9],["NGC 7331","","Galaxy",22.618,34.42,11,9.5],
+  ["NGC 7814","","Galaxy",0.0542,16.145,6,10.5],["IC 342","","Galaxy",3.7801,68.096,21,9.1],
   // BULUTSULAR
-  ["M1","Yengeç Neb.","Nebula",5.578,22.02,6,8.4],["M8","Göl Neb.","Nebula",18.064,-24.38,45,5.8],
+  ["M1","Yengeç Neb.","Nebula",5.5755,22.017,6,8.4],["M8","Göl Neb.","Nebula",18.064,-24.38,45,5.8],
   ["M16","Kartal Neb.","Nebula",18.314,-13.79,35,6.4],["M17","Omega Neb.","Nebula",18.346,-16.18,11,6.0],
   ["M20","Üç Dilimli","Nebula",18.045,-22.97,28,6.3],["M42","Orion Neb.","Nebula",5.588,-5.39,40,4.0],
   ["M43","","Nebula",5.592,-5.27,20,9.0],["M78","","Nebula",5.779,0.07,8,8.3],
   ["NGC 281","Pacman Neb.","Nebula",0.878,56.62,35,7.4],["NGC 1499","Californiya Neb.","Nebula",4.055,36.42,160,5.0],
   ["NGC 1977","Koşan Adam","Nebula",5.598,-4.83,40,7.0],["NGC 2244","Gül Neb.","Nebula",6.533,4.95,80,4.8],
-  ["NGC 6357","Istakoz Neb.","Nebula",17.457,-34.20,50,8.0],["NGC 6820","","Nebula",19.724,23.13,40,8.5],
-  ["NGC 7380","Büyücü Neb.","Nebula",22.778,58.10,25,7.2],["NGC 7635","Kabarcık Neb.","Nebula",23.341,61.20,15,10.0],
-  ["IC 434","At Başı Neb.","Nebula",5.688,-2.45,60,6.8],["IC 405","Alev Yıldızı Neb.","Nebula",5.267,34.27,30,10.0],
+  ["NGC 6357","Istakoz Neb.","Nebula",17.4123,-34.203,50,8.0],["NGC 6820","","Nebula",19.724,23.13,40,8.5],
+  ["NGC 7380","Büyücü Neb.","Nebula",22.7878,58.125,25,7.2],["NGC 7635","Kabarcık Neb.","Nebula",23.3468,61.202,15,10.0],
+  ["IC 434","At Başı Neb.","Nebula",5.688,-2.45,60,6.8],["IC 405","Alev Yıldızı Neb.","Nebula",5.2900,34.383,30,10.0],
   ["IC 410","Iribaş Neb.","Nebula",5.367,33.40,40,10.0],["IC 443","Denizanası Neb.","Nebula",6.283,22.78,50,12.0],
   ["IC 1805","Kalp Neb.","Nebula",2.542,61.45,60,6.5],["IC 1848","Ruh Neb.","Nebula",2.852,60.42,100,6.5],
   ["IC 1318","Kelebek Neb.","Nebula",20.367,40.25,80,8.0],["IC 2177","Deniz Martısı","Nebula",7.050,-10.67,120,7.0],
-  ["IC 5070","Pelikan Neb.","Nebula",20.928,44.37,60,8.0],["IC 5146","Koza Neb.","Nebula",21.887,47.27,12,7.2],
-  ["NGC 7000","K. Amerika Neb.","Nebula",20.979,44.53,120,4.0],["Sh2-132","Aslan Neb.","Nebula",22.600,56.05,50,11.0],
+  ["IC 5070","Pelikan Neb.","Nebula",20.8500,44.367,60,8.0],["IC 5146","Koza Neb.","Nebula",21.8915,47.246,12,7.2],
+  ["NGC 7000","K. Amerika Neb.","Nebula",20.979,44.53,120,4.0],["Sh2-132","Aslan Neb.","Nebula",22.3192,56.079,50,11.0],
   ["Sh2-155","Mağara Neb.","Nebula",22.950,62.62,40,10.0],["Sh2-157","","Nebula",23.267,60.50,60,11.0],
   ["Sh2-240","Makarna Neb.","Nebula",5.683,27.95,180,12.0],["Sh2-261","Lower Neb.","Nebula",6.150,15.90,60,11.0],
-  ["LBN 777","Kartal Yavrusu Neb.","Nebula",4.000,25.60,20,11.0],
+  ["LBN 777","Kartal Yavrusu Neb.","Nebula",4.0833,26.400,20,11.0],
   // GEZEGEN BULUTSUSU (PN)
   ["M27","Dambıl Neb.","PN",19.993,22.72,8,7.4],["M57","Yüzük Neb.","PN",18.893,33.03,1.4,8.8],
   ["M76","Küçük Dambıl","PN",1.704,51.58,2.7,10.1],["M97","Baykuş Neb.","PN",11.248,55.02,3.4,9.9],
-  ["NGC 7293","Heliks Neb.","PN",22.494,-20.84,16,7.3],["NGC 2392","Eskimo Neb.","PN",7.490,20.92,0.7,9.2],
-  ["NGC 6543","Kedi Gözü Neb.","PN",17.967,66.63,0.33,8.1],["NGC 7662","Mavi Kar Topu","PN",23.433,42.55,0.5,8.3],
-  ["NGC 3242","Jüpiter Hayaleti","PN",10.400,-18.63,0.67,7.8],["NGC 6826","Göz Kırpan","PN",19.750,50.53,0.5,8.8],
-  ["NGC 246","Kafatası Neb.","PN",0.783,-11.88,3.8,8.0],["NGC 7009","Satürn Neb.","PN",21.067,-11.37,0.7,8.0],
-  ["NGC 6210","","PN",16.733,23.80,0.3,8.8],["NGC 1514","","PN",4.150,30.78,2.0,9.4],
-  ["NGC 2438","","PN",7.700,-14.73,1.1,10.1],
+  ["NGC 7293","Heliks Neb.","PN",22.494,-20.84,16,7.3],["NGC 2392","Eskimo Neb.","PN",7.4863,20.912,0.7,9.2],
+  ["NGC 6543","Kedi Gözü Neb.","PN",17.9759,66.633,0.33,8.1],["NGC 7662","Mavi Kar Topu","PN",23.4316,42.535,0.5,8.3],
+  ["NGC 3242","Jüpiter Hayaleti","PN",10.4128,-18.642,0.67,7.8],["NGC 6826","Göz Kırpan","PN",19.7467,50.525,0.5,8.8],
+  ["NGC 246","Kafatası Neb.","PN",0.7843,-11.872,3.8,8.0],["NGC 7009","Satürn Neb.","PN",21.0697,-11.363,0.7,8.0],
+  ["NGC 6210","","PN",16.7415,23.800,0.3,8.8],["NGC 1514","","PN",4.1547,30.776,2.0,9.4],
+  ["NGC 2438","","PN",7.6974,-14.735,1.1,10.1],
   // AÇIK KÜMELER
-  ["M6","Kelebek Küm.","Cluster",17.667,-32.22,20,4.2],["M7","Ptolemy Küm.","Cluster",17.898,-34.82,80,3.3],
-  ["M11","Yaban Ördek","Cluster",18.851,-6.27,14,5.8],["M35","","Cluster",6.153,24.33,28,5.1],
-  ["M36","","Cluster",5.601,34.13,12,6.0],["M37","","Cluster",5.873,32.55,24,5.6],
-  ["M38","","Cluster",5.479,35.85,21,6.4],["M41","","Cluster",6.767,-20.73,38,4.5],
+  ["M6","Kelebek Küm.","Cluster",17.6713,-32.242,20,4.2],["M7","Ptolemy Küm.","Cluster",17.898,-34.82,80,3.3],
+  ["M11","Yaban Ördek","Cluster",18.851,-6.27,14,5.8],["M35","","Cluster",6.1515,24.336,28,5.1],
+  ["M36","","Cluster",5.6056,34.135,12,6.0],["M37","","Cluster",5.8716,32.545,24,5.6],
+  ["M38","","Cluster",5.4778,35.824,21,6.4],["M41","","Cluster",6.767,-20.73,38,4.5],
   ["M44","Yengeç Küm.","Cluster",8.673,19.98,95,3.7],["M45","Ülker","Cluster",3.787,24.12,110,1.2],
-  ["M46","","Cluster",7.697,-14.82,27,6.0],["M47","","Cluster",7.612,-14.50,30,4.4],
-  ["M48","","Cluster",8.227,-5.80,54,5.5],["M67","","Cluster",8.850,11.82,25,6.9],
+  ["M46","","Cluster",7.6963,-14.844,27,6.0],["M47","","Cluster",7.612,-14.50,30,4.4],
+  ["M48","","Cluster",8.227,-5.80,54,5.5],["M67","","Cluster",8.8564,11.814,25,6.9],
   ["NGC 869","h Per","Cluster",2.320,57.13,30,4.3],["NGC 884","χ Per","Cluster",2.377,57.12,30,4.4],
-  ["NGC 752","","Cluster",1.958,37.68,50,5.7],["NGC 1502","","Cluster",4.113,62.33,20,5.7],
-  ["NGC 6939","","Cluster",20.533,60.65,7,7.8],["NGC 7789","Karolina Gülü","Cluster",23.957,56.72,25,6.7],
+  ["NGC 752","","Cluster",1.958,37.68,50,5.7],["NGC 1502","","Cluster",4.1303,62.332,20,5.7],
+  ["NGC 6939","","Cluster",20.5278,60.653,7,7.8],["NGC 7789","Karolina Gülü","Cluster",23.957,56.72,25,6.7],
 
   // EK GÖKADALAR
-  ["NGC 55","","Galaxy",0.233,-39.20,32,7.9],["NGC 134","","Galaxy",0.513,-33.25,8,10.4],
-  ["NGC 147","","Galaxy",0.549,48.51,13,9.5],["NGC 185","","Galaxy",0.649,48.34,12,9.2],
-  ["NGC 205","M110 comp","Galaxy",0.673,41.69,17,8.5],["NGC 247","","Galaxy",0.787,-20.76,20,9.1],
+  ["NGC 55","","Galaxy",0.233,-39.20,32,7.9],["NGC 134","","Galaxy",0.5060,-33.246,8,10.4],
+  ["NGC 147","","Galaxy",0.5534,48.509,13,9.5],["NGC 185","","Galaxy",0.649,48.34,12,9.2],
+  ["NGC 205","M110 comp","Galaxy",0.673,41.69,17,8.5],["NGC 247","","Galaxy",0.7857,-20.760,20,9.1],
   ["NGC 253","Sculptor Gal.","Galaxy",0.792,-25.29,25,7.2],["NGC 300","","Galaxy",0.915,-37.68,22,8.7],
-  ["NGC 524","","Galaxy",1.397,9.53,3,10.3],["NGC 598","M33 comp","Galaxy",1.564,30.66,63,5.7],
-  ["NGC 672","","Galaxy",1.799,27.43,7,10.9],["NGC 891","","Galaxy",2.382,42.35,14,9.9],
-  ["NGC 925","","Galaxy",2.432,33.58,10,10.1],["NGC 1022","","Galaxy",2.670,10.65,2,11.4],
-  ["NGC 1055","","Galaxy",2.715,0.44,7,10.6],["NGC 1068","M77","Galaxy",2.712,-0.01,7,8.9],
-  ["NGC 1169","","Galaxy",3.006,46.39,4,11.6],["NGC 1232","","Galaxy",3.162,-20.58,8,9.9],
-  ["NGC 1300","","Galaxy",3.192,-19.41,6,10.4],["NGC 1365","","Galaxy",3.562,-36.14,11,9.6],
-  ["NGC 1380","","Galaxy",3.609,-34.98,4,10.0],["NGC 1399","","Galaxy",3.639,-35.45,3,9.9],
-  ["NGC 1421","","Galaxy",3.697,-13.49,3,11.4],["NGC 1512","","Galaxy",4.066,-43.35,9,10.6],
-  ["NGC 1560","","Galaxy",4.316,71.88,10,11.0],["NGC 1637","","Galaxy",4.681,-2.86,4,11.0],
-  ["NGC 1672","","Galaxy",4.758,-59.25,6,9.7],["NGC 2403","","Galaxy",7.617,65.60,22,8.4],
-  ["NGC 2500","","Galaxy",7.983,50.73,3,11.6],["NGC 2535","","Galaxy",8.165,25.21,3,12.0],
-  ["NGC 2683","","Galaxy",8.879,33.43,9,9.7],["NGC 2787","","Galaxy",9.196,69.20,3,10.8],
-  ["NGC 2841","","Galaxy",9.375,50.98,8,9.2],["NGC 2976","","Galaxy",9.476,67.90,6,10.2],
+  ["NGC 524","","Galaxy",1.4133,9.539,3,10.3],["NGC 598","M33 comp","Galaxy",1.564,30.66,63,5.7],
+  ["NGC 672","","Galaxy",1.799,27.43,7,10.9],["NGC 891","","Galaxy",2.3758,42.348,14,9.9],
+  ["NGC 925","","Galaxy",2.4547,33.579,10,10.1],["NGC 1022","","Galaxy",2.6424,-6.677,2,11.4],
+  ["NGC 1055","","Galaxy",2.6959,0.443,7,10.6],["NGC 1068","M77","Galaxy",2.712,-0.01,7,8.9],
+  ["NGC 1169","","Galaxy",3.0596,46.386,4,11.6],["NGC 1232","","Galaxy",3.162,-20.58,8,9.9],
+  ["NGC 1300","","Galaxy",3.3281,-19.411,6,10.4],["NGC 1365","","Galaxy",3.5601,-36.141,11,9.6],
+  ["NGC 1380","","Galaxy",3.6077,-34.976,4,10.0],["NGC 1399","","Galaxy",3.6414,-35.451,3,9.9],
+  ["NGC 1421","","Galaxy",3.7081,-13.488,3,11.4],["NGC 1512","","Galaxy",4.066,-43.35,9,10.6],
+  ["NGC 1560","","Galaxy",4.5470,71.883,10,11.0],["NGC 1637","","Galaxy",4.6912,-2.858,4,11.0],
+  ["NGC 1672","","Galaxy",4.7618,-59.247,6,9.7],["NGC 2403","","Galaxy",7.6143,65.603,22,8.4],
+  ["NGC 2500","","Galaxy",8.0314,50.737,3,11.6],["NGC 2535","","Galaxy",8.1871,25.207,3,12.0],
+  ["NGC 2683","","Galaxy",8.879,33.43,9,9.7],["NGC 2787","","Galaxy",9.3218,69.203,3,10.8],
+  ["NGC 2841","","Galaxy",9.3674,50.977,8,9.2],["NGC 2976","","Galaxy",9.7876,67.916,6,10.2],
   ["NGC 3031","M81","Galaxy",9.928,69.07,21,6.9],["NGC 3034","M82","Galaxy",9.931,69.68,11,8.4],
-  ["NGC 3077","","Galaxy",10.047,68.73,5,9.9],["NGC 3115","Spindle Gal.","Galaxy",10.086,-7.72,8,9.0],
-  ["NGC 3184","","Galaxy",10.310,41.42,7,9.8],["NGC 3190","","Galaxy",10.318,21.83,4,11.0],
-  ["NGC 3227","","Galaxy",10.490,19.87,4,10.3],["NGC 3351","M95","Galaxy",10.703,11.70,7,9.7],
-  ["NGC 3368","M96","Galaxy",10.747,11.82,7,9.2],["NGC 3379","M105","Galaxy",10.800,12.58,4,9.3],
-  ["NGC 3486","","Galaxy",11.006,28.97,7,10.3],["NGC 3593","","Galaxy",11.147,12.82,5,11.0],
-  ["NGC 3623","M65","Galaxy",11.319,13.09,10,9.3],["NGC 3627","M66","Galaxy",11.340,12.99,9,8.9],
-  ["NGC 3718","","Galaxy",11.529,53.07,8,10.6],["NGC 3726","","Galaxy",11.532,47.03,6,10.4],
-  ["NGC 3810","","Galaxy",11.614,11.47,4,10.8],["NGC 4026","","Galaxy",11.981,50.96,5,10.8],
-  ["NGC 4088","","Galaxy",12.088,50.54,5,10.6],["NGC 4111","","Galaxy",12.097,43.07,4,10.8],
+  ["NGC 3077","","Galaxy",10.0553,68.734,5,9.9],["NGC 3115","Spindle Gal.","Galaxy",10.0872,-7.719,8,9.0],
+  ["NGC 3184","","Galaxy",10.3047,41.424,7,9.8],["NGC 3190","","Galaxy",10.3016,21.832,4,11.0],
+  ["NGC 3227","","Galaxy",10.3918,19.865,4,10.3],["NGC 3351","M95","Galaxy",10.7327,11.704,7,9.7],
+  ["NGC 3368","M96","Galaxy",10.7794,11.820,7,9.2],["NGC 3379","M105","Galaxy",10.7971,12.582,4,9.3],
+  ["NGC 3486","","Galaxy",11.006,28.97,7,10.3],["NGC 3593","","Galaxy",11.2436,12.818,5,11.0],
+  ["NGC 3623","M65","Galaxy",11.3155,13.092,10,9.3],["NGC 3627","M66","Galaxy",11.3375,12.992,9,8.9],
+  ["NGC 3718","","Galaxy",11.5430,53.068,8,10.6],["NGC 3726","","Galaxy",11.5559,47.029,6,10.4],
+  ["NGC 3810","","Galaxy",11.6830,11.471,4,10.8],["NGC 4026","","Galaxy",11.9903,50.962,5,10.8],
+  ["NGC 4088","","Galaxy",12.0928,50.539,5,10.6],["NGC 4111","","Galaxy",12.1175,43.066,4,10.8],
 
   // EK BULUTSULAR
-  ["NGC 896","","Nebula",2.388,61.88,20,10.0],["IC 59","","Nebula",0.960,60.88,10,10.0],
-  ["IC 63","","Nebula",0.968,60.90,10,10.0],["NGC 1333","","Nebula",3.485,31.37,6,10.0],
-  ["NGC 1491","","Nebula",4.077,51.32,25,11.0],["NGC 1554","","Nebula",4.222,19.53,3,10.0],
-  ["NGC 1579","","Nebula",4.378,35.27,12,10.0],["NGC 1624","","Nebula",4.540,50.47,5,10.0],
-  ["NGC 1788","","Nebula",5.067,-3.35,8,10.0],["NGC 1931","","Nebula",5.514,34.24,3,10.0],
-  ["NGC 1952","M1","Nebula",5.578,22.02,6,8.4],["NGC 2024","Alev Neb.","Nebula",5.680,-1.90,30,10.0],
-  ["IC 418","Radyatör Neb.","Nebula",5.783,-12.07,0.2,9.0],["NGC 2175","","Nebula",6.100,20.30,40,10.0],
-  ["NGC 2185","","Nebula",6.117,-6.22,4,10.0],["NGC 2194","","Nebula",6.138,12.81,10,10.0],
-  ["IC 2120","","Nebula",6.300,-6.30,20,10.0],["NGC 2261","Hubble Neb.","Nebula",6.639,8.74,2,10.0],
-  ["NGC 2264","Konifer Neb.","Nebula",6.683,9.87,20,3.9],["NGC 2346","","Nebula",7.094,-0.80,1,11.0],
-  ["NGC 2371","","Nebula",7.424,29.49,1,11.0],["NGC 2440","","Nebula",7.692,-18.21,0.5,9.4],
-  ["NGC 2467","","Nebula",7.874,-26.43,15,7.1],["NGC 2477","","Nebula",7.873,-38.55,27,5.8],
-  ["NGC 2579","","Nebula",8.228,-36.20,10,10.0],["NGC 2736","Kalem Neb.","Nebula",8.984,-45.94,20,10.0],
-  ["NGC 3199","","Nebula",10.265,-57.95,22,10.0],["NGC 3324","","Nebula",10.616,-58.63,16,6.7],
-  ["NGC 3372","Eta Carinae","Nebula",10.745,-59.87,120,3.0],["NGC 3576","","Nebula",11.175,-61.30,6,10.0],
-  ["IC 2944","","Nebula",11.614,-63.04,75,4.5],["NGC 3918","Mavi Gezegen","Nebula",11.882,-57.11,0.3,8.4],
-  ["NGC 4038","Anten","Nebula",12.016,-18.87,3,10.3],["IC 4406","","Nebula",14.225,-44.09,1,10.6],
-  ["NGC 5189","","Nebula",13.566,-65.97,3,9.5],["IC 4628","Karides Neb.","Nebula",16.897,-40.32,90,7.0],
-  ["NGC 6164","","Nebula",16.557,-48.10,6,10.0],["NGC 6334","Kedi Pençesi","Nebula",17.200,-35.78,35,10.0],
-  ["NGC 6559","","Nebula",18.077,-24.10,9,10.0],["NGC 6604","","Nebula",18.298,-12.23,6,10.0],
+  ["NGC 896","","Nebula",2.4300,61.983,20,10.0],["IC 59","","Nebula",0.9618,61.083,10,10.0],
+  ["IC 63","","Nebula",0.9837,60.888,10,10.0],["NGC 1333","","Nebula",3.4865,31.310,6,10.0],
+  ["NGC 1491","","Nebula",4.0544,51.315,25,11.0],["NGC 1554","","Nebula",4.3667,19.600,3,10.0],
+  ["NGC 1579","","Nebula",4.5009,35.325,12,10.0],["NGC 1624","","Nebula",4.6767,50.462,5,10.0],
+  ["NGC 1788","","Nebula",5.1150,-3.342,8,10.0],["NGC 1931","","Nebula",5.5230,34.233,3,10.0],
+  ["NGC 1952","M1","Nebula",5.5755,22.017,6,8.4],["NGC 2024","Alev Neb.","Nebula",5.680,-1.90,30,10.0],
+  ["IC 418","Radyatör Neb.","Nebula",5.4578,-12.697,0.2,9.0],["NGC 2175","","Nebula",6.1608,20.487,40,10.0],
+  ["NGC 2185","","Nebula",6.1667,-6.200,4,10.0],["NGC 2194","","Nebula",6.2293,12.813,10,10.0],
+  ["IC 2120","","Nebula",5.3025,37.538,20,10.0],["NGC 2261","Hubble Neb.","Nebula",6.6528,8.736,2,10.0],
+  ["NGC 2264","Konifer Neb.","Nebula",6.6811,9.877,20,3.9],["NGC 2346","","Nebula",7.1563,-0.807,1,11.0],
+  ["NGC 2371","","Nebula",7.4263,29.491,1,11.0],["NGC 2440","","Nebula",7.6987,-18.208,0.5,9.4],
+  ["NGC 2467","","Nebula",7.8718,-26.428,15,7.1],["NGC 2477","","Nebula",7.8697,-38.537,27,5.8],
+  ["NGC 2579","","Nebula",8.3487,-36.223,10,10.0],["NGC 2736","Kalem Neb.","Nebula",9.0033,-45.950,20,10.0],
+  ["NGC 3199","","Nebula",10.2758,-57.934,22,10.0],["NGC 3324","","Nebula",10.6227,-58.615,16,6.7],
+  ["NGC 3372","Eta Carinae","Nebula",10.745,-59.87,120,3.0],["NGC 3576","","Nebula",11.1981,-61.307,6,10.0],
+  ["IC 2944","","Nebula",11.614,-63.04,75,4.5],["NGC 3918","Mavi Gezegen","Nebula",11.8383,-57.183,0.3,8.4],
+  ["NGC 4038","Anten","Nebula",12.0314,-18.868,3,10.3],["IC 4406","","Nebula",14.3739,-44.151,1,10.6],
+  ["NGC 5189","","Nebula",13.5591,-65.974,3,9.5],["IC 4628","Karides Neb.","Nebula",16.897,-40.32,90,7.0],
+  ["NGC 6164","","Nebula",16.5646,-48.111,6,10.0],["NGC 6334","Kedi Pençesi","Nebula",17.3479,-36.131,35,10.0],
+  ["NGC 6559","","Nebula",18.1667,-24.000,9,10.0],["NGC 6604","","Nebula",18.3008,-12.242,6,10.0],
   ["NGC 6611","Kartal Neb.","Nebula",18.314,-13.79,35,6.4],["NGC 6618","Omega","Nebula",18.346,-16.18,11,6.0],
-  ["NGC 6726","","Nebula",19.017,-36.92,9,10.0],["NGC 6729","","Nebula",19.018,-36.96,1,10.0],
-  ["NGC 6751","","Nebula",19.129,-5.99,0.5,11.9],["NGC 6781","","Nebula",19.181,6.53,1,11.4],
-  ["NGC 6823","","Nebula",19.713,23.30,40,7.1],["NGC 6888","Hilal Neb.","Nebula",20.200,38.35,20,10.0],
-  ["NGC 6960","Perde Neb.","Nebula",20.745,30.72,70,7.0],["NGC 6979","","Nebula",20.794,32.12,60,10.0],
-  ["NGC 6992","Perde Neb.","Nebula",20.933,31.73,60,7.0],["NGC 7008","","Nebula",21.017,54.55,1,10.7],
-  ["NGC 7023","Iris Neb.","Nebula",21.028,68.17,18,6.8],["NGC 7129","","Nebula",21.740,66.10,7,11.5],
-  ["NGC 7133","","Nebula",21.743,66.08,5,10.0],["NGC 7331","","Nebula",22.618,34.42,11,9.5],
-  ["IC 5117","","Nebula",21.675,44.65,0.2,11.6],["Sh2-101","Tulip Neb.","Nebula",20.022,35.27,16,10.0],
-  ["Sh2-106","","Nebula",20.303,37.35,3,10.0],["Sh2-119","","Nebula",21.250,47.30,60,10.0],
-  ["Sh2-129","","Nebula",21.817,60.00,180,10.0],["Sh2-171","","Nebula",0.047,67.07,40,10.0],
-  ["Sh2-188","","Nebula",1.430,58.55,8,12.0],["Sh2-200","","Nebula",2.282,72.38,20,10.0],
+  ["NGC 6726","","Nebula",19.0272,-36.892,9,10.0],["NGC 6729","","Nebula",19.0296,-36.961,1,10.0],
+  ["NGC 6751","","Nebula",19.0988,-5.992,0.5,11.9],["NGC 6781","","Nebula",19.3078,6.539,1,11.4],
+  ["NGC 6823","","Nebula",19.713,23.30,40,7.1],["NGC 6888","Hilal Neb.","Nebula",20.2018,38.355,20,10.0],
+  ["NGC 6960","Perde Neb.","Nebula",20.745,30.72,70,7.0],["NGC 6979","","Nebula",20.8504,32.144,60,10.0],
+  ["NGC 6992","Perde Neb.","Nebula",20.933,31.73,60,7.0],["NGC 7008","","Nebula",21.0091,54.543,1,10.7],
+  ["NGC 7023","Iris Neb.","Nebula",21.028,68.17,18,6.8],["NGC 7129","","Nebula",21.7161,66.113,7,11.5],
+  ["NGC 7133","","Nebula",21.7407,66.168,5,10.0],["NGC 7331","","Nebula",22.618,34.42,11,9.5],
+  ["IC 5117","","Nebula",21.5419,44.597,0.2,11.6],["Sh2-101","Tulip Neb.","Nebula",19.9986,35.277,16,10.0],
+  ["Sh2-106","","Nebula",20.4575,37.380,3,10.0],["Sh2-119","","Nebula",21.3083,43.933,60,10.0],
+  ["Sh2-129","","Nebula",21.1967,59.950,180,10.0],["Sh2-171","","Nebula",0.0191,67.421,40,10.0],
+  ["Sh2-188","","Nebula",1.5092,58.414,8,12.0],["Sh2-200","","Nebula",3.1830,62.799,20,10.0],
 
   // EK GEZEGENİMSİ BULUTSULAR
-  ["NGC 40","","PN",0.213,72.53,1,10.7],["NGC 650","M76","PN",1.704,51.58,2.7,10.1],
-  ["NGC 1360","","PN",3.534,-25.87,6,9.4],["NGC 1501","","PN",4.113,60.55,0.9,11.5],
-  ["NGC 1514","","PN",4.150,30.78,2,9.4],["NGC 1535","","PN",4.201,-12.44,0.75,9.6],
-  ["NGC 2022","","PN",5.643,9.05,0.5,11.6],["NGC 2438","","PN",7.700,-14.73,1.1,10.1],
-  ["NGC 2440","","PN",7.692,-18.21,0.5,9.4],["NGC 2452","","PN",7.793,-27.48,0.5,12.0],
-  ["NGC 2610","","PN",8.549,-16.15,0.8,12.0],["NGC 2792","","PN",9.175,-42.42,0.3,11.6],
-  ["NGC 2818","","PN",9.265,-36.62,0.8,11.9],["NGC 2867","","PN",9.361,-58.31,0.3,9.7],
-  ["NGC 3132","Sekiz Patlama","PN",10.124,-40.44,0.8,8.2],["NGC 3195","","PN",10.295,-65.64,0.7,11.0],
-  ["NGC 3211","","PN",10.329,-62.67,0.3,11.8],["NGC 3699","","PN",11.460,-60.64,1.6,11.0],
-  ["NGC 4361","","PN",12.371,-18.79,1.3,10.3],["NGC 5882","","PN",15.231,-45.65,0.3,10.5],
-  ["NGC 6026","","PN",16.037,-34.55,0.7,11.3],["NGC 6072","","PN",16.198,-36.23,0.8,11.3],
-  ["NGC 6153","","PN",16.518,-40.25,0.5,10.9],["NGC 6309","","PN",17.120,-12.92,0.3,11.5],
-  ["NGC 6326","","PN",17.175,-51.74,0.3,11.1],["NGC 6337","","PN",17.222,-38.49,0.9,12.0],
-  ["NGC 6369","","PN",17.430,-23.76,0.5,11.4],["NGC 6439","","PN",17.790,-16.47,0.3,12.0],
-  ["NGC 6445","","PN",17.821,-20.00,0.6,11.2],["NGC 6537","","PN",18.063,-19.85,0.1,12.0],
-  ["NGC 6563","","PN",18.192,-33.87,0.8,11.0],["NGC 6567","","PN",18.210,-19.07,0.2,11.5],
-  ["NGC 6572","","PN",18.194,6.85,0.1,8.1],["NGC 6620","","PN",18.371,-26.73,0.3,13.0],
-  ["NGC 6629","","PN",18.436,-23.25,0.3,10.9],["NGC 6644","","PN",18.465,-25.13,0.1,11.6],
-  ["NGC 6741","","PN",19.039,-0.45,0.1,11.4],["NGC 6765","","PN",19.109,30.53,0.7,12.9],
-  ["NGC 6778","","PN",19.172,-1.58,0.2,12.3],["NGC 6804","","PN",19.317,9.22,0.8,12.0],
-  ["NGC 6807","","PN",19.325,17.65,0.1,13.0],["NGC 6818","","PN",19.832,-14.09,0.4,9.9],
-  ["NGC 6833","","PN",19.861,48.83,0.1,13.0],["NGC 6842","","PN",19.915,29.29,0.8,13.0],
-  ["NGC 6853","M27","PN",19.993,22.72,8,7.4],["NGC 6884","","PN",20.117,46.46,0.1,12.6],
-  ["NGC 6886","","PN",20.130,19.99,0.1,12.2],["NGC 6891","","PN",20.188,12.70,0.3,10.5],
-  ["NGC 6894","","PN",20.229,30.56,0.9,12.3],["NGC 6905","","PN",20.362,20.12,0.7,11.1],
-  ["NGC 7009","Satürn","PN",21.067,-11.37,0.7,8.0],["NGC 7026","","PN",21.075,47.85,0.3,11.0],
-  ["NGC 7048","","PN",21.149,46.28,1.0,12.1],["NGC 7094","","PN",21.530,12.79,1.5,13.4],
-  ["NGC 7139","","PN",21.793,63.75,1.2,13.3],["NGC 7293","Heliks","PN",22.494,-20.84,16,7.3],
-  ["NGC 7354","","PN",22.679,61.28,0.6,12.9],["NGC 7662","Mavi Kar","PN",23.433,42.55,0.5,8.3],
-  ["NGC 7008","","PN",21.017,54.55,1.4,10.7],["IC 289","","PN",3.369,61.32,0.8,13.0],
-  ["IC 351","","PN",3.666,34.97,0.2,12.4],["IC 2003","","PN",3.551,33.86,0.2,11.4],
-  ["IC 2165","","PN",6.121,-12.98,0.2,12.0],["IC 2448","","PN",9.222,-69.95,0.2,11.5],
-  ["IC 3568","","PN",12.382,82.57,0.3,11.3],["IC 4593","","PN",16.222,12.07,0.2,10.7],
-  ["IC 4634","","PN",17.015,-21.83,0.2,10.9],["IC 4673","","PN",17.238,-44.68,0.3,12.0],
-  ["IC 4776","","PN",18.617,-33.38,0.2,12.0],["IC 4846","","PN",19.286,9.53,0.1,11.0],
-  ["IC 5117","","PN",21.675,44.65,0.2,11.6],["IC 5148","","PN",21.983,-39.76,2,11.0],
+  ["NGC 40","","PN",0.2169,72.522,1,10.7],["NGC 650","M76","PN",1.704,51.58,2.7,10.1],
+  ["NGC 1360","","PN",3.5541,-25.872,6,9.4],["NGC 1501","","PN",4.1165,60.921,0.9,11.5],
+  ["NGC 1514","","PN",4.1547,30.776,2,9.4],["NGC 1535","","PN",4.2377,-12.739,0.75,9.6],
+  ["NGC 2022","","PN",5.7017,9.086,0.5,11.6],["NGC 2438","","PN",7.6974,-14.735,1.1,10.1],
+  ["NGC 2440","","PN",7.6987,-18.208,0.5,9.4],["NGC 2452","","PN",7.7906,-27.335,0.5,12.0],
+  ["NGC 2610","","PN",8.5565,-16.149,0.8,12.0],["NGC 2792","","PN",9.2074,-42.427,0.3,11.6],
+  ["NGC 2818","","PN",9.2696,-36.624,0.8,11.9],["NGC 2867","","PN",9.3571,-58.311,0.3,9.7],
+  ["NGC 3132","Sekiz Patlama","PN",10.1172,-40.436,0.8,8.2],["NGC 3195","","PN",10.1558,-80.859,0.7,11.0],
+  ["NGC 3211","","PN",10.2974,-62.670,0.3,11.8],["NGC 3699","","PN",11.4661,-59.958,1.6,11.0],
+  ["NGC 4361","","PN",12.4085,-18.785,1.3,10.3],["NGC 5882","","PN",15.2805,-45.650,0.3,10.5],
+  ["NGC 6026","","PN",16.0225,-34.543,0.7,11.3],["NGC 6072","","PN",16.2162,-36.230,0.8,11.3],
+  ["NGC 6153","","PN",16.5252,-40.254,0.5,10.9],["NGC 6309","","PN",17.2345,-12.911,0.3,11.5],
+  ["NGC 6326","","PN",17.3462,-51.754,0.3,11.1],["NGC 6337","","PN",17.3710,-38.484,0.9,12.0],
+  ["NGC 6369","","PN",17.4890,-23.760,0.5,11.4],["NGC 6439","","PN",17.8055,-16.479,0.3,12.0],
+  ["NGC 6445","","PN",17.821,-20.00,0.6,11.2],["NGC 6537","","PN",18.0870,-19.843,0.1,12.0],
+  ["NGC 6563","","PN",18.2007,-33.869,0.8,11.0],["NGC 6567","","PN",18.2292,-19.076,0.2,11.5],
+  ["NGC 6572","","PN",18.2018,6.854,0.1,8.1],["NGC 6620","","PN",18.3817,-26.821,0.3,13.0],
+  ["NGC 6629","","PN",18.4285,-23.203,0.3,10.9],["NGC 6644","","PN",18.5430,-25.129,0.1,11.6],
+  ["NGC 6741","","PN",19.0436,-0.449,0.1,11.4],["NGC 6765","","PN",19.1852,30.545,0.7,12.9],
+  ["NGC 6778","","PN",19.3069,-1.596,0.2,12.3],["NGC 6804","","PN",19.5264,9.225,0.8,12.0],
+  ["NGC 6807","","PN",19.5760,5.684,0.1,13.0],["NGC 6818","","PN",19.7327,-14.154,0.4,9.9],
+  ["NGC 6833","","PN",19.8296,48.961,0.1,13.0],["NGC 6842","","PN",19.9173,29.290,0.8,13.0],
+  ["NGC 6853","M27","PN",19.993,22.72,8,7.4],["NGC 6884","","PN",20.1732,46.461,0.1,12.6],
+  ["NGC 6886","","PN",20.2119,19.990,0.1,12.2],["NGC 6891","","PN",20.2525,12.704,0.3,10.5],
+  ["NGC 6894","","PN",20.2733,30.565,0.9,12.3],["NGC 6905","","PN",20.3731,20.105,0.7,11.1],
+  ["NGC 7009","Satürn","PN",21.0697,-11.363,0.7,8.0],["NGC 7026","","PN",21.1052,47.852,0.3,11.0],
+  ["NGC 7048","","PN",21.2376,46.288,1.0,12.1],["NGC 7094","","PN",21.6147,12.789,1.5,13.4],
+  ["NGC 7139","","PN",21.7691,63.792,1.2,13.3],["NGC 7293","Heliks","PN",22.494,-20.84,16,7.3],
+  ["NGC 7354","","PN",22.6722,61.286,0.6,12.9],["NGC 7662","Mavi Kar","PN",23.4316,42.535,0.5,8.3],
+  ["NGC 7008","","PN",21.0091,54.543,1.4,10.7],["IC 289","","PN",3.1720,61.317,0.8,13.0],
+  ["IC 351","","PN",3.7925,35.047,0.2,12.4],["IC 2003","","PN",3.9394,33.875,0.2,11.4],
+  ["IC 2165","","PN",6.3619,-12.987,0.2,12.0],["IC 2448","","PN",9.1184,-69.942,0.2,11.5],
+  ["IC 3568","","PN",12.5519,82.564,0.3,11.3],["IC 4593","","PN",16.1957,12.071,0.2,10.7],
+  ["IC 4634","","PN",17.0260,-21.826,0.2,10.9],["IC 4673","","PN",18.0551,-27.106,0.3,12.0],
+  ["IC 4776","","PN",18.7641,-33.343,0.2,12.0],["IC 4846","","PN",19.2745,-9.044,0.1,11.0],
+  ["IC 5117","","PN",21.5419,44.597,0.2,11.6],["IC 5148","","PN",21.9931,-39.386,2,11.0],
 
   // EK AÇIK KÜMELER
-  ["NGC 103","","Cluster",0.439,61.33,5,10.4],["NGC 129","","Cluster",0.488,60.23,12,6.5],
-  ["NGC 133","","Cluster",0.502,63.32,3,9.4],["NGC 146","","Cluster",0.547,63.32,7,9.1],
-  ["NGC 188","","Cluster",0.788,85.26,13,8.1],["NGC 225","","Cluster",0.704,61.78,12,7.0],
-  ["NGC 366","","Cluster",1.083,62.22,4,9.9],["NGC 381","","Cluster",1.111,61.58,6,9.3],
-  ["NGC 433","","Cluster",1.213,60.11,3,9.8],["NGC 436","","Cluster",1.218,58.82,6,8.8],
-  ["NGC 457","Baykuş Küm.","Cluster",1.327,58.28,13,6.4],["NGC 559","","Cluster",1.475,63.30,7,9.5],
-  ["NGC 581","M103","Cluster",1.558,60.66,6,7.4],["NGC 637","","Cluster",1.647,64.00,4,8.2],
-  ["NGC 654","","Cluster",1.667,61.87,6,6.5],["NGC 659","","Cluster",1.678,60.67,5,7.9],
-  ["NGC 663","","Cluster",1.762,61.23,16,7.1],["NGC 744","","Cluster",1.971,55.47,11,7.9],
-  ["NGC 957","","Cluster",2.537,57.55,11,7.6],["NGC 1039","M34","Cluster",2.702,42.75,35,5.2],
-  ["NGC 1220","","Cluster",3.138,53.35,2,11.8],["NGC 1245","","Cluster",3.238,47.23,10,8.4],
-  ["NGC 1342","","Cluster",3.480,37.38,14,6.7],["NGC 1444","","Cluster",3.807,52.67,4,6.6],
-  ["NGC 1528","","Cluster",4.175,51.22,18,6.4],["NGC 1545","","Cluster",4.222,50.25,12,6.2],
-  ["NGC 1647","","Cluster",4.591,19.12,45,6.4],["NGC 1664","","Cluster",4.690,43.68,18,7.6],
-  ["NGC 1746","","Cluster",5.027,23.80,42,6.1],["NGC 1778","","Cluster",5.095,37.02,7,7.7],
-  ["NGC 1807","","Cluster",5.167,16.48,17,7.0],["NGC 1817","","Cluster",5.183,16.70,16,7.7],
-  ["NGC 1893","","Cluster",5.354,33.43,11,7.5],["NGC 1907","","Cluster",5.467,35.33,7,8.2],
-  ["NGC 1960","M36","Cluster",5.601,34.13,12,6.0],["NGC 2099","M37","Cluster",5.873,32.55,24,5.6],
-  ["NGC 2168","M35","Cluster",6.153,24.33,28,5.1],["NGC 2169","","Cluster",6.157,13.96,7,5.9],
-  ["NGC 2194","","Cluster",6.138,12.81,10,8.5],["NGC 2204","","Cluster",6.241,-18.67,13,8.6],
-  ["NGC 2215","","Cluster",6.309,-7.28,11,8.4],["NGC 2232","","Cluster",6.430,-4.75,30,3.9],
-  ["NGC 2236","","Cluster",6.445,6.83,7,8.5],["NGC 2251","","Cluster",6.493,8.37,10,7.3],
-  ["NGC 2252","","Cluster",6.498,5.38,20,7.7],["NGC 2264","Konifer","Cluster",6.683,9.87,20,3.9],
-  ["NGC 2281","","Cluster",6.806,41.08,15,5.4],["NGC 2301","","Cluster",6.849,0.46,12,6.0],
-  ["NGC 2302","","Cluster",6.852,-7.08,4,8.9],["NGC 2309","","Cluster",6.955,-7.17,4,9.6],
-  ["NGC 2311","","Cluster",6.960,-4.60,7,9.6],["NGC 2323","M50","Cluster",7.040,-8.37,16,5.9],
-  ["NGC 2343","","Cluster",7.090,-10.62,7,6.7],["NGC 2345","","Cluster",7.102,-13.18,12,7.7],
-  ["NGC 2354","","Cluster",7.227,-25.72,20,6.5],["NGC 2355","","Cluster",7.222,13.77,9,9.7],
-  ["NGC 2360","","Cluster",7.286,-15.63,13,7.2],["NGC 2362","","Cluster",7.316,-24.95,8,3.8],
-  ["NGC 2374","","Cluster",7.349,-13.27,19,8.0],["NGC 2380","","Cluster",7.383,-11.50,6,9.5],
-  ["NGC 2384","","Cluster",7.389,-21.02,4,7.4],["NGC 2395","","Cluster",7.445,13.55,12,8.0],
-  ["NGC 2414","","Cluster",7.582,-15.47,4,7.9],["NGC 2421","","Cluster",7.615,-20.60,10,8.3],
-  ["NGC 2422","M47","Cluster",7.612,-14.50,30,4.4],["NGC 2423","","Cluster",7.617,-13.87,19,6.7],
-  ["NGC 2428","","Cluster",7.640,-16.87,20,10.0],["NGC 2439","","Cluster",7.687,-31.68,10,6.9],
-  ["NGC 2447","M93","Cluster",7.740,-23.85,22,6.2],["NGC 2451","","Cluster",7.795,-37.97,45,2.8],
-  ["NGC 2453","","Cluster",7.792,-27.20,5,8.3],["NGC 2455","","Cluster",7.793,-21.28,5,11.0],
-  ["NGC 2516","","Cluster",7.974,-60.85,22,3.8],["NGC 2527","","Cluster",8.073,-28.13,22,6.5],
-  ["NGC 2533","","Cluster",8.121,-29.90,4,7.6],["NGC 2546","","Cluster",8.164,-37.62,41,6.3],
-  ["NGC 2547","","Cluster",8.174,-49.17,20,4.7],["NGC 2548","M48","Cluster",8.227,-5.80,54,5.5],
-  ["NGC 2571","","Cluster",8.243,-29.73,13,7.0],["NGC 2580","","Cluster",8.253,-30.30,8,9.7],
-  ["NGC 2587","","Cluster",8.268,-29.52,10,9.2],["NGC 2627","","Cluster",8.594,-29.95,11,8.4],
-  ["NGC 2658","","Cluster",8.730,-32.65,12,9.2],["NGC 2670","","Cluster",8.775,-48.78,8,7.8],
+  ["NGC 103","","Cluster",0.4208,61.326,5,10.4],["NGC 129","","Cluster",0.5071,60.213,12,6.5],
+  ["NGC 133","","Cluster",0.5200,63.397,3,9.4],["NGC 146","","Cluster",0.5508,63.317,7,9.1],
+  ["NGC 188","","Cluster",0.788,85.26,13,8.1],["NGC 225","","Cluster",0.7203,61.774,12,7.0],
+  ["NGC 366","","Cluster",1.1083,62.219,4,9.9],["NGC 381","","Cluster",1.1389,61.584,6,9.3],
+  ["NGC 433","","Cluster",1.2532,60.133,3,9.8],["NGC 436","","Cluster",1.2667,58.820,6,8.8],
+  ["NGC 457","Baykuş Küm.","Cluster",1.327,58.28,13,6.4],["NGC 559","","Cluster",1.4925,63.301,7,9.5],
+  ["NGC 581","M103","Cluster",1.558,60.66,6,7.4],["NGC 637","","Cluster",1.7183,64.038,4,8.2],
+  ["NGC 654","","Cluster",1.7339,61.883,6,6.5],["NGC 659","","Cluster",1.7405,60.679,5,7.9],
+  ["NGC 663","","Cluster",1.7725,61.212,16,7.1],["NGC 744","","Cluster",1.9768,55.473,11,7.9],
+  ["NGC 957","","Cluster",2.5562,57.553,11,7.6],["NGC 1039","M34","Cluster",2.702,42.75,35,5.2],
+  ["NGC 1220","","Cluster",3.1947,53.344,2,11.8],["NGC 1245","","Cluster",3.2461,47.235,10,8.4],
+  ["NGC 1342","","Cluster",3.5263,37.380,14,6.7],["NGC 1444","","Cluster",3.8241,52.658,4,6.6],
+  ["NGC 1528","","Cluster",4.2585,51.218,18,6.4],["NGC 1545","","Cluster",4.3468,50.221,12,6.2],
+  ["NGC 1647","","Cluster",4.7654,19.079,45,6.4],["NGC 1664","","Cluster",4.8509,43.676,18,7.6],
+  ["NGC 1746","","Cluster",5.0639,23.770,42,6.1],["NGC 1778","","Cluster",5.1355,37.020,7,7.7],
+  ["NGC 1807","","Cluster",5.1802,16.522,17,7.0],["NGC 1817","","Cluster",5.2093,16.696,16,7.7],
+  ["NGC 1893","","Cluster",5.3816,33.444,11,7.5],["NGC 1907","","Cluster",5.4689,35.330,7,8.2],
+  ["NGC 1960","M36","Cluster",5.6056,34.135,12,6.0],["NGC 2099","M37","Cluster",5.8716,32.545,24,5.6],
+  ["NGC 2168","M35","Cluster",6.1515,24.336,28,5.1],["NGC 2169","","Cluster",6.1417,13.952,7,5.9],
+  ["NGC 2194","","Cluster",6.2293,12.813,10,8.5],["NGC 2204","","Cluster",6.2588,-18.670,13,8.6],
+  ["NGC 2215","","Cluster",6.3466,-7.277,11,8.4],["NGC 2232","","Cluster",6.4592,-4.749,30,3.9],
+  ["NGC 2236","","Cluster",6.4944,6.834,7,8.5],["NGC 2251","","Cluster",6.5787,8.337,10,7.3],
+  ["NGC 2252","","Cluster",6.5836,5.420,20,7.7],["NGC 2264","Konifer","Cluster",6.6811,9.877,20,3.9],
+  ["NGC 2281","","Cluster",6.8061,41.060,15,5.4],["NGC 2301","","Cluster",6.8629,0.465,12,6.0],
+  ["NGC 2302","","Cluster",6.8651,-7.086,4,8.9],["NGC 2309","","Cluster",6.9347,-7.180,4,9.6],
+  ["NGC 2311","","Cluster",6.9637,-4.616,7,9.6],["NGC 2323","M50","Cluster",7.0456,-8.365,16,5.9],
+  ["NGC 2343","","Cluster",7.1353,-10.619,7,6.7],["NGC 2345","","Cluster",7.1383,-13.199,12,7.7],
+  ["NGC 2354","","Cluster",7.2335,-25.724,20,6.5],["NGC 2355","","Cluster",7.2831,13.772,9,9.7],
+  ["NGC 2360","","Cluster",7.2962,-15.631,13,7.2],["NGC 2362","","Cluster",7.3114,-24.954,8,3.8],
+  ["NGC 2374","","Cluster",7.4011,-13.235,19,8.0],["NGC 2380","","Cluster",7.3985,-27.529,6,9.5],
+  ["NGC 2384","","Cluster",7.4194,-21.022,4,7.4],["NGC 2395","","Cluster",7.4516,13.584,12,8.0],
+  ["NGC 2414","","Cluster",7.5529,-15.449,4,7.9],["NGC 2421","","Cluster",7.6034,-20.627,10,8.3],
+  ["NGC 2422","M47","Cluster",7.612,-14.50,30,4.4],["NGC 2423","","Cluster",7.6199,-13.863,19,6.7],
+  ["NGC 2428","","Cluster",7.6554,-16.550,20,10.0],["NGC 2439","","Cluster",7.6796,-31.694,10,6.9],
+  ["NGC 2447","M93","Cluster",7.7427,-23.853,22,6.2],["NGC 2451","","Cluster",7.7567,-37.967,45,2.8],
+  ["NGC 2453","","Cluster",7.792,-27.20,5,8.3],["NGC 2455","","Cluster",7.8189,-21.298,5,11.0],
+  ["NGC 2516","","Cluster",7.9685,-60.800,22,3.8],["NGC 2527","","Cluster",8.0831,-28.122,22,6.5],
+  ["NGC 2533","","Cluster",8.1182,-29.872,4,7.6],["NGC 2546","","Cluster",8.2055,-37.661,41,6.3],
+  ["NGC 2547","","Cluster",8.1645,-49.176,20,4.7],["NGC 2548","M48","Cluster",8.227,-5.80,54,5.5],
+  ["NGC 2571","","Cluster",8.3150,-29.775,13,7.0],["NGC 2580","","Cluster",8.3581,-30.306,8,9.7],
+  ["NGC 2587","","Cluster",8.3907,-29.503,10,9.2],["NGC 2627","","Cluster",8.6206,-29.952,11,8.4],
+  ["NGC 2658","","Cluster",8.7245,-32.662,12,9.2],["NGC 2670","","Cluster",8.7591,-48.801,8,7.8],
   // KÜRESEL KÜMELER
-  ["NGC 288","","Globular",0.878,-26.59,13,8.1],["NGC 362","","Globular",1.053,-70.85,13,6.4],
-  ["NGC 1261","","Globular",3.202,-55.22,7,8.3],["NGC 1851","","Globular",5.234,-40.05,11,7.1],
-  ["NGC 1904","M79","Globular",5.406,-24.52,9,7.7],["NGC 2298","","Globular",6.815,-36.00,6,9.3],
-  ["NGC 2419","","Globular",7.638,38.88,4,10.4],["NGC 2808","","Globular",9.200,-64.86,14,6.2],
-  ["NGC 3201","","Globular",10.296,-46.41,18,6.7],["NGC 4590","M68","Globular",12.659,-26.74,12,7.3],
-  ["NGC 5024","M53","Globular",13.215,18.17,13,7.6],["NGC 5053","","Globular",13.264,17.70,10,9.9],
+  ["NGC 288","","Globular",0.8792,-26.583,13,8.1],["NGC 362","","Globular",1.053,-70.85,13,6.4],
+  ["NGC 1261","","Globular",3.2045,-55.216,7,8.3],["NGC 1851","","Globular",5.234,-40.05,11,7.1],
+  ["NGC 1904","M79","Globular",5.4029,-24.524,9,7.7],["NGC 2298","","Globular",6.8165,-36.005,6,9.3],
+  ["NGC 2419","","Globular",7.6357,38.882,4,10.4],["NGC 2808","","Globular",9.200,-64.86,14,6.2],
+  ["NGC 3201","","Globular",10.2936,-46.412,18,6.7],["NGC 4590","M68","Globular",12.6578,-26.744,12,7.3],
+  ["NGC 5024","M53","Globular",13.215,18.17,13,7.6],["NGC 5053","","Globular",13.2742,17.700,10,9.9],
   ["NGC 5139","Omega Cen","Globular",13.447,-47.48,36,3.9],["NGC 5272","M3","Globular",13.703,28.37,18,6.2],
-  ["NGC 5466","","Globular",14.057,28.52,11,9.1],["NGC 5634","","Globular",14.474,-5.98,4,9.5],
+  ["NGC 5466","","Globular",14.0909,28.534,11,9.1],["NGC 5634","","Globular",14.4937,-5.976,4,9.5],
   ["NGC 5897","","Globular",15.289,-21.01,13,8.4],["NGC 5904","M5","Globular",15.309,2.08,20,5.6],
-  ["NGC 5986","","Globular",15.785,-37.79,10,7.1],["NGC 6093","M80","Globular",16.284,-22.97,9,7.3],
+  ["NGC 5986","","Globular",15.7675,-37.786,10,7.1],["NGC 6093","M80","Globular",16.284,-22.97,9,7.3],
   ["NGC 6121","M4","Globular",16.393,-26.53,26,5.6],["NGC 6171","M107","Globular",16.543,-13.05,10,7.8],
-  ["NGC 6205","M13","Globular",16.695,36.46,20,5.8],["NGC 6218","M12","Globular",16.786,-1.95,16,6.7],
-  ["NGC 6254","M10","Globular",16.952,-4.10,15,6.6],["NGC 6266","M62","Globular",17.018,-30.11,14,6.5],
-  ["NGC 6273","M19","Globular",17.044,-26.27,17,6.8],["NGC 6333","M9","Globular",17.300,-18.51,9,7.7],
-  ["NGC 6341","M92","Globular",17.286,43.14,14,6.4],["NGC 6352","","Globular",17.423,-48.42,7,8.1],
-  ["NGC 6388","","Globular",17.600,-44.73,9,6.7],["NGC 6397","","Globular",17.677,-53.67,26,5.7],
-  ["NGC 6402","M14","Globular",17.630,-3.25,12,7.6],["NGC 6441","","Globular",17.836,-37.05,8,7.2],
+  ["NGC 6205","M13","Globular",16.695,36.46,20,5.8],["NGC 6218","M12","Globular",16.7873,-1.949,16,6.7],
+  ["NGC 6254","M10","Globular",16.952,-4.10,15,6.6],["NGC 6266","M62","Globular",17.0202,-30.112,14,6.5],
+  ["NGC 6273","M19","Globular",17.044,-26.27,17,6.8],["NGC 6333","M9","Globular",17.3199,-18.516,9,7.7],
+  ["NGC 6341","M92","Globular",17.286,43.14,14,6.4],["NGC 6352","","Globular",17.4248,-48.422,7,8.1],
+  ["NGC 6388","","Globular",17.6049,-44.736,9,6.7],["NGC 6397","","Globular",17.677,-53.67,26,5.7],
+  ["NGC 6402","M14","Globular",17.6267,-3.246,12,7.6],["NGC 6441","","Globular",17.836,-37.05,8,7.2],
   ["NGC 6496","","Globular",17.984,-44.27,7,8.6],["NGC 6522","","Globular",18.060,-30.03,5,8.3],
-  ["NGC 6541","","Globular",18.134,-43.71,13,6.3],["NGC 6553","","Globular",18.167,-25.91,9,8.3],
+  ["NGC 6541","","Globular",18.134,-43.71,13,6.3],["NGC 6553","","Globular",18.1544,-25.908,9,8.3],
   ["NGC 6584","","Globular",18.311,-52.22,8,8.0],["NGC 6626","M28","Globular",18.409,-24.87,11,6.8],
   ["NGC 6637","M69","Globular",18.523,-32.35,10,7.6],["NGC 6656","M22","Globular",18.607,-23.90,24,5.1],
   ["NGC 6681","M70","Globular",18.719,-32.29,8,7.9],["NGC 6712","","Globular",18.884,-8.71,7,8.1],
-  ["NGC 6715","M54","Globular",18.917,-30.48,9,7.6],["NGC 6723","","Globular",18.991,-36.63,11,7.3],
-  ["NGC 6752","","Globular",19.181,-59.99,20,5.4],["NGC 6779","M56","Globular",19.275,30.18,7,8.3],
+  ["NGC 6715","M54","Globular",18.917,-30.48,9,7.6],["NGC 6723","","Globular",18.9925,-36.632,11,7.3],
+  ["NGC 6752","","Globular",19.181,-59.99,20,5.4],["NGC 6779","M56","Globular",19.2765,30.183,7,8.3],
   ["NGC 6809","M55","Globular",19.667,-30.96,19,6.3],["NGC 6838","M71","Globular",19.897,18.78,7,8.2],
-  ["NGC 6864","M75","Globular",20.099,-21.92,6,8.5],["NGC 6934","","Globular",20.573,7.40,7,8.8],
-  ["NGC 6981","M72","Globular",20.890,-12.53,6,9.3],["NGC 7006","","Globular",21.023,16.19,3,10.6],
+  ["NGC 6864","M75","Globular",20.1013,-21.922,6,8.5],["NGC 6934","","Globular",20.5698,7.404,7,8.8],
+  ["NGC 6981","M72","Globular",20.8910,-12.537,6,9.3],["NGC 7006","","Globular",21.0249,16.188,3,10.6],
   ["NGC 7078","M15","Globular",21.500,12.17,18,6.2],["NGC 7089","M2","Globular",21.558,-0.82,13,6.5],
   ["NGC 7099","M30","Globular",21.672,-23.18,11,7.2],
   ["M2","","Globular",21.558,-0.82,13,6.5],["M3","","Globular",13.703,28.37,18,6.2],
   ["M4","","Globular",16.393,-26.53,26,5.6],["M5","","Globular",15.309,2.08,20,5.6],
-  ["M12","","Globular",16.786,-1.95,16,6.7],["M13","Herkül Küm.","Globular",16.695,36.46,20,5.8],
+  ["M12","","Globular",16.7873,-1.949,16,6.7],["M13","Herkül Küm.","Globular",16.695,36.46,20,5.8],
   ["M15","","Globular",21.500,12.17,18,6.2],["M22","","Globular",18.607,-23.90,24,5.1],
   ["M92","","Globular",17.286,43.14,14,6.4],
 ];
@@ -1080,7 +1094,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.4';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.5';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1230,8 +1244,10 @@ function calculate(){
   const obsS=sh-TZ+sm/60,obsE=obsS+10;
   const d0=new Date(dv+'T00:00:00Z');
   currentDateUTC0h=d0;currentObsStartUTC=obsS;selectedObj=null;_canvasSetup=false;
-  const sl=document.getElementById('timeSlider');sl.value=0;
-  document.getElementById('timeSliderLabel').textContent=fmtH(((obsS+TZ)%24+24)%24);
+  _curveCache={};_sunArr=null;
+  const sl=document.getElementById('timeSlider');sl.value=0;_markUTC=obsS;_markLive=false;
+  {const nowH=(Date.now()-d0.getTime())/3600000;if(nowH>=obsS&&nowH<=obsE){_markLive=true;_markUTC=nowH;sl.value=Math.round((nowH-obsS)*60/10)*10;}}
+  document.getElementById('timeSliderLabel').textContent=fmtH(((_markUTC+TZ)%24+24)%24);
   const jdn=jd(d0)+0.5,jdm=jd(d0)+(obsS+3.5)/24;
   const mpv=mPhase(jdn),mp=mPos(jdn);
   const mi=Math.round((1-Math.cos(2*Math.PI*mpv))/2*100);
@@ -1347,7 +1363,7 @@ function scoreLabel(s){
 
 function renderTable(){
   const tb=document.getElementById('tableBody');
-  if(!filtered.length){const msg=activeType==='FAV'?L('emptyFav'):L('emptyNight');tb.innerHTML='<tr><td colspan="10"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
+  if(!filtered.length){const msg=activeType==='FAV'?L('emptyFav'):L('emptyNight');tb.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="icon">🌙</div><p>'+msg+'</p></div></td></tr>';return;}
   const tC={Galaxy:'tg',Nebula:'tn',Cluster:'tc',Globular:'tgl',PN:'tpn',Gezegen:'tpl'};
   const tL=_lang==='TR'?
     {Galaxy:'GÖKADA',Nebula:'BULUTSU',Cluster:'AÇIK KÜME',Globular:'KÜRESEL KÜME',PN:'GEZEGENİMSİ',Gezegen:'GEZEGEN'}:
@@ -1376,8 +1392,7 @@ function renderTable(){
             +'<td class="name-cell"><img class="obj-thumb" loading="lazy" src="'+aladinThumb(r.ra,r.dec,r.size||10,40,r.type)+'" onclick="event.stopPropagation();showThumbBig('+r.ra+','+r.dec+','+(r.size||10)+',\''+r.name.replace(/'/g,"")+'\',\''+r.type+'\')" onerror="this.style.display=\'none\'"><span style="display:inline-block;vertical-align:middle">'+r.name+(()=>{const en=getCommonName(r.name);const nm=en||r.common;return nm?'<span class="common">'+nm+'</span>':''})()+'</span></td>'
       +'<td><span class="type-badge '+(tC[r.type]||'')+'">'+( tL[r.type]||r.type)+'</span></td>'
       +sizeCell
-      +'<td class="peak-cell">'+fmtH(r.peak)+'</td>'
-      +'<td class="alt-cell">'+r.maxAlt+'°</td>'
+      +'<td class="curve-cell" data-n="'+r.name.replace(/"/g,'')+'" onclick="event.stopPropagation();showCurveBig(\''+r.name.replace(/'/g,"\\'")+'\')" title="'+fmtH(r.peak)+' · '+r.maxAlt+'° — büyütmek için tıkla">'+sparkSVG(r)+'</td>'
       +'<td class="window-cell">'+r.window+L('hourUnit')+'</td>'
       +'<td class="moon-cell '+r.moonClass+'">'+r.moonDist+'° '+(r.moonDist<30?'⚠':r.moonDist<60?'~':'✓')+'</td>'
       +'<td><span class="filter-rec '+fr.c+'" title="'+(fr.d||'')+'">'+fr.t+'</span></td>'
@@ -1386,7 +1401,7 @@ function renderTable(){
   }).join('');
   // Show all button
   if(!_showAll&&filtered.length>PAGE_SIZE){
-    tb.innerHTML+='<tr><td colspan="10" style="text-align:center;padding:14px">'
+    tb.innerHTML+='<tr><td colspan="9" style="text-align:center;padding:14px">'
       +'<button onclick="showAllRows()" class="btn-sm" style="padding:8px 24px;font-size:12px;color:var(--accent);border-color:var(--accent)">'
       +'▼ '+(_lang==='TR'?'Tümünü Göster':'Show All')+' ('+filtered.length+')'
       +'</button></td></tr>';
@@ -1403,12 +1418,99 @@ const TYPE_COLOR={Galaxy:'#c792ea',Nebula:'#89ddff',Cluster:'#f78c6c',Globular:'
 function drawUfuk(){
   const wrap=document.getElementById('ufukWrap');
   wrap.style.display='block';
+  syncUfukUi();
+  if(!ufukOpen())return;
   // Display değişikliğinin layout'a yansıması için kısa bekle
-  setTimeout(()=>{drawFrame(currentObsStartUTC);setupCanvasInteraction();},50);
+  setTimeout(()=>{drawFrame(currentObsStartUTC+parseInt(document.getElementById('timeSlider').value)/60);setupCanvasInteraction();},50);
 }
-function onTimeSlider(val){if(!currentDateUTC0h)return;const utcH=currentObsStartUTC+parseInt(val)/60;document.getElementById('timeSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);drawFrame(utcH);}
+function ufukOpen(){try{return localStorage.getItem('ufuk_open')==='1';}catch(e){return false;}}
+function syncUfukUi(){const o=ufukOpen();document.getElementById('ufukBody').style.display=o?'':'none';const b=document.getElementById('ufukToggle');if(b)b.textContent=(o?'▾ ':'▸ ')+(_lang==='TR'?'Grafik':'Chart');}
+function toggleUfuk(){try{localStorage.setItem('ufuk_open',ufukOpen()?'0':'1');}catch(e){}syncUfukUi();if(ufukOpen()&&currentDateUTC0h)drawUfuk();}
+function onTimeSlider(val){if(!currentDateUTC0h)return;_markLive=false;const utcH=currentObsStartUTC+parseInt(val)/60;_markUTC=utcH;document.getElementById('timeSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);if(ufukOpen())drawFrame(utcH);refreshSparks();}
+
+// ─── Obje gece eğrileri (NINA tarzı) ─────────────────────────────────────────
+let _curveCache={},_sunArr=null,_markUTC=null,_markLive=false;
+const CURVE_STEP=0.25; // saat
+function curveOf(r){
+  if(_curveCache[r.name])return _curveCache[r.name];
+  const out=[],j0=jd(currentDateUTC0h);
+  for(let t=currentObsStartUTC;t<=currentObsStartUTC+10+1e-6;t+=CURVE_STEP){
+    const p=aa(r.ra,r.dec,j0+t/24,OBS_LAT,OBS_LON);out.push({t,alt:p.alt,az:p.az,hz:hAlt(p.az)});
+  }
+  return _curveCache[r.name]=out;
+}
+function sunArr(){
+  if(_sunArr)return _sunArr;const j0=jd(currentDateUTC0h),a=[];
+  for(let t=currentObsStartUTC;t<=currentObsStartUTC+10+1e-6;t+=CURVE_STEP)a.push(sunAlt(j0+t/24,OBS_LAT,OBS_LON));
+  return _sunArr=a;
+}
+function markNow(){
+  // Bugünün gecesi açıksa "şu an"; değilse kaydırıcıdaki saat
+  if(!currentDateUTC0h)return null;
+  const nowH=(Date.now()-currentDateUTC0h.getTime())/3600000;
+  if(_markLive&&nowH>=currentObsStartUTC&&nowH<=currentObsStartUTC+10)return nowH;
+  return _markUTC;
+}
+function interpAt(c,t){
+  if(t==null||t<c[0].t||t>c[c.length-1].t)return null;
+  const i=Math.min(c.length-2,Math.floor((t-c[0].t)/CURVE_STEP)),f=(t-c[i].t)/CURVE_STEP;
+  let daz=c[i+1].az-c[i].az;if(daz>180)daz-=360;if(daz<-180)daz+=360;
+  return{alt:c[i].alt+f*(c[i+1].alt-c[i].alt),az:((c[i].az+f*daz)%360+360)%360,hz:c[i].hz+f*(c[i+1].hz-c[i].hz)};
+}
+function azName(az){const tr=['K','KD','D','GD','G','GB','B','KB'],en=['N','NE','E','SE','S','SW','W','NW'];return(_lang==='TR'?tr:en)[Math.round(az/45)%8];}
+function curveSVG(r,W,H,big){
+  const c=curveOf(r),sa=sunArr(),n=c.length;
+  const pl=big?34:2,pr=big?10:2,pt=big?10:2,pb=big?22:2;
+  const X=i=>pl+i*(W-pl-pr)/(n-1),Xt=t=>pl+(t-c[0].t)/(c[n-1].t-c[0].t)*(W-pl-pr);
+  const Y=a=>pt+(1-Math.max(0,Math.min(90,a))/90)*(H-pt-pb);
+  let g='';
+  // alacakaranlık bantları
+  for(let i=0;i<n-1;i++){const s=(sa[i]+sa[i+1])/2;const col=s>-6?'#2a3358':s>-12?'#1c2344':s>-18?'#141a36':null;if(col)g+='<rect x="'+X(i).toFixed(1)+'" y="'+pt+'" width="'+(X(i+1)-X(i)+0.5).toFixed(1)+'" height="'+(H-pt-pb)+'" fill="'+col+'"/>';}
+  // 30° ve ızgara
+  if(big){for(const a of [0,30,60,90]){g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(a)+'" y2="'+Y(a)+'" stroke="#2a3050" stroke-width="'+(a===30?1:.5)+'"'+(a===30?' stroke-dasharray="4 3"':'')+'/><text x="'+(pl-5)+'" y="'+(Y(a)+4)+'" fill="#7a84a8" font-size="10" text-anchor="end">'+a+'°</text>';}
+    const h0=Math.ceil(c[0].t);for(let h=h0;h<=c[n-1].t;h++){const x=Xt(h);g+='<line x1="'+x+'" x2="'+x+'" y1="'+pt+'" y2="'+(H-pb)+'" stroke="#1e2440" stroke-width=".5"/><text x="'+x+'" y="'+(H-6)+'" fill="#7a84a8" font-size="10" text-anchor="middle">'+String(Math.floor((((h+TZ)%24)+24)%24)).padStart(2,'0')+'</text>';}}
+  else g+='<line x1="0" x2="'+W+'" y1="'+Y(30)+'" y2="'+Y(30)+'" stroke="#2a3050" stroke-width=".6" stroke-dasharray="2 2"/>';
+  // yerel ufuk (objenin baktığı yöndeki engel)
+  let hp='M'+X(0)+','+(H-pb);c.forEach((p,i)=>hp+=' L'+X(i).toFixed(1)+','+Y(p.hz).toFixed(1));hp+=' L'+X(n-1)+','+(H-pb)+'Z';
+  g+='<path d="'+hp+'" fill="#3a2a1a" opacity=".85"/>';
+  // meridyen
+  let im=0;c.forEach((p,i)=>{if(p.alt>c[im].alt)im=i;});
+  const xm=X(im);g+='<line x1="'+xm+'" x2="'+xm+'" y1="'+pt+'" y2="'+(H-pb)+'" stroke="#ffcb6b" stroke-width="'+(big?1:.8)+'" stroke-dasharray="3 2" opacity=".8"/>';
+  // eğri: ufuk üstü parlak, altı sönük
+  let seg='',segs=[];
+  for(let i=0;i<n-1;i++){const up=c[i].alt>c[i].hz&&c[i+1].alt>c[i+1].hz;const col=up?'#4fc3f7':'#4a5070';segs.push('<line x1="'+X(i).toFixed(1)+'" y1="'+Y(c[i].alt).toFixed(1)+'" x2="'+X(i+1).toFixed(1)+'" y2="'+Y(c[i+1].alt).toFixed(1)+'" stroke="'+col+'" stroke-width="'+(big?2.2:1.6)+'" stroke-linecap="round"/>');}
+  g+=segs.join('');
+  if(big){g+='<text x="'+xm+'" y="'+(Y(c[im].alt)-6)+'" fill="#ffcb6b" font-size="11" text-anchor="middle">'+fmtH(((c[im].t+TZ)%24+24)%24)+' · '+Math.round(c[im].alt)+'°</text>';}
+  // şu an
+  const tm=markNow(),pm=interpAt(c,tm);
+  if(pm){const x=Xt(tm),y=Y(pm.alt),vis=pm.alt>pm.hz;
+    g+='<line x1="'+x+'" x2="'+x+'" y1="'+pt+'" y2="'+(H-pb)+'" stroke="#ffffff" stroke-width=".7" opacity=".55"/>';
+    g+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(big?5:3)+'" fill="'+(vis?'#69ff8a':'#ff5370')+'" stroke="#0a0c1a" stroke-width="1"/>';
+    const below=Math.abs(x-xm)<90||y<pt+18;
+    if(big)g+='<text x="'+(x+8)+'" y="'+(below?y+18:y-8)+'" fill="'+(vis?'#69ff8a':'#ff5370')+'" font-size="11">'+(_markLive?(_lang==='TR'?'Şu an ':'Now '):fmtH(((tm+TZ)%24+24)%24)+' ')+Math.round(pm.alt)+'° '+azName(pm.az)+'</text>';}
+  return '<svg class="'+(big?'curve-big':'spark')+'" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg"><rect width="'+W+'" height="'+H+'" fill="#0a0c1a" rx="3"/>'+g+'</svg>';
+}
+function sparkSVG(r){
+  if(!currentDateUTC0h)return fmtH(r.peak)+' · '+r.maxAlt+'°';
+  try{return curveSVG(r,108,40,false)+'<div class="spark-lbl">'+fmtH(r.peak)+' · '+r.maxAlt+'°</div>';}catch(e){return fmtH(r.peak)+' · '+r.maxAlt+'°';}
+}
+function refreshSparks(){
+  document.querySelectorAll('#tableBody td.curve-cell').forEach(td=>{const r=results.find(x=>x.name.replace(/"/g,'')===td.dataset.n);if(r)td.innerHTML=sparkSVG(r);});
+  const m=document.getElementById('curveModal');if(m&&m.classList.contains('open')&&m._r)m.querySelector('.curve-host').innerHTML=curveSVG(m._r,Math.min(640,window.innerWidth-60),300,true);
+}
+function showCurveBig(name){
+  const r=results.find(x=>x.name===name);if(!r)return;
+  const m=document.getElementById('curveModal');m._r=r;
+  const nm=getCommonName(r.name)||r.common;
+  m.querySelector('.curve-name').textContent=r.name+(nm?' — '+nm:'');
+  m.querySelector('.curve-host').innerHTML=curveSVG(r,Math.min(640,window.innerWidth-60),300,true);
+  m.classList.add('open');
+}
+function closeCurve(){document.getElementById('curveModal').classList.remove('open');}
+setInterval(()=>{if(_markLive&&currentDateUTC0h)refreshSparks();},60000);
 
 function drawFrame(utcHour){
+  if(!ufukOpen())return;
   const cv=document.getElementById('ufukCanvas');
   const W=cv.parentElement.clientWidth-4,H=220;
   cv.width=W;cv.height=H;
@@ -1679,10 +1781,11 @@ function removeCustomFilter(name){
 
 // ─── Aladin Thumbnail ────────────────────────────────────────────────────────
 function aladinThumb(ra,dec,sizeArcmin,px,type){
-  const fov=Math.max(0.05,Math.min(5,sizeArcmin*1.5/60));
+  const fov=Math.max(0.07,Math.min(5,sizeArcmin*1.6/60));
   const raDeg=ra*15;
+  // Küçük/kompakt objelerde (gökada, PN, küresel) Pan-STARRS çok daha keskin; δ>-29 kapsıyor
   let hips='CDS%2FP%2FDSS2%2Fcolor';
-  if(type==='Nebula'||type==='PN')hips='CDS%2FP%2FDSS2%2Fred';
+  if(dec>-29&&fov<1.2&&(type==='Galaxy'||type==='PN'||type==='Globular'))hips='CDS%2FP%2FPanSTARRS%2FDR1%2Fcolor-z-zg-g';
   return 'https://alasky.cds.unistra.fr/hips-image-services/hips2fits?hips='+hips+'&ra='+raDeg.toFixed(4)+'&dec='+dec.toFixed(4)+'&fov='+fov.toFixed(3)+'&width='+px+'&height='+px+'&format=jpg';
 }
 function showThumbBig(ra,dec,sizeArcmin,name,type){
