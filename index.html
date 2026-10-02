@@ -3381,7 +3381,13 @@ const SKY = (() => {
     }
     if (!r.ok) { status(nm + ': ' + T('çözülemedi', 'not solved') + ' — ' + r.why + T('. Elle yerleştirebilir ya da ölçeği girip tekrar deneyebilirsin.', '. Place it manually or enter the scale and retry.'), 'warn'); return false; }
     it.wcs = r.wcs; it.visible = true;
-    if (label && !(it.meta && it.meta.object)) it.meta = Object.assign({}, it.meta, { object: label.replace(/\s*\(.*\)$/, '') });
+    if (!(it.meta && it.meta.object)) {
+      // adı ancak çözülen merkez o objeye yakınsa kullan (ör. "Veil" → NGC 6960 adayı, ama kare Doğu Peçe'de olabilir)
+      const c = center(r.wcs), h = hints.find(x => x.label === label) || {};
+      const near = label && h.ra != null && Math.hypot((c[0] - h.ra) * Math.cos(c[1] * D2R), c[1] - h.dec) < Math.max(0.25, fovDeg(r.wcs) / 4);
+      const nmGuess = near ? label.replace(/\s*\(.*\)$/, '') : cleanName(it.name);
+      if (nmGuess) it.meta = Object.assign({}, it.meta, { object: nmGuess });
+    }
     await dbPut(strip(it));
     await showLayer(it); renderList(); drawFootprints();
     const pa = posAngle(it.wcs);
