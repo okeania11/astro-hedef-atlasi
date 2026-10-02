@@ -3267,6 +3267,28 @@ const SKY = (() => {
     }
     return best ? { id: best.id + ' (' + best.label + ')', ra: best.ra, dec: best.dec, src: 'Atlas' } : null;
   }
+  const JUNK = new Set(['ha', 'h', 'alpha', 'oiii', 'o3', 'sii', 's2', 'sho', 'hoo', 'hos', 'lrgb', 'rgb', 'l', 'r', 'g', 'b', 'lum', 'luminance', 'uv', 'ir', 'uvir', 'lpro', 'lextreme', 'extreme', 'lenhance', 'enhance', 'cls', 'final', 'son', 'crop', 'cropped', 'credited', 'credit', 'edit', 'edited', 'session', 'sessions', 'process', 'processed', 'stack', 'stacked', 'master', 'light', 'drizzle', 'mosaic', 'mozaik', 'panel', 'starless', 'stars', 'yildizlar', 'yildizsiz', 'jpg', 'tif', 'tiff', 'png', 'version', 'ver', 'new', 'yeni', 'hubble', 'palette', 'csc', 'lpc', 'cbg', 'nb', 'bb', 'osc', 'mono', 'gece', 'night', 'nights', 'copy', 'kopya', 'web', 'small', 'full', 'hq', 'export']);
+  function cleanName(text) {
+    return String(text || '').replace(/\.[a-z0-9]{2,5}$/i, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([a-zA-Z])(\d)/g, '$1 $2').replace(/[_\-.+()\[\]]+/g, ' ')
+      .split(/\s+/).filter(w => w && !/^\d+$/.test(w) && !/^v\d+$/i.test(w) && !/^\d+x$/i.test(w) && !JUNK.has(norm(w).replace(/\s/g, ''))).join(' ').trim();
+  }
+  async function sesame(q) {
+    try {
+      const t = await (await fetch('https://cds.unistra.fr/cgi-bin/nph-sesame/-oI/SNV?' + encodeURIComponent(q))).text();
+      const m = t.match(/%J\s+([\d.]+)\s+([+-]?[\d.]+)/); if (!m) return null;
+      const o = t.match(/%I\.0\s+(.+)/);
+      return { id: (o ? o[1].replace(/\s+/g, ' ').trim() : q), ra: +m[1], dec: +m[2], src: 'Sesame' };
+    } catch (e) { return null; }
+  }
+  // Bir isim için olası tüm konumlar (isimler belirsiz olabilir: "Lobster" → NGC 6357 ya da M 17)
+  async function candidates(text) {
+    const out = [], add = c => { if (c && c.ra != null && !out.some(o => Math.abs(o.dec - c.dec) < 0.5 && Math.abs(o.ra - c.ra) * Math.cos(c.dec * D2R) < 0.5)) out.push(c); };
+    add(localLookup(text));
+    const cl = cleanName(text);
+    if (cl) { add(localLookup(cl)); add(await sesame(cl)); if (!/nebula|galaxy|cluster/i.test(cl)) { add(await sesame(cl + ' Nebula')); add(await sesame(cl.split(' ')[0] + ' Nebula')); } }
+    if (!out.length) { const r = await resolveName(cl || text); add(r); }
+    return out;
+  }
   async function resolveName(text) {
     const loc0 = localLookup(text);
     if (loc0 && loc0.ra != null) return loc0;
@@ -3339,13 +3361,18 @@ const SKY = (() => {
     if (!hint) {
       const m = it.meta || {};
       if (m.ra != null && m.dec != null) hint = { ra: m.ra, dec: m.dec };
-      const guess = await resolveName(m.object || it.name);
-      if (!hint && guess && guess.ra != null) { hint = { ra: guess.ra, dec: guess.dec }; label = guess.id; }
-      if (hint && m.focal && m.pixsize) hint.scale = 206.265 * m.pixsize * (m.xbin || 1) / m.focal * ((it.origW || it.width) / it.width);
-    }
+      const scale = m.focal && m.pixsize ? 206.265 * m.pixsize * (m.xbin || 1) / m.focal * ((it.origW || it.width) / it.width) : null;
+      if (hint) hint.scale = scale;
+      var hints = hint ? [hint] : (await candidates(m.object || it.name)).slice(0, 3).map(c => ({ ra: c.ra, dec: c.dec, scale, label: c.id }));
+    } else var hints = [hint];
     const nm = (it.meta && it.meta.object) || it.name;
-    if (!hint) { status(nm + ': ' + T('obje adı anlaşılamadı — yerleştirme panelinde adını yazıp 🎯 Çöz\'e bas', 'could not tell the object — type its name in the placement panel and press 🎯 Solve'), 'warn'); return false; }
-    const r = await autoSolve(it, hint, msg => status(nm + ' — ' + msg, 'info', 50));
+    if (!hints.length) { status(nm + ': ' + T('obje adı anlaşılamadı — yerleştirme panelinde adını yazıp 🎯 Otomatik çöz\'e bas', 'could not tell the object — type its name in the placement panel and press 🎯 Auto-solve'), 'warn'); return false; }
+    let r = null;
+    for (const h of hints) {
+      label = h.label || '';
+      r = await autoSolve(it, h, msg => status(nm + (label ? ' (' + label + ')' : '') + ' — ' + msg, 'info', 50));
+      if (r.ok) break;
+    }
     if (!r.ok) { status(nm + ': ' + T('çözülemedi', 'not solved') + ' — ' + r.why + T('. Elle yerleştirebilir ya da ölçeği girip tekrar deneyebilirsin.', '. Place it manually or enter the scale and retry.'), 'warn'); return false; }
     it.wcs = r.wcs; it.visible = true;
     if (label && !(it.meta && it.meta.object)) it.meta = Object.assign({}, it.meta, { object: label.replace(/\s*\(.*\)$/, '') });
