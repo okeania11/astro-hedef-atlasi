@@ -2644,7 +2644,7 @@ function plateSolve(job) {
   if (stars.length < 6) return { ok: false, why: 'Yeterli yıldız bulunamadı (' + stars.length + ')' };
   // görüntü: FITS benzeri koordinat (x sağa, y yukarı)
   const img = stars.map(s => [s.x + 1, h - s.y]);
-  const NI = Math.min(22, img.length), NC = Math.min(35, cat.length);
+  const NI = Math.min(25, img.length), NC = Math.min(50, cat.length);
   const ti = triangles(img, NI), tc = triangles(cat, NC);
   const Q = 0.01, hash = new Map();
   for (const t of tc) { const k = Math.round(t.r1 / Q) + ',' + Math.round(t.r2 / Q); (hash.get(k) || hash.set(k, []).get(k)).push(t); }
@@ -2663,7 +2663,7 @@ function plateSolve(job) {
         const T = simil(t.v.map(i => img[i]), c.v.map(j => cat[j]), par);
         if (++tried > 40000) break;
         const tol = Math.max(3 * T.scale, 1.5);
-        const r = countIn(T, img.slice(0, 40), cat.slice(0, 60), tol);
+        const r = countIn(T, img.slice(0, 40), cat.slice(0, 90), tol);
         if (!best || r.n > best.n) best = { n: r.n, T, pairs: r.pairs };
       }
     }
@@ -3313,7 +3313,7 @@ const SKY = (() => {
     const base = await lumOf(it, 1400), k = base.w / it.width;
     const sHint = hint.scale ? hint.scale / k : null; // lum görüntüsü ölçeği
     const diag = Math.hypot(base.w, base.h) / 2 / 3600;
-    const radii = sHint ? [Math.max(0.15, sHint * diag * 1.15)] : [0.5, 1.0, 2.2, 5, 10];
+    const radii = sHint ? [Math.max(0.15, sHint * diag * 1.15)] : [0.3, 0.6, 1.2, 2.5, 5, 10];
     let last = null;
     for (const r of radii) {
       say(T('Yıldız kataloğu alınıyor', 'Fetching star catalogue') + ' (r=' + r.toFixed(2) + '°)…');
@@ -3322,7 +3322,7 @@ const SKY = (() => {
       if (cat.length < 8) { last = T('Bu bölgede yeterli katalog yıldızı yok', 'Not enough catalogue stars here'); continue; }
       say(T('Yıldızlar eşleştiriliyor…', 'Matching stars…') + ' (' + cat.length + ')');
       const lum = new Float32Array(base.lum); // aktarımda boşalmasın
-      const res = await runSolve({ lum, w: base.w, h: base.h, cat: cat.slice(0, 80).map(c => project(hint.ra, hint.dec, c[0], c[1]).concat([c[2]])), scaleHint: sHint });
+      const res = await runSolve({ lum, w: base.w, h: base.h, cat: cat.slice(0, 120).map(c => project(hint.ra, hint.dec, c[0], c[1]).concat([c[2]])), scaleHint: sHint });
       if (res.ok) {
         const w0 = { NAXIS: 2, NAXIS1: base.w, NAXIS2: base.h, CTYPE1: 'RA---TAN', CTYPE2: 'DEC--TAN', CRVAL1: hint.ra, CRVAL2: hint.dec, CRPIX1: res.crpix[0], CRPIX2: res.crpix[1], CD1_1: res.cd[0][0], CD1_2: res.cd[0][1], CD2_1: res.cd[1][0], CD2_2: res.cd[1][1], RADESYS: 'ICRS', EQUINOX: 2000 };
         const wcs = rescaleWcs(w0, base.w, base.h, it.width, it.height);
