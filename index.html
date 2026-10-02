@@ -3312,12 +3312,14 @@ const SKY = (() => {
   }
   async function fetchCat(ra, dec, rad, deep) {
     const c = encodeURIComponent(ra.toFixed(5) + ' ' + (dec >= 0 ? '+' : '') + dec.toFixed(5));
+    if (deep && rad > 2.5) deep = false; // geniş alanda Gaia çok yavaş: Tycho-2 yeter
     const url = deep
       ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/355/gaiadr3&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=RA_ICRS,DE_ICRS,Gmag&Gmag=%3C' + (rad > 1.2 ? 13 : rad > 0.6 ? 15 : rad > 0.3 ? 16 : 17) + '&-out.max=4000'
       : rad <= 0.7
       ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/355/gaiadr3&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=RA_ICRS,DE_ICRS,Gmag&Gmag=%3C' + (rad < 0.35 ? 16 : 14.5) + '&-out.max=3000'
       : 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/259/tyc2&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=_RAJ2000,_DEJ2000,VTmag&-sort=VTmag&-out.max=400';
-    const t = await (await fetch(url)).text();
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 30000); // VizieR takılırsa bekleme
+    let t; try { t = await (await fetch(url, { signal: ctl.signal })).text(); } finally { clearTimeout(to); }
     const rows = [];
     for (const l of t.split('\n')) { const p = l.trim().split('\t'); if (p.length >= 3 && /^[\d.]+$/.test(p[0])) { const m = parseFloat(p[2]); rows.push([+p[0], +p[1], isFinite(m) ? m : 99]); } }
     rows.sort((a, b) => a[2] - b[2]);
@@ -3368,7 +3370,7 @@ const SKY = (() => {
         // Doğrulama + iyileştirme: görüntü merkezinde, derin Gaia kataloğuyla, bilinen çözümden başlayarak
         try {
           const c = pix2sky(w0, (base.w + 1) / 2, (base.h + 1) / 2), sc = pixScale(w0);
-          const rad = Math.hypot(base.w, base.h) / 2 * sc / 3600 * 1.1;
+          const rad = Math.min(12, Math.hypot(base.w, base.h) / 2 * sc / 3600 * 1.1);
           say(T('Derin katalogla doğrulanıyor…', 'Verifying with a deep catalogue…'));
           const deep = await fetchCat(c[0], c[1], rad, true);
           if (deep.length >= 10) {
@@ -3757,7 +3759,7 @@ const SKY = (() => {
     statusHide, card: showCard, cardVerify, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
     setHorizon, setHorizonUp, setAltaz, setGround, setPlanets,
     setSurvey, setProjection, setFrame, setGrid, setAtlas, setFootprints, setFov, setFovRot, setOpt, applyLabels,
-    _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now })
+    _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now, fetchCat, lumOf, runSolve, autoSolve })
   };
 })();
 
