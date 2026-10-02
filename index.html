@@ -254,9 +254,9 @@ body.sky-open{overflow:hidden}
 .sky-status.ok{border-color:var(--green);color:var(--green)}
 .sky-bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:5px;overflow:hidden}
 .sky-bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
-.sky-info{position:absolute;left:10px;bottom:34px;z-index:20;font-size:11px;color:var(--text);background:rgba(7,8,15,.75);padding:4px 8px;border-radius:4px;pointer-events:none;max-width:70%}
+.sky-info{position:absolute;left:56px;top:96px;z-index:20;font-size:11px;color:var(--text);background:rgba(7,8,15,.75);padding:4px 8px;border-radius:4px;pointer-events:none;max-width:70%}
 .sky-info:empty{display:none}
-.sky-fovrow{position:absolute;right:10px;bottom:34px;z-index:20;display:flex;gap:8px;align-items:center;font-size:11px;background:rgba(7,8,15,.8);padding:5px 10px;border-radius:4px;border:1px solid var(--border)}
+.sky-fovrow{position:absolute;right:10px;bottom:62px;z-index:20;display:flex;gap:8px;align-items:center;font-size:11px;background:rgba(7,8,15,.8);padding:5px 10px;border-radius:4px;border:1px solid var(--border)}
 .sky-fovrow input{width:120px;accent-color:var(--accent)}
 .sky-place{position:absolute;top:10px;right:10px;z-index:25;width:330px;background:var(--bg2);border:1px solid var(--accent);border-radius:6px;padding:12px;font-size:11px;box-shadow:0 6px 30px rgba(0,0,0,.6)}
 .sky-pl-title{font-size:12px;margin-bottom:8px;color:var(--accent)}
@@ -275,6 +275,33 @@ body.sky-open{overflow:hidden}
   .sky-top{padding:6px 8px;gap:6px}
   #skyGoto{width:120px!important}
 }
+/* zaman çubuğu, konum, kart, büyütme */
+.sky-timebar{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;z-index:22;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;background:rgba(13,15,28,.88);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;max-width:calc(100% - 20px)}
+.sky-timebar input[type=range]{width:180px;accent-color:var(--accent)}
+.sky-tlbl{color:#fff;min-width:150px;text-align:center}
+.sky-now.on{border-color:var(--green);color:var(--green)}
+.sky-look .sky-mini{margin-left:2px;padding:4px 6px}
+.sky-locbox{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);z-index:26;width:300px;background:var(--bg2);border:1px solid var(--accent);border-radius:6px;padding:12px;font-size:11px;box-shadow:0 6px 30px rgba(0,0,0,.6)}
+.sky-card{position:absolute;left:10px;bottom:60px;z-index:24;width:270px;background:var(--bg2);border:1px solid #ffcb6b;border-radius:8px;padding:10px;font-size:11px;box-shadow:0 6px 30px rgba(0,0,0,.6)}
+.sky-card-x{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.5);border:none;color:#fff;width:24px;height:24px;border-radius:50%;cursor:pointer;z-index:1}
+.sky-card-img{width:100%;max-height:220px;object-fit:contain;background:#000;border-radius:4px;cursor:zoom-in;display:block}
+.sky-card-title{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;margin-top:8px}
+.sky-card-pos{margin-top:6px;line-height:1.6;color:var(--text)}
+.sky-card-act{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.sky-card-act .sky-mini{margin-left:0}
+.sky-light{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.94);display:flex;flex-direction:column}
+.sky-light-wrap{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;min-height:0}
+.sky-light-wrap img{max-width:100vw;max-height:calc(100vh - 40px);object-fit:contain;cursor:zoom-in}
+.sky-light-wrap img.full{max-width:none;max-height:none;cursor:zoom-out}
+.sky-light-x{position:absolute;top:12px;right:12px;z-index:2;margin:0}
+.sky-light-cap{text-align:center;color:var(--text2);font-size:11px;padding:8px}
+@media (max-width:760px){
+  .sky-timebar{bottom:4px;gap:4px;padding:4px 6px}
+  .sky-timebar input[type=range]{width:110px}
+  .sky-tlbl{min-width:0}
+  .sky-card{left:6px;right:6px;width:auto;bottom:auto;top:6px}
+  .sky-card-img{max-height:150px}
+}
 /*/SKY:css*/
 </style>
 </head>
@@ -284,7 +311,7 @@ body.sky-open{overflow:hidden}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.0</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.1</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
@@ -477,7 +504,7 @@ body.sky-open{overflow:hidden}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.0
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.1
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -671,7 +698,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.0');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.1');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -1046,7 +1073,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.0';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.1';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1907,7 +1934,10 @@ if('serviceWorker' in navigator){
       <option value="SIN">SIN (küre)</option><option value="TAN">TAN</option><option value="STG">STG</option><option value="ZEA">ZEA</option><option value="AIT">Aitoff</option><option value="MOL">Mollweide</option>
     </select>
     <select id="skyFrame" class="sky-in" onchange="SKY.setFrame(this.value)"><option value="ICRS">ICRS</option><option value="ICRSd">ICRS (°)</option><option value="GAL">Galactic</option></select>
-    <label class="sky-chk"><input type="checkbox" id="skyGrid" onchange="SKY.setGrid(this.checked)"><span data-tr="Izgara" data-en="Grid">Izgara</span></label>
+    <label class="sky-chk"><input type="checkbox" id="skyHz" onchange="SKY.setHorizon(this.checked)"><span data-tr="Ufuk" data-en="Horizon">Ufuk</span></label>
+    <label class="sky-chk" data-trt="Ufku ekranda yatay tut (Stellarium gibi)" data-ent="Keep the horizon level (like Stellarium)"><input type="checkbox" id="skyHzUp" onchange="SKY.setHorizonUp(this.checked)"><span data-tr="Ufku düz tut" data-en="Level horizon">Ufku düz tut</span></label>
+    <label class="sky-chk"><input type="checkbox" id="skyAltaz" onchange="SKY.setAltaz(this.checked)"><span data-tr="Alt-Az" data-en="Alt-Az">Alt-Az</span></label>
+    <label class="sky-chk"><input type="checkbox" id="skyGrid" onchange="SKY.setGrid(this.checked)"><span data-tr="RA/Dec" data-en="RA/Dec">RA/Dec</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyAtlas" onchange="SKY.setAtlas(this.checked)"><span data-tr="Atlas hedefleri" data-en="Atlas targets">Atlas hedefleri</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyFp" onchange="SKY.setFootprints(this.checked)"><span data-tr="Çerçeveler" data-en="Footprints">Çerçeveler</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyFovChk" onchange="SKY.setFov(this.checked)"><span data-tr="Kadraj" data-en="FOV">Kadraj</span></label>
@@ -1930,6 +1960,9 @@ if('serviceWorker' in navigator){
             <option value="stf" data-tr="Her zaman STF" data-en="Always STF">Her zaman STF</option>
             <option value="none" data-tr="Yok (işlenmiş görüntü)" data-en="None (processed image)">Yok (işlenmiş görüntü)</option></select></div>
         <label class="sky-row sky-chk"><input type="checkbox" id="skyLinked" onchange="SKY.setOpt('linked',this.checked)"><span data-tr="RGB kanalları bağlı ger" data-en="Linked RGB stretch">RGB kanalları bağlı ger</span></label>
+        <div class="sky-row"><span data-tr="Ufuk profili (.hrz)" data-en="Horizon profile (.hrz)">Ufuk profili (.hrz)</span>
+          <span><label class="sky-mini" for="skyHzFile" style="display:inline-block" data-tr="Yükle" data-en="Load">Yükle</label><button class="sky-mini" onclick="SKY.clearHz()" data-tr="Kaldır" data-en="Remove">Kaldır</button></span></div>
+        <input type="file" id="skyHzFile" accept=".hrz,.hzn,.txt" style="display:none">
         <div class="sky-hint" data-tr="Ayarlar yeni eklenen dosyalara uygulanır. Orijinal dosyaya dokunulmaz; küçültülmüş kopya bu tarayıcıda saklanır." data-en="Settings apply to newly added files. Originals are untouched; a downsized copy is kept in this browser.">Ayarlar yeni eklenen dosyalara uygulanır.</div>
       </details>
       <div class="sky-listhead"><span id="skyCount"></span>
@@ -1945,6 +1978,39 @@ if('serviceWorker' in navigator){
         <input type="range" id="skyFovRot" min="-180" max="180" step="1" value="0" oninput="SKY.setFovRot(this.value)"><span id="skyFovRotV">0°</span>
       </div>
       <div id="skyInfo" class="sky-info"></div>
+
+      <!-- Zaman ve konum -->
+      <div class="sky-timebar">
+        <button id="skyNow" class="sky-mini sky-now" onclick="SKY.timeNow()" data-tr="● Şimdi" data-en="● Now">● Şimdi</button>
+        <input type="range" id="skyTimeSl" min="-720" max="720" step="10" value="0" oninput="SKY.timeShift(this.value)" data-trt="Saati ileri/geri al (±12 saat)" data-ent="Shift time (±12 h)">
+        <span id="skyTimeLbl" class="sky-tlbl"></span>
+        <span class="sky-look">
+          <button class="sky-mini" onclick="SKY.look(0)" data-tr="K" data-en="N">K</button><button class="sky-mini" onclick="SKY.look(90)" data-tr="D" data-en="E">D</button><button class="sky-mini" onclick="SKY.look(180)" data-tr="G" data-en="S">G</button><button class="sky-mini" onclick="SKY.look(270)" data-tr="B" data-en="W">B</button><button class="sky-mini" onclick="SKY.look(0,90)" data-tr="Zenit" data-en="Zenith">Zenit</button>
+        </span>
+        <button class="sky-mini" onclick="SKY.locEdit()" data-trt="Konumu değiştir" data-ent="Change location">📍 <span id="skyLocLbl"></span></button>
+      </div>
+      <div id="skyLocBox" class="sky-locbox" style="display:none">
+        <div class="sky-pl-title" data-tr="Gözlem yeri" data-en="Observing site">Gözlem yeri</div>
+        <button class="sky-save" style="width:100%;margin-bottom:8px" onclick="SKY.locGeo()" data-tr="📍 Konumumu bul" data-en="📍 Use my location">📍 Konumumu bul</button>
+        <div class="sky-pl-grid"><span data-tr="Enlem" data-en="Latitude">Enlem</span><input id="skyLocLat" class="sky-in" type="number" step="0.0001"><span data-tr="Boylam" data-en="Longitude">Boylam</span><input id="skyLocLon" class="sky-in" type="number" step="0.0001"></div>
+        <div id="skyLocMsg" class="sky-hint"></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="sky-mini" onclick="SKY.locEdit()" data-tr="Vazgeç" data-en="Cancel">Vazgeç</button><button class="sky-save" onclick="SKY.locApply()" data-tr="Uygula" data-en="Apply">Uygula</button></div>
+        <div class="sky-hint" data-tr="Konum tüm Atlas için geçerlidir. Doğu boylamı ve kuzey enlemi artı (+) yazılır." data-en="The location applies to the whole Atlas. East longitude and north latitude are positive.">Konum tüm Atlas için geçerlidir.</div>
+      </div>
+
+      <!-- Fotoğraf kartı -->
+      <div id="skyCard" class="sky-card" style="display:none">
+        <button class="sky-card-x" onclick="SKY.cardClose()">✕</button>
+        <img id="skyCardImg" class="sky-card-img" onclick="SKY.cardZoom()" data-trt="Büyütmek için tıkla" data-ent="Click to enlarge" alt="">
+        <div id="skyCardTitle" class="sky-card-title"></div>
+        <div id="skyCardSub" class="sky-it-sub"></div>
+        <div id="skyCardPos" class="sky-card-pos"></div>
+        <div class="sky-card-act">
+          <button class="sky-save" onclick="SKY.cardZoom()" data-tr="🔍 Büyüt" data-en="🔍 Enlarge">🔍 Büyüt</button>
+          <button class="sky-mini" id="skyCardShow" onclick="SKY.cardToggle()"></button>
+          <button class="sky-mini" onclick="SKY.cardGo()" data-tr="⌖ Yakınlaş" data-en="⌖ Zoom in">⌖ Yakınlaş</button>
+        </div>
+      </div>
 
       <!-- Elle yerleştirme paneli -->
       <div id="skyPlace" class="sky-place" style="display:none">
@@ -1974,6 +2040,11 @@ if('serviceWorker' in navigator){
         </div>
       </div>
     </main>
+  </div>
+  <div id="skyLight" class="sky-light" style="display:none" onclick="if(event.target===this)SKY.lightClose()">
+    <button class="sky-close sky-light-x" onclick="SKY.lightClose()">✕</button>
+    <div class="sky-light-wrap" onclick="if(event.target===this)SKY.lightClose()"><img id="skyLightImg" alt="" onclick="this.classList.toggle('full')"></div>
+    <div id="skyLightCap" class="sky-light-cap"></div>
   </div>
 </div>
 <!--/SKY:html-->
@@ -2460,14 +2531,17 @@ const SKY = (() => {
   const layers = new Set();     // yüklü katman adları
   let worker = null, jobSeq = 0; const jobs = new Map();
   let fpOverlay = null, fpCatalog = null, atlasCat = null, fovOverlay = null;
+  let hzOverlay = null, cardCat = null, liveTimer = null, orientRaf = 0;
   let placing = null;           // manuel yerleştirme durumu
   let selectedId = null;
 
   // ─── Ayarlar (tarayıcıda) ───
   const SETKEY = 'sky_settings';
-  const defaults = { survey: 'P/DSS2/color', projection: 'SIN', maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
+  const defaults = { v: 2, survey: 'P/DSS2/color', projection: 'STG', horizon: true, horizonUp: true, altaz: false, maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
   let S = Object.assign({}, defaults);
-  try { Object.assign(S, JSON.parse(localStorage.getItem(SETKEY) || '{}')); } catch (e) { }
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(SETKEY) || '{}') || {}; Object.assign(S, stored); } catch (e) { }
+  if (stored.v !== 2 && Object.keys(stored).length) { S.v = 2; S.projection = 'STG'; S.horizon = true; S.horizonUp = true; } // planetaryum görünümüne geçiş
   const saveS = () => { try { localStorage.setItem(SETKEY, JSON.stringify(S)); } catch (e) { } };
 
   // ─── IndexedDB ───
@@ -2564,15 +2638,20 @@ const SKY = (() => {
       });
       fpOverlay = A.graphicOverlay({ color: '#ffcb6b', lineWidth: 1.5, name: T('Fotoğraf çerçeveleri', 'Photo footprints') });
       aladin.addOverlay(fpOverlay);
-      fpCatalog = A.catalog({ name: T('Fotoğraflarım', 'My photos'), sourceSize: 14, color: '#ffcb6b', shape: 'square', displayLabel: true, labelColumn: 'label', labelColor: '#ffcb6b', labelFont: '12px Space Mono, monospace', onClick: 'showPopup' });
+      hzOverlay = A.graphicOverlay({ color: '#89ddff', lineWidth: 2, name: T('Ufuk', 'Horizon') });
+      aladin.addOverlay(hzOverlay);
+      cardCat = A.catalog({ name: T('Yönler', 'Directions'), sourceSize: 30, shape: s => s.data._cv });
+      aladin.addCatalog(cardCat);
+      // Fotoğraflar: küçük resimli halkalar
+      fpCatalog = A.catalog({ name: T('Fotoğraflarım', 'My photos'), sourceSize: 44, color: '#ffcb6b', shape: s => s.data._ring, displayLabel: true, labelColumn: 'label', labelColor: '#ffcb6b', labelFont: '12px Space Mono, monospace' });
       aladin.addCatalog(fpCatalog);
       fovOverlay = A.graphicOverlay({ color: '#4fc3f7', lineWidth: 2, name: T('Kadraj', 'FOV') });
       aladin.addOverlay(fovOverlay);
       buildAtlasCatalog();
       aladin.on('objectClicked', o => {
-        if (o && o.data && o.data._skyId) { select(o.data._skyId, true); }
+        if (o && o.data && o.data._skyId) showCard(o.data._skyId);
       });
-      aladin.on('positionChanged', () => { if (S.fov) drawFov(); if (placing) updatePlaceCenterHint(); });
+      aladin.on('positionChanged', () => { if (S.fov) drawFov(); scheduleOrient(); });
       aladin.on('zoomChanged', () => { if (S.fov) drawFov(); atlasLabels(); });
       return aladin;
     })();
@@ -2582,7 +2661,7 @@ const SKY = (() => {
 
   function buildAtlasCatalog() {
     if (typeof CAT === 'undefined') return;
-    atlasCat = A.catalog({ name: T('Atlas hedefleri', 'Atlas targets'), sourceSize: 10, color: '#c792ea', shape: 'circle', displayLabel: true, labelColumn: 'name', labelColor: '#c792ea', labelFont: '11px Space Mono, monospace' });
+    atlasCat = A.catalog({ name: T('Atlas hedefleri', 'Atlas targets'), sourceSize: 7, color: '#c792ea', shape: 'circle', displayLabel: true, labelColumn: 'name', labelColor: '#c792ea', labelFont: '11px Space Mono, monospace' });
     const src = [];
     const all = CAT.concat(typeof _extraObjects !== 'undefined' ? _extraObjects.map(o => [o.name, o.common, o.type, o.ra, o.dec, o.size, o.mag]) : []);
     const seen = [];
@@ -2621,19 +2700,41 @@ const SKY = (() => {
   function hideLayer(it) { const nm = layerName(it); if (layers.has(nm)) { try { aladin.removeImageLayer(nm); } catch (e) { } layers.delete(nm); } }
   function setOpacity(it, v) { it.opacity = v; try { const l = aladin.getOverlayImageLayer(layerName(it)); l && l.setOpacity(v); } catch (e) { } }
 
-  function drawFootprints() {
+  // Halka: dairesel küçük resim + altın çerçeve (ufkun altındaysa soluk)
+  const thumbImgs = new Map();
+  function thumbImg(it) {
+    if (thumbImgs.has(it.id)) return thumbImgs.get(it.id);
+    const p = new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = it._thumbUrl; });
+    thumbImgs.set(it.id, p); return p;
+  }
+  async function ring(it, below, sel) {
+    const im = await thumbImg(it), S2 = 44, r = 19, cv = document.createElement('canvas');
+    cv.width = cv.height = S2; const cx = cv.getContext('2d');
+    cx.globalAlpha = below ? 0.45 : 1;
+    cx.save(); cx.beginPath(); cx.arc(S2 / 2, S2 / 2, r, 0, 2 * Math.PI); cx.clip();
+    cx.fillStyle = '#000'; cx.fill();
+    if (im) { const k = Math.max((2 * r) / im.width, (2 * r) / im.height); cx.drawImage(im, S2 / 2 - im.width * k / 2, S2 / 2 - im.height * k / 2, im.width * k, im.height * k); }
+    cx.restore();
+    cx.beginPath(); cx.arc(S2 / 2, S2 / 2, r, 0, 2 * Math.PI);
+    cx.lineWidth = sel ? 3.5 : 2.5; cx.strokeStyle = sel ? '#4fc3f7' : below ? '#8a8f9e' : '#ffcb6b'; cx.stroke();
+    return cv;
+  }
+  let fpSeq = 0;
+  async function drawFootprints() {
     if (!fpOverlay) return;
-    fpOverlay.removeAll(); fpCatalog.removeAll();
-    if (!S.footprints) return;
-    const src = [];
+    const seq = ++fpSeq, date = now(), L = loc();
+    const src = [], polys = [];
     for (const it of items) {
       if (!it.wcs) continue;
-      const c = corners(it.wcs);
-      fpOverlay.add(A.polygon(c, { color: it.id === selectedId ? '#4fc3f7' : '#ffcb6b', lineWidth: it.id === selectedId ? 2.5 : 1.5 }));
-      const top = c.reduce((a, b) => (b[1] > a[1] ? b : a));
       const cc = center(it.wcs);
-      src.push(A.source(cc[0], cc[1], { label: it.meta && it.meta.object || it.name, _skyId: it.id, [T('Dosya', 'File')]: it.name, [T('Filtre', 'Filter')]: it.meta && it.meta.filter || '', [T('Tarih', 'Date')]: (it.meta && it.meta.dateObs || '').slice(0, 10) }));
+      if (S.footprints) polys.push(A.polygon(corners(it.wcs), { color: it.id === selectedId ? '#4fc3f7' : '#ffcb6b', lineWidth: it.id === selectedId ? 2.5 : 1.5 }));
+      const below = S.horizon && radec2altaz(cc[0], cc[1], date, L)[0] < 0;
+      const cv = await ring(it, below, it.id === selectedId);
+      src.push(A.source(cc[0], cc[1], { label: it.meta && it.meta.object || it.name, _skyId: it.id, _ring: cv }));
     }
+    if (seq !== fpSeq) return; // daha yeni bir çizim başladı
+    fpOverlay.removeAll(); fpCatalog.removeAll();
+    polys.forEach(p => fpOverlay.add(p));
     fpCatalog.addSources(src);
   }
 
@@ -2670,7 +2771,7 @@ const SKY = (() => {
       const w = it.wcs;
       const info = w ? (pixScale(w) / (it.bin || 1)).toFixed(2) + '″/px · ' + (fovDeg(w) * 60).toFixed(0) + '′' : '<span style="color:var(--warning)">' + T('Konum yok — yerleştir', 'No position — place it') + '</span>';
       return '<div class="sky-item' + (it.id === selectedId ? ' sel' : '') + '" data-id="' + it.id + '">'
-        + '<img class="sky-th" src="' + (it._thumbUrl || '') + '" onclick="SKY.select(\'' + it.id + '\',true)">'
+        + '<img class="sky-th" src="' + (it._thumbUrl || '') + '" onclick="SKY.card(\'' + it.id + '\',true)">'
         + '<div class="sky-it-body"><div class="sky-it-name" title="' + esc(it.name) + '" onclick="SKY.select(\'' + it.id + '\',true)">' + esc(m.object || it.name) + '</div>'
         + '<div class="sky-it-sub">' + esc(sub || it.name) + '</div><div class="sky-it-sub">' + info + '</div>'
         + '<div class="sky-it-act">'
@@ -2900,6 +3001,181 @@ const SKY = (() => {
     aladin.gotoObject(q, { error: () => status(T('Bulunamadı: ', 'Not found: ') + q, 'warn') });
   }
 
+  // ═══ Zaman, konum, ufuk (planetaryum) ═══
+  const loc = () => ({
+    lat: typeof OBS_LAT !== 'undefined' ? OBS_LAT : 0, lon: typeof OBS_LON !== 'undefined' ? OBS_LON : 0,
+    name: typeof OBS_NAME !== 'undefined' ? OBS_NAME : ''
+  });
+  let timeOffset = 0; // dakika, "şimdi"ye göre
+  const now = () => new Date(Date.now() + timeOffset * 60000);
+  function lstDeg(date, lon) {
+    const j = date.getTime() / 86400000 + 2440587.5, d = j - 2451545, T2 = d / 36525;
+    const g = 280.46061837 + 360.98564736629 * d + 0.000387933 * T2 * T2 - T2 * T2 * T2 / 38710000;
+    return (((g + lon) % 360) + 360) % 360;
+  }
+  function altaz2radec(alt, az, date, L) {
+    const a = alt * D2R, z = az * D2R, l = L.lat * D2R;
+    const dec = Math.asin(Math.max(-1, Math.min(1, Math.sin(a) * Math.sin(l) + Math.cos(a) * Math.cos(l) * Math.cos(z))));
+    const H = Math.atan2(-Math.cos(a) * Math.sin(z), Math.cos(l) * Math.sin(a) - Math.sin(l) * Math.cos(a) * Math.cos(z));
+    return [(((lstDeg(date, L.lon) - H * R2D) % 360) + 360) % 360, dec * R2D];
+  }
+  function radec2altaz(ra, dec, date, L) {
+    const H = (lstDeg(date, L.lon) - ra) * D2R, d = dec * D2R, l = L.lat * D2R;
+    const alt = Math.asin(Math.max(-1, Math.min(1, Math.sin(d) * Math.sin(l) + Math.cos(d) * Math.cos(l) * Math.cos(H))));
+    const az = Math.atan2(-Math.sin(H) * Math.cos(d), Math.cos(l) * Math.sin(d) - Math.sin(l) * Math.cos(d) * Math.cos(H));
+    return [alt * R2D, ((az * R2D) % 360 + 360) % 360];
+  }
+  // Kullanıcının kendi ufuk profili (.hrz/.txt): sky ayarı ya da Atlas'ta yüklenen
+  function hzProfile() {
+    let p = null; try { p = JSON.parse(localStorage.getItem('sky_horizon') || 'null'); } catch (e) { }
+    if ((!p || p.length < 3) && typeof ufukData !== 'undefined' && ufukData && ufukData.length > 2) p = ufukData;
+    return p && p.length > 2 ? p : null;
+  }
+  function hzAlt(p, az) {
+    const n = p.length;
+    for (let i = 0; i < n; i++) {
+      const a = p[i], b = p[(i + 1) % n], aAz = a.az, bAz = i === n - 1 ? b.az + 360 : b.az;
+      const z = az < aAz ? az + 360 : az;
+      if (z >= aAz && z <= bAz) return bAz === aAz ? a.alt : a.alt + (b.alt - a.alt) * (z - aAz) / (bAz - aAz);
+    }
+    return p[0].alt;
+  }
+  function textCanvas(txt, color, size) {
+    const cv = document.createElement('canvas'), cx = cv.getContext('2d');
+    cx.font = '700 ' + size + 'px Syne, sans-serif'; const w = Math.ceil(cx.measureText(txt).width) + 6;
+    cv.width = w; cv.height = size + 6; cx.font = '700 ' + size + 'px Syne, sans-serif';
+    cx.fillStyle = color; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+    cx.shadowColor = '#000'; cx.shadowBlur = 4; cx.fillText(txt, w / 2, (size + 6) / 2);
+    return cv;
+  }
+  function drawHorizon() {
+    if (!hzOverlay) return;
+    hzOverlay.removeAll(); cardCat.removeAll();
+    if (!S.horizon) return;
+    const d = now(), L = loc(), line = [];
+    for (let az = 0; az <= 360; az += 2) line.push(altaz2radec(0, az, d, L));
+    hzOverlay.add(A.polyline(line, { color: '#89ddff', lineWidth: 2.5 }));
+    const p = hzProfile();
+    if (p) {
+      const pl = []; for (let az = 0; az <= 360; az += 1) pl.push(altaz2radec(Math.max(0, hzAlt(p, az)), az, d, L));
+      hzOverlay.add(A.polyline(pl, { color: '#f78c6c', lineWidth: 2 }));
+    }
+    if (S.altaz) {
+      for (const alt of [30, 60]) { const c = []; for (let az = 0; az <= 360; az += 3) c.push(altaz2radec(alt, az, d, L)); hzOverlay.add(A.polyline(c, { color: 'rgba(137,221,255,.35)', lineWidth: 1 })); }
+      for (let az = 0; az < 360; az += 45) { const m = []; for (let alt = 0; alt <= 88; alt += 4) m.push(altaz2radec(alt, az, d, L)); hzOverlay.add(A.polyline(m, { color: 'rgba(137,221,255,.25)', lineWidth: 1 })); }
+    }
+    const names = _lang === 'EN' ? ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'] : ['K', 'KD', 'D', 'GD', 'G', 'GB', 'B', 'KB'];
+    const src = names.map((n, i) => { const [ra, dec] = altaz2radec(2.5, i * 45, d, L); return A.source(ra, dec, { _cv: textCanvas(n, i % 2 ? '#89ddff' : '#ffcb6b', i % 2 ? 13 : 18) }); });
+    const [zr, zd] = altaz2radec(90, 0, d, L);
+    src.push(A.source(zr, zd, { _cv: textCanvas('✛ ' + T('Zenit', 'Zenith'), 'rgba(137,221,255,.8)', 11) }));
+    cardCat.addSources(src);
+  }
+  // Ufku yatay tut: zenit yönü ekranın üstüne gelsin
+  function orient() {
+    if (!aladin || !S.horizon || !S.horizonUp) return;
+    const [ra1, de1] = aladin.getRaDec(), [ra2, de2] = altaz2radec(90, 0, now(), loc());
+    const a1 = ra1 * D2R, d1 = de1 * D2R, a2 = ra2 * D2R, d2 = de2 * D2R;
+    const dist = Math.acos(Math.max(-1, Math.min(1, Math.sin(d1) * Math.sin(d2) + Math.cos(d1) * Math.cos(d2) * Math.cos(a2 - a1))));
+    if (dist < 0.5 * D2R) return; // tam zenitteyken yön tanımsız
+    const pa = Math.atan2(Math.sin(a2 - a1) * Math.cos(d2), Math.cos(d1) * Math.sin(d2) - Math.sin(d1) * Math.cos(d2) * Math.cos(a2 - a1)) * R2D;
+    const rot = ((-pa % 360) + 360) % 360;
+    if (Math.abs(((aladin.getRotation() - rot + 540) % 360) - 180) > 0.2) aladin.setRotation(rot);
+  }
+  function scheduleOrient() { if (orientRaf) return; orientRaf = requestAnimationFrame(() => { orientRaf = 0; orient(); }); }
+  function look(az, alt) {
+    if (!aladin) return;
+    const [ra, dec] = altaz2radec(alt == null ? 40 : alt, az, now(), loc());
+    aladin.gotoRaDec(ra, dec); if (aladin.getFov()[0] < 60) aladin.setFoV(110);
+    orient();
+  }
+  function refreshTime() {
+    const d = now(), L = loc();
+    const fmt = d.toLocaleString(_lang === 'EN' ? 'en-GB' : 'tr-TR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    $('skyTimeLbl').textContent = fmt + (timeOffset ? '' : ' · ' + T('şimdi', 'now'));
+    $('skyNow').classList.toggle('on', timeOffset === 0);
+    $('skyLocLbl').textContent = (L.name && L.name !== 'Özel' ? L.name + ' · ' : '') + Math.abs(L.lat).toFixed(2) + '°' + (L.lat >= 0 ? (_lang === 'EN' ? 'N' : 'K') : (_lang === 'EN' ? 'S' : 'G')) + ' ' + Math.abs(L.lon).toFixed(2) + '°' + (L.lon >= 0 ? (_lang === 'EN' ? 'E' : 'D') : (_lang === 'EN' ? 'W' : 'B'));
+    drawHorizon(); orient(); drawFootprints();
+    if (cardId) fillCardPos();
+  }
+  function timeShift(min) { timeOffset = +min; refreshTime(); }
+  function timeNow() { timeOffset = 0; $('skyTimeSl').value = 0; refreshTime(); }
+  function setHorizon(v) { S.horizon = v; saveS(); refreshTime(); if (!v && aladin) aladin.setRotation(0); }
+  function setHorizonUp(v) { S.horizonUp = v; saveS(); if (v) orient(); else if (aladin) aladin.setRotation(0); }
+  function setAltaz(v) { S.altaz = v; saveS(); drawHorizon(); }
+  // Konum
+  function locEdit() {
+    const b = $('skyLocBox'), L = loc();
+    if (b.style.display === 'block') { b.style.display = 'none'; return; }
+    $('skyLocLat').value = L.lat.toFixed(4); $('skyLocLon').value = L.lon.toFixed(4); $('skyLocMsg').textContent = '';
+    b.style.display = 'block';
+  }
+  function setLoc(lat, lon, name) {
+    if (typeof saveLocation === 'function') {
+      saveLocation(name || 'Özel', lat, lon);
+      try { const sel = document.getElementById('locationSelect'); if (sel && (name || 'Özel') === 'Özel') { sel.value = 'Özel'; document.getElementById('customCoords').style.display = 'flex'; document.getElementById('customLat').value = lat; document.getElementById('customLon').value = lon; } } catch (e) { }
+    } else { window.OBS_LAT = lat; window.OBS_LON = lon; }
+    $('skyLocBox').style.display = 'none'; refreshTime(); look(loc().lat >= 0 ? 180 : 0, 40);
+  }
+  function locApply() {
+    const lat = parseFloat($('skyLocLat').value), lon = parseFloat($('skyLocLon').value);
+    if (!(lat >= -90 && lat <= 90) || !(lon >= -180 && lon <= 180)) { $('skyLocMsg').textContent = T('Geçerli enlem/boylam gir', 'Enter a valid latitude/longitude'); return; }
+    setLoc(lat, lon);
+  }
+  function locGeo() {
+    if (!navigator.geolocation) { $('skyLocMsg').textContent = T('Tarayıcı konum vermiyor', 'Browser has no geolocation'); return; }
+    $('skyLocMsg').textContent = T('Konum alınıyor…', 'Getting location…');
+    navigator.geolocation.getCurrentPosition(
+      p => setLoc(+p.coords.latitude.toFixed(4), +p.coords.longitude.toFixed(4)),
+      e => { $('skyLocMsg').textContent = T('Konum alınamadı: ', 'Could not get location: ') + e.message; },
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+  }
+  function loadHzFile(f) {
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      const pts = typeof parseUFUK === 'function' ? parseUFUK(String(r.result)) : [];
+      if (pts.length < 3) { status(T('Ufuk dosyası okunamadı', 'Could not read horizon file'), 'warn'); return; }
+      try { localStorage.setItem('sky_horizon', JSON.stringify(pts)); } catch (e) { }
+      status(T('Ufuk profili yüklendi: ', 'Horizon profile loaded: ') + pts.length + T(' nokta', ' points'), 'ok'); drawHorizon();
+    };
+    r.readAsText(f);
+  }
+  function clearHz() { try { localStorage.removeItem('sky_horizon'); } catch (e) { } drawHorizon(); status(T('Ufuk profili kaldırıldı', 'Horizon profile removed'), 'ok'); }
+
+  // ═══ Fotoğraf kartı + büyütme ═══
+  let cardId = null;
+  function showCard(id, go) {
+    const it = items.find(i => i.id === id); if (!it) return;
+    cardId = id; selectedId = id; renderList(); drawFootprints();
+    const m = it.meta || {};
+    $('skyCardImg').src = it._thumbUrl || '';
+    $('skyCardTitle').textContent = m.object || it.name;
+    $('skyCardSub').textContent = [m.filter, m.exptime ? Math.round(m.exptime) + 's' : '', (m.dateObs || '').slice(0, 10), m.telescope].filter(Boolean).join(' · ') || it.name;
+    $('skyCardShow').textContent = it.visible && it.wcs ? T('Gökyüzünden kaldır', 'Hide on sky') : T('Gökyüzüne yerleştir', 'Show on sky');
+    fillCardPos();
+    $('skyCard').style.display = 'block';
+    if (go && it.wcs && aladin) { const c = center(it.wcs); aladin.gotoRaDec(c[0], c[1]); }
+  }
+  function fillCardPos() {
+    const it = items.find(i => i.id === cardId); if (!it) return;
+    if (!it.wcs) { $('skyCardPos').textContent = T('Konumu yok — elle yerleştir', 'No position — place it manually'); return; }
+    const c = center(it.wcs), [alt, az] = radec2altaz(c[0], c[1], now(), loc());
+    const up = alt > 0, hp = hzProfile(), blocked = up && hp && alt < hzAlt(hp, az);
+    $('skyCardPos').innerHTML = fmtRA(c[0]) + ' ' + fmtDec(c[1]) + '<br>' + (timeOffset ? T('O saatte', 'At that time') : T('Şu an', 'Now')) + ': ' + T('yükseklik', 'alt') + ' ' + alt.toFixed(0) + '° · az ' + az.toFixed(0) + '° — '
+      + '<b style="color:' + (up && !blocked ? 'var(--green)' : 'var(--danger)') + '">' + (!up ? T('ufkun altında', 'below horizon') : blocked ? T('ufuk engelinin arkasında', 'behind your horizon') : T('ufkun üstünde', 'above horizon')) + '</b>';
+  }
+  function cardClose() { $('skyCard').style.display = 'none'; cardId = null; selectedId = null; renderList(); drawFootprints(); }
+  function cardZoom() {
+    const it = items.find(i => i.id === cardId); if (!it) return;
+    const lb = $('skyLight'), im = $('skyLightImg');
+    im.src = blobUrl(it); im.classList.remove('full');
+    $('skyLightCap').textContent = ((it.meta && it.meta.object) || it.name) + ' · ' + (it.origW || it.width) + '×' + (it.origH || it.height) + ' px';
+    lb.style.display = 'flex';
+  }
+  function lightClose() { $('skyLight').style.display = 'none'; }
+  async function cardToggle() { if (!cardId) return; await toggle(cardId); showCard(cardId); }
+  function cardGo() { if (cardId) select(cardId, true); }
+
   // ─── Aç / kapat ───
   async function open() {
     $('skyView').classList.add('open'); document.body.classList.add('sky-open');
@@ -2909,12 +3185,13 @@ const SKY = (() => {
       const all = await dbAll().catch(() => []);
       items = all.map(it => Object.assign(it, { _thumbUrl: it.thumb ? URL.createObjectURL(it.thumb) : '' }));
       for (const it of items) if (it.wcs && it.visible) await showLayer(it);
-      const last = items.filter(i => i.wcs).sort((a, b) => (b.created || 0) - (a.created || 0))[0];
-      if (last) select(last.id, true);
+      // açılışta: bulunduğun yerden, şu anki gökyüzü
+      if (S.horizon) look(loc().lat >= 0 ? 180 : 0, 40);
     }
-    renderList(); drawFootprints(); drawFov();
+    renderList(); refreshTime(); drawFov();
+    clearInterval(liveTimer); liveTimer = setInterval(() => { if ($('skyView').classList.contains('open')) refreshTime(); }, 60000);
   }
-  function close() { $('skyView').classList.remove('open'); document.body.classList.remove('sky-open'); if (placing) placeCancel(); }
+  function close() { $('skyView').classList.remove('open'); document.body.classList.remove('sky-open'); if (placing) placeCancel(); clearInterval(liveTimer); lightClose(); }
 
   function applyLabels() {
     const q = (s, f) => document.querySelectorAll(s).forEach(f);
@@ -2925,6 +3202,8 @@ const SKY = (() => {
     $('skySurvey').value = S.survey; $('skyProj').value = S.projection; $('skyFrame').value = S.frame;
     $('skyGrid').checked = S.grid; $('skyAtlas').checked = S.atlas; $('skyFp').checked = S.footprints; $('skyFovChk').checked = S.fov;
     $('skyMax').value = S.maxDim; $('skyStretch').value = S.stretch; $('skyLinked').checked = S.linked;
+    $('skyHz').checked = S.horizon; $('skyHzUp').checked = S.horizonUp; $('skyAltaz').checked = S.altaz;
+    if (aladin) refreshTime();
     $('skyFovRot').value = S.fovRot; $('skyFovRotV').textContent = S.fovRot + '°'; $('skyFovRow').style.display = S.fov ? 'flex' : 'none';
     renderList();
   }
@@ -2936,15 +3215,18 @@ const SKY = (() => {
     ['dragleave', 'drop'].forEach(ev => v.addEventListener(ev, e => { e.preventDefault(); if (ev === 'drop' || e.target === v) z.classList.remove('hover'); }));
     v.addEventListener('drop', e => { z.classList.remove('hover'); if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
     $('skyFile').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('skyView').classList.contains('open')) { if (placing) placeCancel(); else close(); } });
+    $('skyHzFile').addEventListener('change', e => { loadHzFile(e.target.files[0]); e.target.value = ''; });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('skyView').classList.contains('open')) { if ($('skyLight').style.display === 'flex') lightClose(); else if (placing) placeCancel(); else if (cardId) cardClose(); else close(); } });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initDrop); else initDrop();
 
   return {
     open, close, addFiles, select, toggle, opacity, remove, place, showAll, goto,
     placePreview, placeRot, placeNudge, placeFromView, placeResolve, placeSave, placeCancel,
+    card: showCard, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
+    setHorizon, setHorizonUp, setAltaz,
     setSurvey, setProjection, setFrame, setGrid, setAtlas, setFootprints, setFov, setFovRot, setOpt, applyLabels,
-    _debug: () => ({ aladin, items, S, pix2sky, makeWcs })
+    _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now })
   };
 })();
 
