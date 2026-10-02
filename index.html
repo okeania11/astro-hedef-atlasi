@@ -319,11 +319,12 @@ body.sky-open{overflow:hidden}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.5</div>
+      <div class="subtitle" id="mainSubtitle" onclick="showNews()" style="cursor:pointer" title="Yenilikler">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.5</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
       <!--/SKY:btn--><button id="themeToggle" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Tema değiştir">☀️</button>
+      <button id="newsBtn" onclick="showNews()" style="position:relative;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Sürüm yenilikleri">Yenilikler<span id="newsDot" style="display:none;position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--accent)"></span></button>
       <button id="langToggle" onclick="toggleLang()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer;letter-spacing:1px" title="Switch language / Dil değiştir">🇬🇧 EN</button>
     </div>
   </header>
@@ -499,6 +500,18 @@ body.sky-open{overflow:hidden}
 </div>
 
 
+  <!-- Yenilikler -->
+  <div class="modal-overlay" id="newsModal" onclick="closeNews()">
+    <div class="modal" style="max-width:620px;max-height:80vh;display:flex;flex-direction:column" onclick="event.stopPropagation()">
+      <h3 style="margin-bottom:10px">Yenilikler</h3>
+      <div id="newsBody" style="overflow:auto;font-size:12px;line-height:1.6;color:var(--text)">Yükleniyor…</div>
+      <div class="modal-actions" style="justify-content:space-between;align-items:center">
+        <a href="https://github.com/okeania11/astro-hedef-atlasi/releases" target="_blank" rel="noopener" style="font-size:11px;color:var(--text2)">GitHub sürümleri ↗</a>
+        <button class="btn-cancel" onclick="closeNews()">Kapat</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Gece eğrisi büyük -->
   <div class="modal-overlay" id="curveModal" onclick="closeCurve()">
     <div class="modal" style="max-width:690px;text-align:center" onclick="event.stopPropagation()">
@@ -525,7 +538,7 @@ body.sky-open{overflow:hidden}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.5
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; <a href="#" onclick="showNews();return false" style="color:inherit" title="Yenilikler">v0.7.5</a>
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -1506,6 +1519,24 @@ function showCurveBig(name){
   m.querySelector('.curve-host').innerHTML=curveSVG(r,Math.min(640,window.innerWidth-60),300,true);
   m.classList.add('open');
 }
+// ─── Yenilikler (CHANGELOG.md tek kaynak) ─────────────────────────────────────
+const APP_VER='0.7.5';
+function esc(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+async function showNews(){
+  const m=document.getElementById('newsModal'),b=document.getElementById('newsBody');m.classList.add('open');
+  try{localStorage.setItem('seen_ver',APP_VER);}catch(e){}document.getElementById('newsDot').style.display='none';
+  try{
+    const md=await (await fetch('CHANGELOG.md',{cache:'no-cache'})).text();
+    let h='',open=false;
+    for(const ln of md.split('\n')){
+      if(ln.startsWith('## ')){if(open)h+='</ul>';h+='<div style="font-family:Syne,sans-serif;font-weight:700;color:var(--accent);margin:12px 0 4px">'+esc(ln.slice(3))+'</div><ul style="margin:0;padding-left:18px">';open=true;}
+      else if(ln.startsWith('- ')&&open)h+='<li style="margin:2px 0">'+esc(ln.slice(2)).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</li>';
+    }
+    b.innerHTML=h+(open?'</ul>':'');
+  }catch(e){b.textContent='Yenilikler yüklenemedi (çevrimdışı olabilir).';}
+}
+function closeNews(){document.getElementById('newsModal').classList.remove('open');}
+try{if(localStorage.getItem('seen_ver')!==APP_VER)document.addEventListener('DOMContentLoaded',()=>{const d=document.getElementById('newsDot');if(d)d.style.display='block';});}catch(e){}
 function closeCurve(){document.getElementById('curveModal').classList.remove('open');}
 setInterval(()=>{if(_markLive&&currentDateUTC0h)refreshSparks();},60000);
 

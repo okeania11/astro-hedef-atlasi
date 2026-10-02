@@ -1,5 +1,5 @@
-const CACHE = 'astro-atlas-v075';
-const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE = 'astro-atlas-v075b';
+const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './CHANGELOG.md'];
 // Gökyüzüm için Aladin Lite kitaplığı da önbelleğe alınır; gökyüzü karoları (HiPS) alınmaz,
 // yoksa önbellek sınırsız büyür.
 const EXTRA = url => url.startsWith('https://cdn.jsdelivr.net/npm/aladin-lite@');
