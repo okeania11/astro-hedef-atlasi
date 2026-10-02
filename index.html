@@ -3284,6 +3284,8 @@ const SKY = (() => {
   }
   const JUNK = new Set(['ha', 'h', 'alpha', 'oiii', 'o3', 'sii', 's2', 'sho', 'hoo', 'hos', 'lrgb', 'rgb', 'l', 'r', 'g', 'b', 'lum', 'luminance', 'uv', 'ir', 'uvir', 'lpro', 'lextreme', 'extreme', 'lenhance', 'enhance', 'cls', 'final', 'son', 'crop', 'cropped', 'credited', 'credit', 'edit', 'edited', 'session', 'sessions', 'process', 'processed', 'stack', 'stacked', 'master', 'light', 'drizzle', 'mosaic', 'mozaik', 'panel', 'starless', 'stars', 'yildizlar', 'yildizsiz', 'jpg', 'tif', 'tiff', 'png', 'version', 'ver', 'new', 'yeni', 'hubble', 'palette', 'csc', 'lpc', 'cbg', 'nb', 'bb', 'osc', 'mono', 'gece', 'night', 'nights', 'copy', 'kopya', 'web', 'small', 'full', 'hq', 'export']);
   function cleanName(text) {
+    const cid = String(text || '').match(/\b(M|NGC|IC|Sh2|SH2|LBN|LDN|vdB|Abell|Barnard|Ced|Cr|Mel|Arp|UGC|PGC)[\s_-]*(\d{1,5})/i);
+    if (cid) return cid[1].toUpperCase().replace('SH2', 'Sh2').replace('ABELL', 'Abell').replace('BARNARD', 'Barnard') + ' ' + cid[2];
     return String(text || '').replace(/\.[a-z0-9]{2,5}$/i, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([a-zA-Z])(\d)/g, '$1 $2').replace(/[_\-.+()\[\]]+/g, ' ')
       .split(/\s+/).filter(w => w && !/^\d+$/.test(w) && !/^v\d+$/i.test(w) && !/^\d+x$/i.test(w) && !JUNK.has(norm(w).replace(/\s/g, ''))).join(' ').trim();
   }
@@ -3382,7 +3384,15 @@ const SKY = (() => {
     const base = await lumOf(it, 1400), k = base.w / it.width;
     const sHint = hint.scale ? hint.scale / k : null; // lum görüntüsü ölçeği
     const diag = Math.hypot(base.w, base.h) / 2 / 3600;
-    const radii = sHint ? [Math.max(0.15, sHint * diag * 1.15)] : [0.3, 0.6, 1.2, 2.5, 5, 10];
+    // Ölçek bilinmiyorsa: önce kullanıcının kurulumlarının alanları, sonra genel bir dizi
+    let radii;
+    if (sHint) radii = [Math.max(0.15, sHint * diag * 1.15)];
+    else {
+      const pri = [];
+      try { for (const st of (typeof setups !== 'undefined' ? setups : [])) if (st.focalLength && st.sensorW) { const hd = Math.hypot(st.sensorW, st.sensorH || st.sensorW * 0.66) / st.focalLength * R2D / 2; pri.push(hd * 1.1, hd * 0.75); } } catch (e) { }
+      radii = [];
+      for (const r0 of pri.concat([0.3, 0.6, 1.2, 1.8, 2.5, 3.5, 5, 10])) if (r0 > 0.08 && r0 < 15 && radii.every(q => Math.abs(q - r0) / r0 > 0.2)) radii.push(r0);
+    }
     let last = null;
     for (const r of radii) {
       say(T('Yıldız kataloğu alınıyor', 'Fetching star catalogue') + ' (r=' + r.toFixed(2) + '°)…');
@@ -3450,7 +3460,7 @@ const SKY = (() => {
     if (!(it.meta && it.meta.object)) {
       // adı ancak çözülen merkez o objeye yakınsa kullan (ör. "Veil" → NGC 6960 adayı, ama kare Doğu Peçe'de olabilir)
       const c = center(r.wcs), h = hints.find(x => x.label === label) || {};
-      const near = label && h.ra != null && Math.hypot((c[0] - h.ra) * Math.cos(c[1] * D2R), c[1] - h.dec) < Math.max(0.25, fovDeg(r.wcs) / 4);
+      const near = label && h.ra != null && Math.hypot((c[0] - h.ra) * Math.cos(c[1] * D2R), c[1] - h.dec) < Math.max(0.6, fovDeg(r.wcs));
       const nmGuess = near ? label.replace(/\s*\(.*\)$/, '') : cleanName(it.name);
       if (nmGuess) it.meta = Object.assign({}, it.meta, { object: nmGuess });
     }
