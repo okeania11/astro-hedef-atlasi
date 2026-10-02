@@ -1942,6 +1942,7 @@ if('serviceWorker' in navigator){
     <label class="sky-chk"><input type="checkbox" id="skyHz" onchange="SKY.setHorizon(this.checked)"><span data-tr="Ufuk" data-en="Horizon">Ufuk</span></label>
     <label class="sky-chk" data-trt="Ufku ekranda yatay tut (Stellarium gibi)" data-ent="Keep the horizon level (like Stellarium)"><input type="checkbox" id="skyHzUp" onchange="SKY.setHorizonUp(this.checked)"><span data-tr="Ufku düz tut" data-en="Level horizon">Ufku düz tut</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyGround" onchange="SKY.setGround(this.checked)"><span data-tr="Ufkun altını kapat" data-en="Hide below horizon">Ufkun altını kapat</span></label>
+    <label class="sky-chk"><input type="checkbox" id="skyCon" onchange="SKY.setConstellations(this.checked)"><span data-tr="Takımyıldızlar" data-en="Constellations">Takımyıldızlar</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyPlanets" onchange="SKY.setPlanets(this.checked)"><span data-tr="Gezegenler" data-en="Planets">Gezegenler</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyAltaz" onchange="SKY.setAltaz(this.checked)"><span data-tr="Alt-Az" data-en="Alt-Az">Alt-Az</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyGrid" onchange="SKY.setGrid(this.checked)"><span data-tr="RA/Dec" data-en="RA/Dec">RA/Dec</span></label>
@@ -2551,23 +2552,21 @@ async function readTiff(file, opt, id) {
 
 // ---------- Plate solve (ipuçlu, üçgen eşleştirme) ----------
 function detectStars(lum, w, h, maxN) {
-  // arka plan: 32 px hücre medyanları, çift doğrusal
-  const cs = 32, gx = Math.ceil(w / cs), gy = Math.ceil(h / cs), grid = new Float32Array(gx * gy);
-  const tmp = [];
-  for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) {
-    tmp.length = 0;
-    for (let y = j * cs; y < Math.min(h, (j + 1) * cs); y += 2) for (let x = i * cs; x < Math.min(w, (i + 1) * cs); x += 2) tmp.push(lum[y * w + x]);
-    tmp.sort((a, b) => a - b); grid[j * gx + i] = tmp[tmp.length >> 1] || 0;
-  }
-  const bgAt = (x, y) => {
-    const fx = Math.min(gx - 1, Math.max(0, x / cs - 0.5)), fy = Math.min(gy - 1, Math.max(0, y / cs - 0.5));
-    const x0 = Math.floor(fx), y0 = Math.floor(fy), x1 = Math.min(gx - 1, x0 + 1), y1 = Math.min(gy - 1, y0 + 1), tx = fx - x0, ty = fy - y0;
-    return (grid[y0 * gx + x0] * (1 - tx) + grid[y0 * gx + x1] * tx) * (1 - ty) + (grid[y1 * gx + x0] * (1 - tx) + grid[y1 * gx + x1] * tx) * ty;
-  };
+  // Yerel arka plan: ~17×17 kutu ortalaması (integral görüntü) — bulutsu gibi geniş yapıları siler,
+  // yıldız gibi küçük noktaları bırakır (işlenmiş/gerilmiş JPG'lerde de çalışsın diye)
+  const W1 = w + 1, I = new Float64Array(W1 * (h + 1));
+  for (let y = 0; y < h; y++) { let row = 0; for (let x = 0; x < w; x++) { row += lum[y * w + x]; I[(y + 1) * W1 + x + 1] = I[y * W1 + x + 1] + row; } }
+  const R = 8, box = (x0, y0, x1, y1) => I[y1 * W1 + x1] - I[y0 * W1 + x1] - I[y1 * W1 + x0] + I[y0 * W1 + x0];
   const res = new Float32Array(w * h);
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) res[y * w + x] = lum[y * w + x] - bgAt(x, y);
+  for (let y = 0; y < h; y++) {
+    const y0 = Math.max(0, y - R), y1 = Math.min(h, y + R + 1);
+    for (let x = 0; x < w; x++) {
+      const x0 = Math.max(0, x - R), x1 = Math.min(w, x + R + 1);
+      res[y * w + x] = lum[y * w + x] - box(x0, y0, x1, y1) / ((x1 - x0) * (y1 - y0));
+    }
+  }
   const smp = []; for (let i = 0; i < res.length; i += 7) smp.push(Math.abs(res[i]));
-  smp.sort((a, b) => a - b); const sig = Math.max(1e-6, 1.4826 * smp[smp.length >> 1]);
+  smp.sort((a, b) => a - b); const sig = Math.max(1e-4, 1.4826 * smp[smp.length >> 1]);
   const thr = 5 * sig, stars = [], m = 6;
   for (let y = m; y < h - m; y++) for (let x = m; x < w - m; x++) {
     const v = res[y * w + x]; if (v < thr) continue;
@@ -2575,14 +2574,18 @@ function detectStars(lum, w, h, maxN) {
     for (let dy = -2; dy <= 2 && isMax; dy++) for (let dx = -2; dx <= 2; dx++) { if ((dx || dy) && res[(y + dy) * w + x + dx] > v) { isMax = false; break; } }
     if (!isMax) continue;
     let cnt = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (res[(y + dy) * w + x + dx] > 2.5 * sig) cnt++;
-    if (cnt < 4) continue; // sıcak piksel
+    if (cnt < 4) continue; // sıcak piksel / gürültü
+    // yıldız gibi mi? 5 px uzaklıktaki halka tepeye göre belirgin sönük olmalı
+    let ring = 0, rn = 0;
+    for (let k = 0; k < 16; k++) { const t = k * Math.PI / 8, xx = Math.round(x + 5 * Math.cos(t)), yy = Math.round(y + 5 * Math.sin(t)); ring += res[yy * w + xx]; rn++; }
+    if (ring / rn > 0.6 * v) continue; // geniş, yayılmış yapı (bulutsu düğümü)
     let sx = 0, sy = 0, sf = 0;
     for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const q = res[(y + dy) * w + x + dx]; if (q > 0) { sx += q * (x + dx); sy += q * (y + dy); sf += q; } }
     stars.push({ x: sx / sf, y: sy / sf, f: sf, p: v });
   }
   stars.sort((a, b) => b.f - a.f);
   const out = [];
-  for (const s of stars) { if (out.every(o => (o.x - s.x) ** 2 + (o.y - s.y) ** 2 > 36)) out.push(s); if (out.length >= maxN) break; }
+  for (const st of stars) { if (out.every(o => (o.x - st.x) ** 2 + (o.y - st.y) ** 2 > 36)) out.push(st); if (out.length >= maxN) break; }
   return out;
 }
 function triangles(pts, n) {
@@ -2758,7 +2761,7 @@ const SKY = (() => {
 
   // ─── Ayarlar (tarayıcıda) ───
   const SETKEY = 'sky_settings';
-  const defaults = { v: 2, lookAz: 90, ground: true, planets: true, survey: 'P/DSS2/color', projection: 'STG', horizon: true, horizonUp: true, altaz: false, maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
+  const defaults = { v: 2, constellations: true, lookAz: 90, ground: true, planets: true, survey: 'P/DSS2/color', projection: 'STG', horizon: true, horizonUp: true, altaz: false, maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
   let S = Object.assign({}, defaults);
   let stored = {};
   try { stored = JSON.parse(localStorage.getItem(SETKEY) || '{}') || {}; Object.assign(S, stored); } catch (e) { }
@@ -3284,6 +3287,30 @@ const SKY = (() => {
     return String(text || '').replace(/\.[a-z0-9]{2,5}$/i, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([a-zA-Z])(\d)/g, '$1 $2').replace(/[_\-.+()\[\]]+/g, ' ')
       .split(/\s+/).filter(w => w && !/^\d+$/.test(w) && !/^v\d+$/i.test(w) && !/^\d+x$/i.test(w) && !JUNK.has(norm(w).replace(/\s/g, ''))).join(' ').trim();
   }
+  // Amatörlerin kullandığı takma adlar — bazıları birden fazla objeye gider; hepsi denenir, yıldızlar karar verir
+  const ALIASES = [
+    ['lobster claw', ['Sh2-157']], ['lobster', ['NGC 6357', 'Sh2-157', 'M 17']], ['war and peace', ['NGC 6357']],
+    ['pacman', ['NGC 281']], ['wizard', ['NGC 7380']], ['heart', ['IC 1805']], ['soul', ['IC 1848']], ['cocoon', ['IC 5146', 'NGC 4490']],
+    ['bubble', ['NGC 7635']], ['elephant', ['IC 1396']], ['iris', ['NGC 7023']], ['eagle', ['M 16']], ['lagoon', ['M 8']], ['trifid', ['M 20']],
+    ['omega', ['M 17']], ['swan', ['M 17']], ['crescent', ['NGC 6888']], ['tulip', ['Sh2-101']], ['flaming star', ['IC 405']], ['rosette', ['NGC 2244']],
+    ['cone', ['NGC 2264']], ['christmas tree', ['NGC 2264']], ['california', ['NGC 1499']], ['north america', ['NGC 7000']], ['pelican', ['IC 5070']],
+    ['eastern veil', ['NGC 6992']], ['western veil', ['NGC 6960']], ['veil east', ['NGC 6992']], ['veil west', ['NGC 6960']], ['pickering', ['NGC 6979']], ['veil', ['NGC 6992', 'NGC 6960', 'NGC 6979']],
+    ['cave', ['Sh2-155']], ['cigar', ['M 82']], ['bode', ['M 81']], ['whirlpool', ['M 51']], ['pinwheel', ['M 101']], ['triangulum', ['M 33']],
+    ['andromeda', ['M 31']], ['orion', ['M 42']], ['horsehead', ['B 33']], ['flame', ['NGC 2024']], ['jellyfish', ['IC 443']], ['medusa', ['Abell 21']],
+    ['ghost of cassiopeia', ['IC 63']], ['gamma cas', ['IC 63']], ['dumbbell', ['M 27']], ['ring', ['M 57']], ['owl', ['M 97']], ['helix', ['NGC 7293']],
+    ['cats eye', ['NGC 6543']], ['thors helmet', ['NGC 2359']], ['thor', ['NGC 2359']], ['seagull', ['IC 2177']], ['monkey', ['NGC 2174']], ['spaghetti', ['Sh2-240']],
+    ['fireworks', ['NGC 6946']], ['sunflower', ['M 63']], ['black eye', ['M 64']], ['phantom', ['M 74']], ['sculptor', ['NGC 253']], ['silver dollar', ['NGC 253']],
+    ['leo triplet', ['M 66']], ['markarian', ['M 86']], ['pleiades', ['M 45']], ['dolphin', ['Sh2-308']], ['shark', ['LDN 1235']], ['squid', ['Ou 4']], ['flying bat', ['Sh2-129']],
+    ['fish head', ['IC 1795']], ['pac man', ['NGC 281']], ['crab', ['M 1']], ['sombrero', ['M 104']], ['needle', ['NGC 4565']], ['cocoon galaxy', ['NGC 4490']],
+    ['running chicken', ['IC 2944']], ['prawn', ['IC 4628']], ['cat paw', ['NGC 6334']], ['cats paw', ['NGC 6334']], ['carina', ['NGC 3372']], ['tarantula', ['NGC 2070']],
+    ['witch head', ['IC 2118']], ['bernard loop', ['Sh2-276']], ['barnard loop', ['Sh2-276']], ['angelfish', ['Sh2-264']], ['meathook', ['NGC 2442']], ['wolf rayet', ['NGC 6888']],
+    ['soap bubble', ['PN G75.5+1.7']], ['wolf', ['Sh2-129']]
+  ];
+  function aliasIds(text) {
+    const n = ' ' + norm(cleanName(text)).replace(/\s+/g, ' ') + ' ', flat = n.replace(/\s/g, '');
+    for (const [k, ids] of ALIASES) { const kk = k.replace(/\s/g, ''); if (n.includes(' ' + k + ' ') || (kk.length >= 7 && flat.includes(kk))) return ids; }
+    return [];
+  }
   async function sesame(q) {
     try {
       const t = await (await fetch('https://cds.unistra.fr/cgi-bin/nph-sesame/-oI/SNV?' + encodeURIComponent(q))).text();
@@ -3295,6 +3322,8 @@ const SKY = (() => {
   // Bir isim için olası tüm konumlar (isimler belirsiz olabilir: "Lobster" → NGC 6357 ya da M 17)
   async function candidates(text) {
     const out = [], add = c => { if (c && c.ra != null && !out.some(o => Math.abs(o.dec - c.dec) < 0.5 && Math.abs(o.ra - c.ra) * Math.cos(c.dec * D2R) < 0.5)) out.push(c); };
+    // önce bilinen takma adlar (birden fazla olabilir), sonra Atlas, sonra CDS
+    for (const id of aliasIds(text)) { const l = localLookup(id); add(l && l.ra != null ? l : await sesame(id)); }
     add(localLookup(text));
     const cl = cleanName(text);
     if (cl) { add(localLookup(cl)); add(await sesame(cl)); if (!/nebula|galaxy|cluster/i.test(cl)) { add(await sesame(cl + ' Nebula')); add(await sesame(cl.split(' ')[0] + ' Nebula')); } }
@@ -3406,7 +3435,7 @@ const SKY = (() => {
       if (m.ra != null && m.dec != null) hint = { ra: m.ra, dec: m.dec };
       const scale = m.focal && m.pixsize ? 206.265 * m.pixsize * (m.xbin || 1) / m.focal * ((it.origW || it.width) / it.width) : null;
       if (hint) hint.scale = scale;
-      var hints = hint ? [hint] : (await candidates(m.object || it.name)).slice(0, 3).map(c => ({ ra: c.ra, dec: c.dec, scale, label: c.id }));
+      var hints = hint ? [hint] : (await candidates(m.object || it.name)).slice(0, 4).map(c => ({ ra: c.ra, dec: c.dec, scale, label: c.id }));
     } else var hints = [hint];
     const nm = (it.meta && it.meta.object) || it.name;
     if (!hints.length) { status(nm + ': ' + T('obje adı anlaşılamadı — yerleştirme panelinde adını yazıp 🎯 Otomatik çöz\'e bas', 'could not tell the object — type its name in the placement panel and press 🎯 Auto-solve'), 'warn'); return false; }
@@ -3505,6 +3534,37 @@ const SKY = (() => {
     g.putImageData(im, 0, 0);
   }
   function setGround(v) { S.ground = v; saveS(); drawGround(); }
+
+  // ═══ Takımyıldızlar (d3-celestial verisi, ilk açılışta indirilir) ═══
+  let conOverlay = null, conCat = null, conData = null;
+  async function drawConstellations() {
+    if (!aladin) return;
+    if (!conOverlay) {
+      conOverlay = A.graphicOverlay({ color: 'rgba(120,170,255,.55)', lineWidth: 1.2, name: T('Takımyıldızlar', 'Constellations') });
+      aladin.addOverlay(conOverlay);
+      conCat = A.catalog({ name: T('Takımyıldız adları', 'Constellation names'), sourceSize: 20, shape: s => s.data._cv });
+      aladin.addCatalog(conCat);
+    }
+    conOverlay.removeAll(); conCat.removeAll();
+    if (!S.constellations) return;
+    if (!conData) {
+      try {
+        const base = 'https://cdn.jsdelivr.net/npm/d3-celestial@0.7.35/data/';
+        const [lines, names] = await Promise.all([fetch(base + 'constellations.lines.json').then(r => r.json()), fetch(base + 'constellations.json').then(r => r.json())]);
+        conData = { lines, names };
+      } catch (e) { status(T('Takımyıldız verisi alınamadı', 'Could not load constellation data'), 'warn'); return; }
+    }
+    const ra = lon => (lon < 0 ? lon + 360 : lon);
+    for (const f of conData.lines.features) for (const seg of f.geometry.coordinates) conOverlay.add(A.polyline(seg.map(p => [ra(p[0]), p[1]]), { color: 'rgba(120,170,255,.55)', lineWidth: 1.2 }));
+    const src = [];
+    for (const f of conData.names.features) {
+      const p = f.geometry && f.geometry.coordinates; if (!p) continue;
+      const nm = (_lang === 'EN' ? f.properties.name : (f.properties.tr || f.properties.name));
+      src.push(A.source(ra(p[0]), p[1], { _cv: textCanvas(nm.toUpperCase(), 'rgba(150,185,255,.75)', 11) }));
+    }
+    conCat.addSources(src);
+  }
+  function setConstellations(v) { S.constellations = v; saveS(); drawConstellations(); }
 
   // ═══ Güneş, Ay, gezegenler ═══
   function bodyCanvas(label, color, r) {
@@ -3729,6 +3789,7 @@ const SKY = (() => {
       if (S.horizon) look(S.lookAz != null ? S.lookAz : 90);
     }
     resumeLoop(); renderList(); refreshTime(); drawFov();
+    if (!conOverlay) drawConstellations();
     clearInterval(liveTimer); liveTimer = setInterval(() => { if ($('skyView').classList.contains('open')) refreshTime(); }, 60000);
   }
   function close() { $('skyView').classList.remove('open'); document.body.classList.remove('sky-open'); if (placing) placeCancel(); clearInterval(liveTimer); lightClose(); pauseLoop(); }
@@ -3742,7 +3803,7 @@ const SKY = (() => {
     $('skySurvey').value = S.survey; $('skyProj').value = S.projection; $('skyFrame').value = S.frame;
     $('skyGrid').checked = S.grid; $('skyAtlas').checked = S.atlas; $('skyFp').checked = S.footprints; $('skyFovChk').checked = S.fov;
     $('skyMax').value = S.maxDim; $('skyStretch').value = S.stretch; $('skyLinked').checked = S.linked;
-    $('skyGround').checked = S.ground; $('skyPlanets').checked = S.planets;
+    $('skyCon').checked = S.constellations !== false; $('skyGround').checked = S.ground; $('skyPlanets').checked = S.planets;
     $('skyHz').checked = S.horizon; $('skyHzUp').checked = S.horizonUp; $('skyAltaz').checked = S.altaz;
     if (aladin) refreshTime();
     $('skyFovRot').value = S.fovRot; $('skyFovRotV').textContent = S.fovRot + '°'; $('skyFovRow').style.display = S.fov ? 'flex' : 'none';
@@ -3766,7 +3827,7 @@ const SKY = (() => {
     placePreview, placeRot, placeNudge, placeFromView, placeResolve, placeSave, placeCancel,
     solve: solveItem, placeSolve, verify, scaleTouched: () => { if (placing) placing.scaleTouched = true; },
     statusHide, card: showCard, cardVerify, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
-    setHorizon, setHorizonUp, setAltaz, setGround, setPlanets,
+    setHorizon, setHorizonUp, setAltaz, setGround, setPlanets, setConstellations,
     setSurvey, setProjection, setFrame, setGrid, setAtlas, setFootprints, setFov, setFovRot, setOpt, applyLabels,
     _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now, fetchCat, lumOf, runSolve, autoSolve })
   };
