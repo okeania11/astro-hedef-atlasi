@@ -72,3 +72,7 @@ Astro Hedef Atlası, astrofotoğrafçılar için geliştirilmiş, tamamen taray�
 
 **Developed by / Hazırlayan:** Okan Doğu - Antalya, Türkiye  
 **Project Info:** [okanizma.wordpress.com](https://okanizma.wordpress.com/astro-hedef-atlas-uygulamasi-astro-target-planner/)
+
+## Yenilikler / Changelog
+
+Sürüm notları: [CHANGELOG.md](CHANGELOG.md) · [GitHub Releases](https://github.com/okeania11/astro-hedef-atlasi/releases). Sitede sürüm numarasına ya da **Yenilikler** düğmesine tıklayınca da açılır.
