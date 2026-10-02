@@ -6,7 +6,7 @@
 - Üstteki ufuk grafiği açılır/kapanır (▸ Grafik), tercih hatırlanır.
 - Kompakt gökada, PN ve küresel kümelerde daha keskin Pan-STARRS küçük resimleri.
 - İngilizce'ye geçince tablo başlıklarının kayması düzeltildi.
-- Sürüm numarasına tıklayınca bu "Yenilikler" listesi açılır.
+- Sürüm numarasına ya da "Yenilikler" düğmesine tıklayınca bu liste açılır; aynı notlar GitHub Releases sayfasına da otomatik yazılır.
 
 ## v0.7.4 — 2 Ekim 2026
 - Gökyüzüm: fotoğraf kartında ad değiştirme; eski sürümden kalan kesik adlar ("M 96" → "M") otomatik onarılıyor.
