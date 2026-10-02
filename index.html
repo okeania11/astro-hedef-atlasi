@@ -2539,8 +2539,9 @@ const SKY = (() => {
   const SETKEY = 'sky_settings';
   const defaults = { v: 2, survey: 'P/DSS2/color', projection: 'STG', horizon: true, horizonUp: true, altaz: false, maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
   let S = Object.assign({}, defaults);
-  try { Object.assign(S, JSON.parse(localStorage.getItem(SETKEY) || '{}')); } catch (e) { }
-  if (S.v !== 2) { S.v = 2; S.projection = 'STG'; S.horizon = true; S.horizonUp = true; } // planetaryum görünümüne geçiş
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(SETKEY) || '{}') || {}; Object.assign(S, stored); } catch (e) { }
+  if (stored.v !== 2 && Object.keys(stored).length) { S.v = 2; S.projection = 'STG'; S.horizon = true; S.horizonUp = true; } // planetaryum görünümüne geçiş
   const saveS = () => { try { localStorage.setItem(SETKEY, JSON.stringify(S)); } catch (e) { } };
 
   // ─── IndexedDB ───
