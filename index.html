@@ -304,6 +304,9 @@ body.sky-open{overflow:hidden}
 }
 
 .sky-ground{position:absolute;left:0;top:0;pointer-events:none;image-rendering:auto}
+.sky-status{padding-right:30px}
+.sky-status-x{position:absolute;top:4px;right:6px;background:none;border:none;color:inherit;cursor:pointer;font-size:12px;opacity:.7}
+.sky-status-x:hover{opacity:1}
 /*/SKY:css*/
 </style>
 </head>
@@ -313,7 +316,7 @@ body.sky-open{overflow:hidden}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.2</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.3</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
@@ -506,7 +509,7 @@ body.sky-open{overflow:hidden}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.2
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.3
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -700,7 +703,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.2');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.3');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -1075,7 +1078,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.2';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.3';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1939,6 +1942,7 @@ if('serviceWorker' in navigator){
     <label class="sky-chk"><input type="checkbox" id="skyHz" onchange="SKY.setHorizon(this.checked)"><span data-tr="Ufuk" data-en="Horizon">Ufuk</span></label>
     <label class="sky-chk" data-trt="Ufku ekranda yatay tut (Stellarium gibi)" data-ent="Keep the horizon level (like Stellarium)"><input type="checkbox" id="skyHzUp" onchange="SKY.setHorizonUp(this.checked)"><span data-tr="Ufku düz tut" data-en="Level horizon">Ufku düz tut</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyGround" onchange="SKY.setGround(this.checked)"><span data-tr="Ufkun altını kapat" data-en="Hide below horizon">Ufkun altını kapat</span></label>
+    <label class="sky-chk"><input type="checkbox" id="skyCon" onchange="SKY.setConstellations(this.checked)"><span data-tr="Takımyıldızlar" data-en="Constellations">Takımyıldızlar</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyPlanets" onchange="SKY.setPlanets(this.checked)"><span data-tr="Gezegenler" data-en="Planets">Gezegenler</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyAltaz" onchange="SKY.setAltaz(this.checked)"><span data-tr="Alt-Az" data-en="Alt-Az">Alt-Az</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyGrid" onchange="SKY.setGrid(this.checked)"><span data-tr="RA/Dec" data-en="RA/Dec">RA/Dec</span></label>
@@ -1971,6 +1975,10 @@ if('serviceWorker' in navigator){
       </details>
       <div class="sky-listhead"><span id="skyCount"></span>
         <span><button class="sky-mini" onclick="SKY.showAll(true)" data-tr="Hepsi" data-en="All">Hepsi</button><button class="sky-mini" onclick="SKY.showAll(false)" data-tr="Hiçbiri" data-en="None">Hiçbiri</button></span></div>
+      <div class="sky-listhead" style="border-top:none;padding-top:0">
+        <span></span>
+        <span><button class="sky-mini" onclick="SKY.exportGallery()" data-tr="💾 Dosyaya kaydet" data-en="💾 Save to file" data-trt="Galeriyi (görüntüler + konumlar) bilgisayarına bir dosya olarak indir" data-ent="Download the gallery (images + positions) as a file">💾 Dosyaya kaydet</button><label class="sky-mini" for="skyGalFile" style="display:inline-block" data-tr="📂 Dosyadan yükle" data-en="📂 Load file">📂 Dosyadan yükle</label></span></div>
+      <input type="file" id="skyGalFile" accept=".json" style="display:none">
       <div id="skyList" class="sky-list"></div>
     </aside>
     <main class="sky-main">
@@ -2548,23 +2556,21 @@ async function readTiff(file, opt, id) {
 
 // ---------- Plate solve (ipuçlu, üçgen eşleştirme) ----------
 function detectStars(lum, w, h, maxN) {
-  // arka plan: 32 px hücre medyanları, çift doğrusal
-  const cs = 32, gx = Math.ceil(w / cs), gy = Math.ceil(h / cs), grid = new Float32Array(gx * gy);
-  const tmp = [];
-  for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) {
-    tmp.length = 0;
-    for (let y = j * cs; y < Math.min(h, (j + 1) * cs); y += 2) for (let x = i * cs; x < Math.min(w, (i + 1) * cs); x += 2) tmp.push(lum[y * w + x]);
-    tmp.sort((a, b) => a - b); grid[j * gx + i] = tmp[tmp.length >> 1] || 0;
-  }
-  const bgAt = (x, y) => {
-    const fx = Math.min(gx - 1, Math.max(0, x / cs - 0.5)), fy = Math.min(gy - 1, Math.max(0, y / cs - 0.5));
-    const x0 = Math.floor(fx), y0 = Math.floor(fy), x1 = Math.min(gx - 1, x0 + 1), y1 = Math.min(gy - 1, y0 + 1), tx = fx - x0, ty = fy - y0;
-    return (grid[y0 * gx + x0] * (1 - tx) + grid[y0 * gx + x1] * tx) * (1 - ty) + (grid[y1 * gx + x0] * (1 - tx) + grid[y1 * gx + x1] * tx) * ty;
-  };
+  // Yerel arka plan: ~17×17 kutu ortalaması (integral görüntü) — bulutsu gibi geniş yapıları siler,
+  // yıldız gibi küçük noktaları bırakır (işlenmiş/gerilmiş JPG'lerde de çalışsın diye)
+  const W1 = w + 1, I = new Float64Array(W1 * (h + 1));
+  for (let y = 0; y < h; y++) { let row = 0; for (let x = 0; x < w; x++) { row += lum[y * w + x]; I[(y + 1) * W1 + x + 1] = I[y * W1 + x + 1] + row; } }
+  const R = 8, box = (x0, y0, x1, y1) => I[y1 * W1 + x1] - I[y0 * W1 + x1] - I[y1 * W1 + x0] + I[y0 * W1 + x0];
   const res = new Float32Array(w * h);
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) res[y * w + x] = lum[y * w + x] - bgAt(x, y);
+  for (let y = 0; y < h; y++) {
+    const y0 = Math.max(0, y - R), y1 = Math.min(h, y + R + 1);
+    for (let x = 0; x < w; x++) {
+      const x0 = Math.max(0, x - R), x1 = Math.min(w, x + R + 1);
+      res[y * w + x] = lum[y * w + x] - box(x0, y0, x1, y1) / ((x1 - x0) * (y1 - y0));
+    }
+  }
   const smp = []; for (let i = 0; i < res.length; i += 7) smp.push(Math.abs(res[i]));
-  smp.sort((a, b) => a - b); const sig = Math.max(1e-6, 1.4826 * smp[smp.length >> 1]);
+  smp.sort((a, b) => a - b); const sig = Math.max(1e-4, 1.4826 * smp[smp.length >> 1]);
   const thr = 5 * sig, stars = [], m = 6;
   for (let y = m; y < h - m; y++) for (let x = m; x < w - m; x++) {
     const v = res[y * w + x]; if (v < thr) continue;
@@ -2572,14 +2578,25 @@ function detectStars(lum, w, h, maxN) {
     for (let dy = -2; dy <= 2 && isMax; dy++) for (let dx = -2; dx <= 2; dx++) { if ((dx || dy) && res[(y + dy) * w + x + dx] > v) { isMax = false; break; } }
     if (!isMax) continue;
     let cnt = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (res[(y + dy) * w + x + dx] > 2.5 * sig) cnt++;
-    if (cnt < 4) continue; // sıcak piksel
+    if (cnt < 4) continue; // sıcak piksel / gürültü
+    // yıldız gibi mi? 5 px uzaklıktaki halka tepeye göre belirgin sönük olmalı
+    let ring = 0, rn = 0;
+    for (let k = 0; k < 16; k++) { const t = k * Math.PI / 8, xx = Math.round(x + 5 * Math.cos(t)), yy = Math.round(y + 5 * Math.sin(t)); ring += res[yy * w + xx]; rn++; }
+    if (ring / rn > 0.6 * v) continue; // geniş, yayılmış yapı (bulutsu düğümü)
     let sx = 0, sy = 0, sf = 0;
     for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const q = res[(y + dy) * w + x + dx]; if (q > 0) { sx += q * (x + dx); sy += q * (y + dy); sf += q; } }
-    stars.push({ x: sx / sf, y: sy / sf, f: sf, p: v });
+    const cx = sx / sf, cy = sy / sf;
+    // yuvarlaklık: yazı/logo çizgileri ve uydu izleri uzun, yıldızlar yuvarlak
+    let mxx = 0, myy = 0, mxy = 0;
+    let mn = 0;
+    for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const q = res[(y + dy) * w + x + dx]; if (q > 2 * sig) { const ux = x + dx - cx, uy = y + dy - cy; mxx += q * ux * ux; myy += q * uy * uy; mxy += q * ux * uy; mn++; } }
+    const el = mn >= 5 ? Math.sqrt((mxx - myy) ** 2 + 4 * mxy * mxy) / Math.max(1e-9, mxx + myy) : 0;
+    if (el > 0.6) continue;
+    stars.push({ x: cx, y: cy, f: sf, p: v });
   }
   stars.sort((a, b) => b.f - a.f);
   const out = [];
-  for (const s of stars) { if (out.every(o => (o.x - s.x) ** 2 + (o.y - s.y) ** 2 > 36)) out.push(s); if (out.length >= maxN) break; }
+  for (const st of stars) { if (out.every(o => (o.x - st.x) ** 2 + (o.y - st.y) ** 2 > 36)) out.push(st); if (out.length >= maxN) break; }
   return out;
 }
 function triangles(pts, n) {
@@ -2610,12 +2627,16 @@ function simil(src, dst, par) { // karmaşık benzerlik: dst = α·src' + β (sr
   return { ar, ai, par, bx: wx - (ar * zx - ai * zy), by: wy - (ai * zx + ar * zy), scale: Math.hypot(ar, ai) };
 }
 const applyS = (T, x, y) => { const yy = T.par * y; return [T.ar * x - T.ai * yy + T.bx, T.ai * x + T.ar * yy + T.by]; };
-function countIn(T, img, cat, tol) {
-  let n = 0; const used = new Set(), pairs = [];
+// katalog x'e göre sıralı tutulur → en yakın komşu araması ikili arama ile
+function sortedCat(cat) { const idx = cat.map((c, i) => i).sort((i, j) => cat[i][0] - cat[j][0]); return { idx, xs: idx.map(i => cat[i][0]), cat }; }
+function countIn(T, img, sc, tol) {
+  const { idx, xs, cat } = sc; let n = 0; const used = new Set(), pairs = [];
   for (let i = 0; i < img.length; i++) {
     const [u, v] = applyS(T, img[i][0], img[i][1]);
+    let lo = 0, hi = xs.length; const x0 = u - tol;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (xs[m] < x0) lo = m + 1; else hi = m; }
     let bj = -1, bd = tol * tol;
-    for (let j = 0; j < cat.length; j++) { const dd = (cat[j][0] - u) ** 2 + (cat[j][1] - v) ** 2; if (dd < bd && !used.has(j)) { bd = dd; bj = j; } }
+    for (let k = lo; k < xs.length && xs[k] <= u + tol; k++) { const j = idx[k]; const dd = (cat[j][0] - u) ** 2 + (cat[j][1] - v) ** 2; if (dd < bd && !used.has(j)) { bd = dd; bj = j; } }
     if (bj >= 0) { used.add(bj); n++; pairs.push([i, bj]); }
   }
   return { n, pairs };
@@ -2639,18 +2660,25 @@ function fitAffine(img, cat, pairs) { // ξ = a x + b y + c ; η = d x + e y + f
   return { a, b, c, d, e, f };
 }
 function plateSolve(job) {
-  const { lum, w, h, cat, scaleHint } = job; // cat: [[ξ″, η″, mag]] (parlaktan sönüğe)
-  const stars = detectStars(lum, w, h, 80);
+  const { lum, w, h, cat, scaleHint, init } = job; // cat: [[ξ″, η″, mag]] (parlaktan sönüğe)
+  const stars = detectStars(lum, w, h, 160);
   if (stars.length < 6) return { ok: false, why: 'Yeterli yıldız bulunamadı (' + stars.length + ')' };
   // görüntü: FITS benzeri koordinat (x sağa, y yukarı)
   const img = stars.map(s => [s.x + 1, h - s.y]);
-  const NI = Math.min(25, img.length), NC = Math.min(50, cat.length);
+  let pairs, A = null;
+  if (init) { // bilinen yaklaşık çözümden başla (derin katalogla iyileştirme)
+    A = init; pairs = null;
+  } else {
+  const NI = Math.min(30, img.length), NC = Math.min(60, cat.length);
   const ti = triangles(img, NI), tc = triangles(cat, NC);
   const Q = 0.01, hash = new Map();
   for (const t of tc) { const k = Math.round(t.r1 / Q) + ',' + Math.round(t.r2 / Q); (hash.get(k) || hash.set(k, []).get(k)).push(t); }
   const smin = scaleHint ? scaleHint * 0.6 : 0.05, smax = scaleHint ? scaleHint * 1.6 : 400;
   const diag = Math.hypot(w, h);
   let best = null, tried = 0;
+  ti.sort((a, b) => b.a - a.a); // büyük üçgenler önce (daha kararlı)
+  const img15 = img.slice(0, 25), catQ = sortedCat(cat.slice(0, 120));
+  outer:
   for (const t of ti) {
     if (t.a < diag * 0.08) continue;
     const kx = Math.round(t.r1 / Q), ky = Math.round(t.r2 / Q);
@@ -2661,38 +2689,42 @@ function plateSolve(job) {
         const scale = c.a / t.a; if (scale < smin || scale > smax) continue;
         const par = c.s === t.s ? 1 : -1;
         const T = simil(t.v.map(i => img[i]), c.v.map(j => cat[j]), par);
-        if (++tried > 40000) break;
+        if (++tried > 120000) break outer;
         const tol = Math.max(3 * T.scale, 1.5);
-        const r = countIn(T, img.slice(0, 40), cat.slice(0, 90), tol);
+        // hızlı ön eleme: en parlak 15 yıldızdan en az 4'ü tutmalı
+        if (countIn(T, img15, catQ, tol).n < 3) continue;
+        const r = countIn(T, img.slice(0, 45), catQ, tol);
         if (!best || r.n > best.n) best = { n: r.n, T, pairs: r.pairs };
       }
     }
     if (best && best.n >= 14) break;
   }
-  if (!best || best.n < 6) return { ok: false, why: 'Eşleşme bulunamadı' + (best ? ' (en iyi ' + best.n + ' yıldız)' : ''), stars: stars.length };
+  if (!best || best.n < 5) return { ok: false, why: 'Eşleşme bulunamadı' + (best ? ' (en iyi ' + best.n + ' yıldız)' : ''), stars: stars.length };
+  pairs = best.pairs;
+  }
   // iyileştir: afin uydur, tüm yıldızlarla yeniden eşle
-  let pairs = best.pairs, A = null;
   const imgAll = img, catAll = cat;
-  for (let it = 0; it < 3; it++) {
-    A = fitAffine(imgAll, catAll, pairs);
-    const sc = Math.sqrt(Math.abs(A.a * A.e - A.b * A.d)), tol = Math.max(2 * sc, 1);
+  for (let it = 0; it < 4; it++) {
+    if (pairs) A = fitAffine(imgAll, catAll, pairs);
+    const sc = Math.sqrt(Math.abs(A.a * A.e - A.b * A.d)), tol = Math.max((init && it === 0 ? 4 : 2) * sc, 1);
     const used = new Set(); pairs = [];
-    imgAll.slice(0, 80).forEach((p, i) => {
+    imgAll.slice(0, 160).forEach((p, i) => {
       const u = A.a * p[0] + A.b * p[1] + A.c, v = A.d * p[0] + A.e * p[1] + A.f;
       let bj = -1, bd = tol * tol;
       catAll.forEach((q, j) => { const dd = (q[0] - u) ** 2 + (q[1] - v) ** 2; if (dd < bd && !used.has(j)) { bd = dd; bj = j; } });
       if (bj >= 0) { used.add(bj); pairs.push([i, bj]); }
     });
-    if (pairs.length < 6) return { ok: false, why: 'İyileştirme başarısız' };
+    if (pairs.length < 5) return { ok: false, why: 'İyileştirme başarısız (' + pairs.length + ' yıldız)' };
   }
   A = fitAffine(imgAll, catAll, pairs);
   let rms = 0; for (const [i, j] of pairs) { const p = imgAll[i], u = A.a * p[0] + A.b * p[1] + A.c, v = A.d * p[0] + A.e * p[1] + A.f; rms += (u - catAll[j][0]) ** 2 + (v - catAll[j][1]) ** 2; }
   rms = Math.sqrt(rms / pairs.length);
   const scale = Math.sqrt(Math.abs(A.a * A.e - A.b * A.d));
-  if (pairs.length < 8 || rms > 3 * scale) return { ok: false, why: 'Çözüm güvenilir değil (' + pairs.length + ' yıldız, rms ' + (rms / scale).toFixed(1) + ' px)' };
+  if (rms > 2 * scale) return { ok: false, why: 'Çözüm güvenilir değil (' + pairs.length + ' yıldız, rms ' + (rms / scale).toFixed(1) + ' px)' };
   // teğet noktasının pikseli: A·p + t = 0
   const det = A.a * A.e - A.b * A.d, px = (-A.c * A.e + A.b * A.f) / det, py = (-A.a * A.f + A.d * A.c) / det;
-  return { ok: true, crpix: [px, py], cd: [[A.a / 3600, A.b / 3600], [A.d / 3600, A.e / 3600]], matched: pairs.length, rmsPx: rms / scale, scale, stars: stars.length };
+  // az eşleşme = zayıf; ana iş parçacığı derin katalogla doğrular
+  return { ok: true, weak: pairs.length < 10, crpix: [px, py], cd: [[A.a / 3600, A.b / 3600], [A.d / 3600, A.e / 3600]], affine: A, matched: pairs.length, rmsPx: rms / scale, scale, stars: stars.length };
 }
 
 // ---------- ana akış ----------
@@ -2749,7 +2781,7 @@ const SKY = (() => {
 
   // ─── Ayarlar (tarayıcıda) ───
   const SETKEY = 'sky_settings';
-  const defaults = { v: 2, lookAz: 90, ground: true, planets: true, survey: 'P/DSS2/color', projection: 'STG', horizon: true, horizonUp: true, altaz: false, maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
+  const defaults = { v: 2, constellations: true, lookAz: 90, ground: true, planets: true, survey: 'P/DSS2/color', projection: 'STG', horizon: true, horizonUp: true, altaz: false, maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
   let S = Object.assign({}, defaults);
   let stored = {};
   try { stored = JSON.parse(localStorage.getItem(SETKEY) || '{}') || {}; Object.assign(S, stored); } catch (e) { }
@@ -2769,6 +2801,7 @@ const SKY = (() => {
     return dbp;
   }
   async function dbAll() { const d = await db(); return new Promise((res, rej) => { const q = d.transaction(STORE).objectStore(STORE).getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }); }
+  try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) { } // tarayıcı yer açmak için silmesin
   async function dbPut(it) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction(STORE, 'readwrite'); t.objectStore(STORE).put(it); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
   async function dbDel(id) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction(STORE, 'readwrite'); t.objectStore(STORE).delete(id); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
 
@@ -2983,7 +3016,7 @@ const SKY = (() => {
     const el = $('skyList');
     $('skyCount').textContent = items.length ? items.length + ' ' + T('görüntü', 'images') : '';
     if (!items.length) {
-      el.innerHTML = '<div class="sky-empty">' + T('Henüz görüntü yok.<br>Plate solve edilmiş <b>XISF</b> ya da <b>FITS</b> dosyalarını yukarıya bırak.<br><br>Çözümsüz dosyaları (APP, ASIAIR) veya <b>JPG</b>\'leri de bırakabilirsin — elle yerleştirirsin.', 'No images yet.<br>Drop plate‑solved <b>XISF</b> or <b>FITS</b> files above.<br><br>Unsolved files or <b>JPG</b>s can be placed manually.') + '</div>';
+      el.innerHTML = '<div class="sky-empty">' + T('Henüz görüntü yok.<br>İşlenmiş <b>JPG / TIFF</b> ya da <b>XISF / FITS</b> dosyalarını yukarıya bırak.<br><br>Konum bilgisi olmayanlar otomatik plate solve edilir; obje adı dosya adından tahmin edilir. Olmazsa elle yerleştirebilirsin.<br><br>Görüntüler bu tarayıcıda saklanır, hiçbir yere yüklenmez.', 'No images yet.<br>Drop finished <b>JPG / TIFF</b> or <b>XISF / FITS</b> files above.<br><br>Files without a position are plate‑solved automatically; the object is guessed from the file name. Otherwise place them manually.<br><br>Images stay in this browser and are not uploaded anywhere.') + '</div>';
       return;
     }
     const sorted = items.slice().sort((a, b) => (b.created || 0) - (a.created || 0));
@@ -3128,7 +3161,7 @@ const SKY = (() => {
     const it = items.find(i => i.id === id); if (!it) return;
     const b = document.querySelector('.sky-item[data-id="' + id + '"] .sky-del');
     if (b && !b.classList.contains('confirm')) { b.classList.add('confirm'); b.textContent = T('Sil?', 'Delete?'); setTimeout(() => { if (b.isConnected) { b.classList.remove('confirm'); b.textContent = '✕'; } }, 2500); return; }
-    hideLayer(it); await dbDel(id); items = items.filter(i => i.id !== id);
+    hideLayer(it); await dbDel(id); items = items.filter(i => i.id !== id); statusHide(); $('skyInfo').innerHTML = ''; if (cardId === id) cardClose();
     if (urls.has(id)) { URL.revokeObjectURL(urls.get(id)); urls.delete(id); }
     if (selectedId === id) selectedId = null;
     renderList(); drawFootprints();
@@ -3209,9 +3242,12 @@ const SKY = (() => {
   let stT = null;
   function status(msg, kind, pct) {
     const el = $('skyStatus'); el.className = 'sky-status ' + (kind || 'info'); el.style.display = 'block';
-    el.innerHTML = esc(msg) + (pct != null && kind === 'info' ? '<div class="sky-bar"><i style="width:' + Math.max(2, pct) + '%"></i></div>' : '');
-    clearTimeout(stT); if (kind === 'ok') stT = setTimeout(() => { el.style.display = 'none'; }, 4000);
+    el.innerHTML = '<button class="sky-status-x" onclick="SKY.statusHide()" title="Kapat">✕</button>' + esc(msg) + (pct != null && kind === 'info' ? '<div class="sky-bar"><i style="width:' + Math.max(2, pct) + '%"></i></div>' : '');
+    clearTimeout(stT);
+    if (kind === 'ok') stT = setTimeout(statusHide, 5000);
+    else if (kind === 'warn' || kind === 'err') stT = setTimeout(statusHide, 15000);
   }
+  function statusHide() { clearTimeout(stT); $('skyStatus').style.display = 'none'; }
 
   // ─── Görünüm ayarları ───
   function setSurvey(v) { S.survey = v; saveS(); aladin && aladin.setImageSurvey(v); }
@@ -3269,8 +3305,34 @@ const SKY = (() => {
   }
   const JUNK = new Set(['ha', 'h', 'alpha', 'oiii', 'o3', 'sii', 's2', 'sho', 'hoo', 'hos', 'lrgb', 'rgb', 'l', 'r', 'g', 'b', 'lum', 'luminance', 'uv', 'ir', 'uvir', 'lpro', 'lextreme', 'extreme', 'lenhance', 'enhance', 'cls', 'final', 'son', 'crop', 'cropped', 'credited', 'credit', 'edit', 'edited', 'session', 'sessions', 'process', 'processed', 'stack', 'stacked', 'master', 'light', 'drizzle', 'mosaic', 'mozaik', 'panel', 'starless', 'stars', 'yildizlar', 'yildizsiz', 'jpg', 'tif', 'tiff', 'png', 'version', 'ver', 'new', 'yeni', 'hubble', 'palette', 'csc', 'lpc', 'cbg', 'nb', 'bb', 'osc', 'mono', 'gece', 'night', 'nights', 'copy', 'kopya', 'web', 'small', 'full', 'hq', 'export']);
   function cleanName(text) {
+    const cid = String(text || '').match(/\b(M|NGC|IC|Sh2|SH2|LBN|LDN|vdB|Abell|Barnard|Ced|Cr|Mel|Arp|UGC|PGC)[\s_-]*(\d{1,5})/i);
+    if (cid) return cid[1].toUpperCase().replace('SH2', 'Sh2').replace('ABELL', 'Abell').replace('BARNARD', 'Barnard') + ' ' + cid[2];
     return String(text || '').replace(/\.[a-z0-9]{2,5}$/i, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([a-zA-Z])(\d)/g, '$1 $2').replace(/[_\-.+()\[\]]+/g, ' ')
       .split(/\s+/).filter(w => w && !/^\d+$/.test(w) && !/^v\d+$/i.test(w) && !/^\d+x$/i.test(w) && !JUNK.has(norm(w).replace(/\s/g, ''))).join(' ').trim();
+  }
+  // Amatörlerin kullandığı takma adlar — bazıları birden fazla objeye gider; hepsi denenir, yıldızlar karar verir
+  const ALIASES = [
+    ['lobster claw', ['Sh2-157']], ['lobster', ['NGC 6357', 'Sh2-157', 'M 17']], ['war and peace', ['NGC 6357']],
+    ['pacman', ['NGC 281']], ['wizard', ['NGC 7380']], ['heart', ['IC 1805']], ['soul', ['IC 1848']], ['cocoon', ['IC 5146', 'NGC 4490']],
+    ['bubble', ['NGC 7635']], ['elephant', ['IC 1396']], ['iris', ['NGC 7023']], ['eagle', ['M 16']], ['lagoon', ['M 8']], ['trifid', ['M 20']],
+    ['omega', ['M 17']], ['swan', ['M 17']], ['crescent', ['NGC 6888']], ['tulip', ['Sh2-101']], ['flaming star', ['IC 405']], ['rosette', ['NGC 2244']],
+    ['cone', ['NGC 2264']], ['christmas tree', ['NGC 2264']], ['california', ['NGC 1499']], ['north america', ['NGC 7000']], ['pelican', ['IC 5070']],
+    ['eastern veil', ['NGC 6992']], ['western veil', ['NGC 6960']], ['veil east', ['NGC 6992']], ['veil west', ['NGC 6960']], ['pickering', ['NGC 6979']], ['veil', ['NGC 6992', 'NGC 6960', 'NGC 6979']],
+    ['cave', ['Sh2-155']], ['cigar', ['M 82']], ['bode', ['M 81']], ['whirlpool', ['M 51']], ['pinwheel', ['M 101']], ['triangulum', ['M 33']],
+    ['andromeda', ['M 31']], ['orion', ['M 42']], ['horsehead', ['B 33']], ['flame', ['NGC 2024']], ['jellyfish', ['IC 443']], ['medusa', ['Abell 21']],
+    ['ghost of cassiopeia', ['IC 63']], ['gamma cas', ['IC 63']], ['dumbbell', ['M 27']], ['ring', ['M 57']], ['owl', ['M 97']], ['helix', ['NGC 7293']],
+    ['cats eye', ['NGC 6543']], ['thors helmet', ['NGC 2359']], ['thor', ['NGC 2359']], ['seagull', ['IC 2177']], ['monkey', ['NGC 2174']], ['spaghetti', ['Sh2-240']],
+    ['fireworks', ['NGC 6946']], ['sunflower', ['M 63']], ['black eye', ['M 64']], ['phantom', ['M 74']], ['sculptor', ['NGC 253']], ['silver dollar', ['NGC 253']],
+    ['leo triplet', ['M 66']], ['markarian', ['M 86']], ['pleiades', ['M 45']], ['dolphin', ['Sh2-308']], ['shark', ['LDN 1235']], ['squid', ['Ou 4']], ['flying bat', ['Sh2-129']],
+    ['fish head', ['IC 1795']], ['pac man', ['NGC 281']], ['crab', ['M 1']], ['sombrero', ['M 104']], ['needle', ['NGC 4565']], ['cocoon galaxy', ['NGC 4490']],
+    ['running chicken', ['IC 2944']], ['prawn', ['IC 4628']], ['cat paw', ['NGC 6334']], ['cats paw', ['NGC 6334']], ['carina', ['NGC 3372']], ['tarantula', ['NGC 2070']],
+    ['witch head', ['IC 2118']], ['bernard loop', ['Sh2-276']], ['barnard loop', ['Sh2-276']], ['angelfish', ['Sh2-264']], ['meathook', ['NGC 2442']], ['wolf rayet', ['NGC 6888']],
+    ['soap bubble', ['PN G75.5+1.7']], ['wolf', ['Sh2-129']]
+  ];
+  function aliasIds(text) {
+    const n = ' ' + norm(cleanName(text)).replace(/\s+/g, ' ') + ' ', flat = n.replace(/\s/g, '');
+    for (const [k, ids] of ALIASES) { const kk = k.replace(/\s/g, ''); if (n.includes(' ' + k + ' ') || (kk.length >= 7 && flat.includes(kk))) return ids; }
+    return [];
   }
   async function sesame(q) {
     try {
@@ -3283,6 +3345,8 @@ const SKY = (() => {
   // Bir isim için olası tüm konumlar (isimler belirsiz olabilir: "Lobster" → NGC 6357 ya da M 17)
   async function candidates(text) {
     const out = [], add = c => { if (c && c.ra != null && !out.some(o => Math.abs(o.dec - c.dec) < 0.5 && Math.abs(o.ra - c.ra) * Math.cos(c.dec * D2R) < 0.5)) out.push(c); };
+    // önce bilinen takma adlar (birden fazla olabilir), sonra Atlas, sonra CDS
+    for (const id of aliasIds(text)) { const l = localLookup(id); add(l && l.ra != null ? l : await sesame(id)); }
     add(localLookup(text));
     const cl = cleanName(text);
     if (cl) { add(localLookup(cl)); add(await sesame(cl)); if (!/nebula|galaxy|cluster/i.test(cl)) { add(await sesame(cl + ' Nebula')); add(await sesame(cl.split(' ')[0] + ' Nebula')); } }
@@ -3298,12 +3362,18 @@ const SKY = (() => {
     try { const f = typeof tryNED === 'function' && await tryNED(q); if (f) return { id: f.id, ra: f.ra * 15, dec: f.dec, src: 'NED' }; } catch (e) { }
     return null;
   }
-  async function fetchCat(ra, dec, rad) {
+  async function fetchCat(ra, dec, rad, deep) {
     const c = encodeURIComponent(ra.toFixed(5) + ' ' + (dec >= 0 ? '+' : '') + dec.toFixed(5));
-    const url = rad <= 0.7
+    if (deep && rad > 1.0) deep = 'tyc'; // geniş alanda Gaia çok yavaş: Tycho-2 yeter
+    const url = deep === 'tyc'
+      ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/259/tyc2&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=_RAJ2000,_DEJ2000,VTmag&-sort=VTmag&-out.max=2500'
+      : deep
+      ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/355/gaiadr3&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=RA_ICRS,DE_ICRS,Gmag&Gmag=%3C' + (rad > 1.2 ? 13 : rad > 0.6 ? 15 : rad > 0.3 ? 16 : 17) + '&-out.max=4000'
+      : rad <= 0.7
       ? 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/355/gaiadr3&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=RA_ICRS,DE_ICRS,Gmag&Gmag=%3C' + (rad < 0.35 ? 16 : 14.5) + '&-out.max=3000'
       : 'https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/259/tyc2&-c=' + c + '&-c.rd=' + rad.toFixed(3) + '&-out=_RAJ2000,_DEJ2000,VTmag&-sort=VTmag&-out.max=400';
-    const t = await (await fetch(url)).text();
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 10000); // VizieR takılırsa bekleme
+    let t; try { t = await (await fetch(url, { signal: ctl.signal })).text(); } finally { clearTimeout(to); }
     const rows = [];
     for (const l of t.split('\n')) { const p = l.trim().split('\t'); if (p.length >= 3 && /^[\d.]+$/.test(p[0])) { const m = parseFloat(p[2]); rows.push([+p[0], +p[1], isFinite(m) ? m : 99]); } }
     rows.sort((a, b) => a[2] - b[2]);
@@ -3335,7 +3405,15 @@ const SKY = (() => {
     const base = await lumOf(it, 1400), k = base.w / it.width;
     const sHint = hint.scale ? hint.scale / k : null; // lum görüntüsü ölçeği
     const diag = Math.hypot(base.w, base.h) / 2 / 3600;
-    const radii = sHint ? [Math.max(0.15, sHint * diag * 1.15)] : [0.3, 0.6, 1.2, 2.5, 5, 10];
+    // Ölçek bilinmiyorsa: önce kullanıcının kurulumlarının alanları, sonra genel bir dizi
+    let radii;
+    if (sHint) radii = [Math.max(0.15, sHint * diag * 1.15)];
+    else {
+      const pri = [];
+      try { for (const st of (typeof setups !== 'undefined' ? setups : [])) if (st.focalLength && st.sensorW) { const hd = Math.hypot(st.sensorW, st.sensorH || st.sensorW * 0.66) / st.focalLength * R2D / 2; pri.push(hd * 1.1, hd * 0.75); } } catch (e) { }
+      radii = [];
+      for (const r0 of pri.concat([0.15, 0.22, 0.3, 0.45, 0.65, 0.9, 1.3, 1.8, 2.5, 3.5, 5, 10])) if (r0 > 0.08 && r0 < 15 && radii.every(q => Math.abs(q - r0) / r0 > 0.15)) radii.push(r0);
+    }
     let last = null;
     for (const r of radii) {
       say(T('Yıldız kataloğu alınıyor', 'Fetching star catalogue') + ' (r=' + r.toFixed(2) + '°)…');
@@ -3346,16 +3424,36 @@ const SKY = (() => {
       const lum = new Float32Array(base.lum); // aktarımda boşalmasın
       const res = await runSolve({ lum, w: base.w, h: base.h, cat: cat.slice(0, 120).map(c => project(hint.ra, hint.dec, c[0], c[1]).concat([c[2]])), scaleHint: sHint });
       if (res.ok) {
-        const w0 = { NAXIS: 2, NAXIS1: base.w, NAXIS2: base.h, CTYPE1: 'RA---TAN', CTYPE2: 'DEC--TAN', CRVAL1: hint.ra, CRVAL2: hint.dec, CRPIX1: res.crpix[0], CRPIX2: res.crpix[1], CD1_1: res.cd[0][0], CD1_2: res.cd[0][1], CD2_1: res.cd[1][0], CD2_2: res.cd[1][1], RADESYS: 'ICRS', EQUINOX: 2000 };
-        const wcs = rescaleWcs(w0, base.w, base.h, it.width, it.height);
-        wcs._source = T('Gökyüzüm plate solve', 'My Sky plate solve') + ' · ' + res.matched + T(' yıldız', ' stars') + ' · rms ' + res.rmsPx.toFixed(1) + ' px';
-        // İpucu görüntü merkezinden uzaksa teğet noktası yanlış yerde kalır: merkezle bir kez daha çöz
-        const c = center(wcs), off = Math.hypot((c[0] - hint.ra) * Math.cos(c[1] * D2R), c[1] - hint.dec);
-        if (!hint._refined && off > 0.02 * Math.max(1, fovDeg(wcs))) {
-          const r2 = await autoSolve(it, { ra: c[0], dec: c[1], scale: pixScale(wcs), _refined: true }, say);
-          if (r2.ok) return r2;
+        const mk = (r, ra0, dec0) => {
+          const w0 = { NAXIS: 2, NAXIS1: base.w, NAXIS2: base.h, CTYPE1: 'RA---TAN', CTYPE2: 'DEC--TAN', CRVAL1: ra0, CRVAL2: dec0, CRPIX1: r.crpix[0], CRPIX2: r.crpix[1], CD1_1: r.cd[0][0], CD1_2: r.cd[0][1], CD2_1: r.cd[1][0], CD2_2: r.cd[1][1], RADESYS: 'ICRS', EQUINOX: 2000 };
+          return w0;
+        };
+        if (res.matched < 8) { last = T('Zayıf eşleşme', 'Weak match') + ' (' + res.matched + ')'; continue; } // doğrulamaya değmez
+        let w0 = mk(res, hint.ra, hint.dec), fin = null;
+        // Akla yatkınlık: alan, aranan yarıçapa uymalı ve merkez ipucuna yakın olmalı
+        {
+          const hd = Math.hypot(base.w, base.h) / 2 * pixScale(w0) / 3600, c0 = pix2sky(w0, (base.w + 1) / 2, (base.h + 1) / 2);
+          const off = Math.hypot((c0[0] - hint.ra) * Math.cos(c0[1] * D2R), c0[1] - hint.dec);
+          if (hd > 2.2 * r || hd < 0.12 * r || off > r) { last = T('Eşleşme tutarsız', 'Inconsistent match'); continue; }
         }
-        return { ok: true, wcs, res };
+        // Doğrulama + iyileştirme: görüntü merkezinde, derin Gaia kataloğuyla, bilinen çözümden başlayarak
+        try {
+          const c = pix2sky(w0, (base.w + 1) / 2, (base.h + 1) / 2), sc = pixScale(w0);
+          const rad = Math.min(12, Math.hypot(base.w, base.h) / 2 * sc / 3600 * 1.1);
+          say(T('Derin katalogla doğrulanıyor…', 'Verifying with a deep catalogue…'));
+          const deep = await fetchCat(c[0], c[1], rad, true);
+          if (deep.length >= 10) {
+            const xc = (base.w + 1) / 2, yc = (base.h + 1) / 2, A0 = { a: w0.CD1_1 * 3600, b: w0.CD1_2 * 3600, d: w0.CD2_1 * 3600, e: w0.CD2_2 * 3600 };
+            A0.c = -(A0.a * xc + A0.b * yc); A0.f = -(A0.d * xc + A0.e * yc);
+            const r2 = await runSolve({ lum: new Float32Array(base.lum), w: base.w, h: base.h, cat: deep.slice(0, 1500).map(q => project(c[0], c[1], q[0], q[1]).concat([q[2]])), scaleHint: sc, init: A0 });
+            if (r2.ok && r2.matched >= Math.max(12, res.matched)) { w0 = mk(r2, c[0], c[1]); fin = r2; }
+          }
+        } catch (e) { console.warn('verify', e); }
+        // Yalnızca derin katalogla doğrulanmış çözüm kabul edilir — yanlış yere koymaktansa çözmemek iyidir
+        if (!fin) { last = T('Çözüm doğrulanamadı', 'Solution could not be verified') + ' (' + res.matched + T(' yıldız)', ' stars)'); continue; }
+        const wcs = rescaleWcs(w0, base.w, base.h, it.width, it.height);
+        wcs._source = T('Gökyüzüm plate solve', 'My Sky plate solve') + ' · ' + fin.matched + T(' yıldız', ' stars') + ' · rms ' + fin.rmsPx.toFixed(1) + ' px';
+        return { ok: true, wcs, res: fin };
       }
       last = res.why;
     }
@@ -3369,7 +3467,7 @@ const SKY = (() => {
       if (m.ra != null && m.dec != null) hint = { ra: m.ra, dec: m.dec };
       const scale = m.focal && m.pixsize ? 206.265 * m.pixsize * (m.xbin || 1) / m.focal * ((it.origW || it.width) / it.width) : null;
       if (hint) hint.scale = scale;
-      var hints = hint ? [hint] : (await candidates(m.object || it.name)).slice(0, 3).map(c => ({ ra: c.ra, dec: c.dec, scale, label: c.id }));
+      var hints = hint ? [hint] : (await candidates(m.object || it.name)).slice(0, 4).map(c => ({ ra: c.ra, dec: c.dec, scale, label: c.id }));
     } else var hints = [hint];
     const nm = (it.meta && it.meta.object) || it.name;
     if (!hints.length) { status(nm + ': ' + T('obje adı anlaşılamadı — yerleştirme panelinde adını yazıp 🎯 Otomatik çöz\'e bas', 'could not tell the object — type its name in the placement panel and press 🎯 Auto-solve'), 'warn'); return false; }
@@ -3384,7 +3482,7 @@ const SKY = (() => {
     if (!(it.meta && it.meta.object)) {
       // adı ancak çözülen merkez o objeye yakınsa kullan (ör. "Veil" → NGC 6960 adayı, ama kare Doğu Peçe'de olabilir)
       const c = center(r.wcs), h = hints.find(x => x.label === label) || {};
-      const near = label && h.ra != null && Math.hypot((c[0] - h.ra) * Math.cos(c[1] * D2R), c[1] - h.dec) < Math.max(0.25, fovDeg(r.wcs) / 4);
+      const near = label && h.ra != null && Math.hypot((c[0] - h.ra) * Math.cos(c[1] * D2R), c[1] - h.dec) < Math.max(0.6, fovDeg(r.wcs));
       const nmGuess = near ? label.replace(/\s*\(.*\)$/, '') : cleanName(it.name);
       if (nmGuess) it.meta = Object.assign({}, it.meta, { object: nmGuess });
     }
@@ -3468,6 +3566,74 @@ const SKY = (() => {
     g.putImageData(im, 0, 0);
   }
   function setGround(v) { S.ground = v; saveS(); drawGround(); }
+
+  // ═══ Galeriyi dosyaya kaydet / dosyadan geri yükle ═══
+  const b64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); });
+  const unb64 = (s, type) => { const bin = atob(s), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type }); };
+  async function exportGallery() {
+    if (!items.length) { status(T('Galeri boş', 'Gallery is empty'), 'warn'); return; }
+    status(T('Galeri dosyası hazırlanıyor…', 'Preparing gallery file…'), 'info', 30);
+    const out = { app: 'Astro Hedef Atlası · Gökyüzüm', version: 1, saved: new Date().toISOString(), items: [] };
+    for (const it of items) {
+      const o = strip(it); delete o.blob; delete o.thumb;
+      o.jpeg = await b64(it.blob); o.thumbJpeg = it.thumb ? await b64(it.thumb) : null;
+      out.items.push(o);
+    }
+    const blob = new Blob([JSON.stringify(out)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'gokyuzum-galeri-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    status(T('Kaydedildi: ', 'Saved: ') + items.length + T(' görüntü · ', ' images · ') + (blob.size / 1048576).toFixed(1) + ' MB', 'ok');
+  }
+  async function importGallery(file) {
+    if (!file) return;
+    try {
+      const d = JSON.parse(await file.text());
+      if (!d || !Array.isArray(d.items)) throw new Error(T('Gökyüzüm galeri dosyası değil', 'Not a My Sky gallery file'));
+      await loadAladin();
+      let n = 0;
+      for (const o of d.items) {
+        if (items.some(i => i.id === o.id || (i.name === o.name && i.created === o.created))) continue;
+        const it = Object.assign({}, o, { blob: unb64(o.jpeg, 'image/jpeg'), thumb: o.thumbJpeg ? unb64(o.thumbJpeg, 'image/jpeg') : null });
+        delete it.jpeg; delete it.thumbJpeg;
+        it._thumbUrl = it.thumb ? URL.createObjectURL(it.thumb) : '';
+        await dbPut(strip(it)); items.push(it); if (it.wcs && it.visible) await showLayer(it); n++;
+      }
+      renderList(); drawFootprints();
+      status(n + T(' görüntü geri yüklendi', ' images restored'), 'ok');
+    } catch (e) { status(T('Okunamadı: ', 'Could not read: ') + e.message, 'err'); }
+  }
+
+  // ═══ Takımyıldızlar (d3-celestial verisi, ilk açılışta indirilir) ═══
+  let conOverlay = null, conCat = null, conData = null;
+  async function drawConstellations() {
+    if (!aladin) return;
+    if (!conOverlay) {
+      conOverlay = A.graphicOverlay({ color: 'rgba(120,170,255,.55)', lineWidth: 1.2, name: T('Takımyıldızlar', 'Constellations') });
+      aladin.addOverlay(conOverlay);
+      conCat = A.catalog({ name: T('Takımyıldız adları', 'Constellation names'), sourceSize: 20, shape: s => s.data._cv });
+      aladin.addCatalog(conCat);
+    }
+    conOverlay.removeAll(); conCat.removeAll();
+    if (!S.constellations) return;
+    if (!conData) {
+      try {
+        const base = 'https://cdn.jsdelivr.net/npm/d3-celestial@0.7.35/data/';
+        const [lines, names] = await Promise.all([fetch(base + 'constellations.lines.json').then(r => r.json()), fetch(base + 'constellations.json').then(r => r.json())]);
+        conData = { lines, names };
+      } catch (e) { status(T('Takımyıldız verisi alınamadı', 'Could not load constellation data'), 'warn'); return; }
+    }
+    const ra = lon => (lon < 0 ? lon + 360 : lon);
+    for (const f of conData.lines.features) for (const seg of f.geometry.coordinates) conOverlay.add(A.polyline(seg.map(p => [ra(p[0]), p[1]]), { color: 'rgba(120,170,255,.55)', lineWidth: 1.2 }));
+    const src = [];
+    for (const f of conData.names.features) {
+      const p = f.geometry && f.geometry.coordinates; if (!p) continue;
+      const nm = (_lang === 'EN' ? f.properties.name : (f.properties.tr || f.properties.name));
+      src.push(A.source(ra(p[0]), p[1], { _cv: textCanvas(nm.toUpperCase(), 'rgba(150,185,255,.75)', 11) }));
+    }
+    conCat.addSources(src);
+  }
+  function setConstellations(v) { S.constellations = v; saveS(); drawConstellations(); }
 
   // ═══ Güneş, Ay, gezegenler ═══
   function bodyCanvas(label, color, r) {
@@ -3582,8 +3748,12 @@ const SKY = (() => {
   function look(az, alt) {
     if (!aladin) return;
     if (alt == null || alt < 80) { S.lookAz = az; saveS(); }
-    const [ra, dec] = altaz2radec(alt == null ? 40 : alt, az, now(), loc());
-    aladin.gotoRaDec(ra, dec); if (aladin.getFov()[0] < 60) aladin.setFoV(110);
+    if (aladin.getFov()[0] < 60) aladin.setFoV(110);
+    // ufuk ekranın altına yakın görünsün: dikey açının ~%35'i kadar yukarı bak
+    const vf = aladin.getFov()[1] || 60;
+    if (alt == null) alt = Math.max(8, Math.min(45, vf * 0.35));
+    const [ra, dec] = altaz2radec(alt, az, now(), loc());
+    aladin.gotoRaDec(ra, dec);
     orient();
   }
   function refreshTime() {
@@ -3597,7 +3767,9 @@ const SKY = (() => {
   }
   function timeShift(min) { timeOffset = +min; refreshTime(); }
   function timeNow() { timeOffset = 0; $('skyTimeSl').value = 0; refreshTime(); }
-  function setHorizon(v) { S.horizon = v; saveS(); refreshTime(); if (!v && aladin) aladin.setRotation(0); }
+  function setHorizon(v) { S.horizon = v; saveS(); syncHzUi(); refreshTime(); drawGround(); if (!v && aladin) aladin.setRotation(0); }
+  // Ufuk kapalıyken zemin ve ufka bağlı seçenekler de kapalı görünsün
+  function syncHzUi() { ['skyGround', 'skyHzUp', 'skyAltaz'].forEach(id => { const el = $(id); if (el) { el.disabled = !S.horizon; el.parentElement.style.opacity = S.horizon ? '' : '.45'; } }); }
   function setHorizonUp(v) { S.horizonUp = v; saveS(); if (v) orient(); else if (aladin) aladin.setRotation(0); }
   function setAltaz(v) { S.altaz = v; saveS(); drawHorizon(); }
   // Konum
@@ -3612,7 +3784,7 @@ const SKY = (() => {
       saveLocation(name || 'Özel', lat, lon);
       try { const sel = document.getElementById('locationSelect'); if (sel && (name || 'Özel') === 'Özel') { sel.value = 'Özel'; document.getElementById('customCoords').style.display = 'flex'; document.getElementById('customLat').value = lat; document.getElementById('customLon').value = lon; } } catch (e) { }
     } else { window.OBS_LAT = lat; window.OBS_LON = lon; }
-    $('skyLocBox').style.display = 'none'; refreshTime(); look(S.lookAz != null ? S.lookAz : 90, 40);
+    $('skyLocBox').style.display = 'none'; refreshTime(); look(S.lookAz != null ? S.lookAz : 90);
   }
   function locApply() {
     const lat = parseFloat($('skyLocLat').value), lon = parseFloat($('skyLocLon').value);
@@ -3685,9 +3857,10 @@ const SKY = (() => {
       items = all.map(it => Object.assign(it, { _thumbUrl: it.thumb ? URL.createObjectURL(it.thumb) : '' }));
       for (const it of items) if (it.wcs && it.visible) await showLayer(it);
       // açılışta: bulunduğun yerden, şu anki gökyüzü
-      if (S.horizon) look(S.lookAz != null ? S.lookAz : 90, 40);
+      if (S.horizon) look(S.lookAz != null ? S.lookAz : 90);
     }
     resumeLoop(); renderList(); refreshTime(); drawFov();
+    if (!conOverlay) drawConstellations();
     clearInterval(liveTimer); liveTimer = setInterval(() => { if ($('skyView').classList.contains('open')) refreshTime(); }, 60000);
   }
   function close() { $('skyView').classList.remove('open'); document.body.classList.remove('sky-open'); if (placing) placeCancel(); clearInterval(liveTimer); lightClose(); pauseLoop(); }
@@ -3701,8 +3874,8 @@ const SKY = (() => {
     $('skySurvey').value = S.survey; $('skyProj').value = S.projection; $('skyFrame').value = S.frame;
     $('skyGrid').checked = S.grid; $('skyAtlas').checked = S.atlas; $('skyFp').checked = S.footprints; $('skyFovChk').checked = S.fov;
     $('skyMax').value = S.maxDim; $('skyStretch').value = S.stretch; $('skyLinked').checked = S.linked;
-    $('skyGround').checked = S.ground; $('skyPlanets').checked = S.planets;
-    $('skyHz').checked = S.horizon; $('skyHzUp').checked = S.horizonUp; $('skyAltaz').checked = S.altaz;
+    $('skyCon').checked = S.constellations !== false; $('skyGround').checked = S.ground; $('skyPlanets').checked = S.planets;
+    $('skyHz').checked = S.horizon; syncHzUi(); $('skyHzUp').checked = S.horizonUp; $('skyAltaz').checked = S.altaz;
     if (aladin) refreshTime();
     $('skyFovRot').value = S.fovRot; $('skyFovRotV').textContent = S.fovRot + '°'; $('skyFovRow').style.display = S.fov ? 'flex' : 'none';
     renderList();
@@ -3716,6 +3889,7 @@ const SKY = (() => {
     v.addEventListener('drop', e => { z.classList.remove('hover'); if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
     $('skyFile').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
     $('skyHzFile').addEventListener('change', e => { loadHzFile(e.target.files[0]); e.target.value = ''; });
+    $('skyGalFile').addEventListener('change', e => { importGallery(e.target.files[0]); e.target.value = ''; });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('skyView').classList.contains('open')) { if ($('skyLight').style.display === 'flex') lightClose(); else if (placing) placeCancel(); else if (cardId) cardClose(); else close(); } });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initDrop); else initDrop();
@@ -3724,10 +3898,10 @@ const SKY = (() => {
     open, close, addFiles, select, toggle, opacity, remove, place, showAll, goto,
     placePreview, placeRot, placeNudge, placeFromView, placeResolve, placeSave, placeCancel,
     solve: solveItem, placeSolve, verify, scaleTouched: () => { if (placing) placing.scaleTouched = true; },
-    card: showCard, cardVerify, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
-    setHorizon, setHorizonUp, setAltaz, setGround, setPlanets,
+    statusHide, exportGallery, card: showCard, cardVerify, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
+    setHorizon, setHorizonUp, setAltaz, setGround, setPlanets, setConstellations,
     setSurvey, setProjection, setFrame, setGrid, setAtlas, setFootprints, setFov, setFovRot, setOpt, applyLabels,
-    _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now })
+    _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now, fetchCat, lumOf, runSolve, autoSolve })
   };
 })();
 
