@@ -307,6 +307,8 @@ body.sky-open{overflow:hidden}
 .sky-status{padding-right:30px}
 .sky-status-x{position:absolute;top:4px;right:6px;background:none;border:none;color:inherit;cursor:pointer;font-size:12px;opacity:.7}
 .sky-status-x:hover{opacity:1}
+.sky-card-title[contenteditable]{outline:none;border-bottom:1px dashed transparent;cursor:text}
+.sky-card-title[contenteditable]:hover,.sky-card-title[contenteditable]:focus{border-bottom-color:var(--accent)}
 /*/SKY:css*/
 </style>
 </head>
@@ -316,7 +318,7 @@ body.sky-open{overflow:hidden}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.3</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.4</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
@@ -509,7 +511,7 @@ body.sky-open{overflow:hidden}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.3
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.4
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -703,7 +705,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.3');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.4');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -1078,7 +1080,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.3';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.4';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -2014,7 +2016,7 @@ if('serviceWorker' in navigator){
       <div id="skyCard" class="sky-card" style="display:none">
         <button class="sky-card-x" onclick="SKY.cardClose()">✕</button>
         <img id="skyCardImg" class="sky-card-img" onclick="SKY.cardZoom()" data-trt="Büyütmek için tıkla" data-ent="Click to enlarge" alt="">
-        <div id="skyCardTitle" class="sky-card-title"></div>
+        <div id="skyCardTitle" class="sky-card-title" contenteditable="true" spellcheck="false" data-trt="Adı değiştirmek için tıkla, Enter ile kaydet" data-ent="Click to rename, Enter to save" title="Adı değiştirmek için tıkla, Enter ile kaydet" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="SKY.cardRename(this.textContent)"></div>
         <div id="skyCardSub" class="sky-it-sub"></div>
         <div id="skyCardPos" class="sky-card-pos"></div>
         <div class="sky-card-act">
@@ -3844,6 +3846,10 @@ const SKY = (() => {
   }
   function lightClose() { $('skyLight').style.display = 'none'; }
   async function cardToggle() { if (!cardId) return; await toggle(cardId); showCard(cardId); }
+  async function cardRename(txt) {
+    const it = items.find(i => i.id === cardId); txt = String(txt || '').trim(); if (!it || !txt || txt === (it.meta && it.meta.object)) return;
+    it.meta = Object.assign({}, it.meta, { object: txt }); await dbPut(strip(it)); renderList(); drawFootprints();
+  }
   function cardVerify() { if (cardId) verify(cardId); }
   function cardGo() { if (cardId) select(cardId, true); }
 
@@ -3855,6 +3861,8 @@ const SKY = (() => {
     if (!items.length) {
       const all = await dbAll().catch(() => []);
       items = all.map(it => Object.assign(it, { _thumbUrl: it.thumb ? URL.createObjectURL(it.thumb) : '' }));
+      // eski sürümde "M96-crop" → "M" gibi kesik adlar oluşabiliyordu: dosya adından yeniden üret
+      for (const it of items) { const o = it.meta && it.meta.object; if (o && /^[A-Za-z]{1,3}( [A-Za-z]{1,3})?$/.test(o.trim())) { const nn = cleanName(it.name); if (nn && nn !== o) { it.meta.object = nn; dbPut(strip(it)); } } }
       for (const it of items) if (it.wcs && it.visible) await showLayer(it);
       // açılışta: bulunduğun yerden, şu anki gökyüzü
       if (S.horizon) look(S.lookAz != null ? S.lookAz : 90);
@@ -3898,7 +3906,7 @@ const SKY = (() => {
     open, close, addFiles, select, toggle, opacity, remove, place, showAll, goto,
     placePreview, placeRot, placeNudge, placeFromView, placeResolve, placeSave, placeCancel,
     solve: solveItem, placeSolve, verify, scaleTouched: () => { if (placing) placing.scaleTouched = true; },
-    statusHide, exportGallery, card: showCard, cardVerify, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
+    statusHide, exportGallery, card: showCard, cardVerify, cardRename, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
     setHorizon, setHorizonUp, setAltaz, setGround, setPlanets, setConstellations,
     setSurvey, setProjection, setFrame, setGrid, setAtlas, setFootprints, setFov, setFovRot, setOpt, applyLabels,
     _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now, fetchCat, lumOf, runSolve, autoSolve })
