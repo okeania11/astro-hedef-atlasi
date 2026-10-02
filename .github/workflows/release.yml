@@ -1,0 +1,33 @@
+# CHANGELOG.md'deki her "## vX.Y.Z" başlığı için GitHub Release oluşturur.
+# main'e her gönderimde çalışır; zaten var olan sürümleri atlar.
+name: Sürüm notları
+on:
+  push:
+    branches: [main]
+    paths: [CHANGELOG.md]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Eksik sürümleri yayınla
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          latest=$(grep -m1 -oP '^## \Kv[0-9.]+' CHANGELOG.md)
+          for v in $(grep -oP '^## \Kv[0-9.]+' CHANGELOG.md | tac); do
+            if gh release view "$v" >/dev/null 2>&1; then echo "$v zaten var"; continue; fi
+            # sürüm numarasının index.html'e ilk girdiği commit
+            sha=$(git log --reverse -S "$v" --format=%H -- index.html | head -1)
+            [ -z "$sha" ] && sha=$GITHUB_SHA
+            awk -v v="$v" '$0 ~ "^## "v" " {f=1; next} /^## /{f=0} f' CHANGELOG.md > notes.md
+            title=$(grep -m1 "^## $v " CHANGELOG.md | sed 's/^## //')
+            flag=--latest=false; [ "$v" = "$latest" ] && flag=--latest
+            gh release create "$v" --target "$sha" --title "$title" --notes-file notes.md $flag
+            echo "$v yayınlandı ($sha)"
+          done
