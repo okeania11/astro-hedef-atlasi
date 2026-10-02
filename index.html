@@ -207,6 +207,75 @@ tbody tr:last-child td{border-bottom:none;}
   #downloadBtn{font-size:10px;padding:4px 8px;}
 }
 
+/*SKY:css*/
+/* ═══ GÖKYÜZÜM ═══ */
+.sky-view{display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;font-family:'Space Mono',monospace;color:var(--text)}
+.sky-view.open{display:flex}
+body.sky-open{overflow:hidden}
+.sky-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.sky-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:2px;color:#fff;margin-right:6px;white-space:nowrap}
+.sky-in{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;padding:5px 8px;border-radius:4px;outline:none;min-width:0}
+.sky-in:focus{border-color:var(--accent)}
+.sky-chk{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);cursor:pointer;user-select:none;white-space:nowrap}
+.sky-chk input{accent-color:var(--accent)}
+.sky-close{margin-left:auto;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:14px;width:32px;height:30px;border-radius:4px;cursor:pointer}
+.sky-close:hover{border-color:var(--danger);color:var(--danger)}
+.sky-body{flex:1;display:flex;min-height:0}
+.sky-side{width:310px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;padding:10px;background:var(--bg2);border-right:1px solid var(--border);min-height:0}
+.sky-drop{display:block;border:1.5px dashed var(--border);border-radius:6px;padding:14px 10px;text-align:center;cursor:pointer;color:var(--text2);font-size:12px;transition:all .15s}
+.sky-drop small{font-size:10px;opacity:.8}
+.sky-drop:hover,.sky-drop.hover{border-color:var(--accent);color:var(--accent);background:rgba(79,195,247,.06)}
+.sky-opts{font-size:11px;color:var(--text2)}
+.sky-opts summary{cursor:pointer;letter-spacing:1px;text-transform:uppercase;font-size:10px;padding:2px 0}
+.sky-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px}
+.sky-hint{font-size:10px;color:var(--text2);line-height:1.5;margin-top:6px}
+.sky-listhead{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text2);border-top:1px solid var(--border);padding-top:8px}
+.sky-mini{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:10px;padding:4px 8px;border-radius:4px;cursor:pointer;margin-left:4px;white-space:nowrap}
+.sky-mini:hover{border-color:var(--accent);color:var(--accent)}
+.sky-save{background:var(--accent);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;padding:6px 16px;border-radius:4px;cursor:pointer}
+.sky-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;min-height:0}
+.sky-empty{font-size:11px;color:var(--text2);line-height:1.6;padding:10px 4px}
+.sky-item{display:flex;gap:8px;padding:6px;border:1px solid var(--border);border-radius:5px;background:var(--bg3)}
+.sky-item.sel{border-color:var(--accent);box-shadow:0 0 0 1px rgba(79,195,247,.25)}
+.sky-th{width:64px;height:64px;object-fit:cover;border-radius:3px;background:#000;cursor:pointer;flex-shrink:0}
+.sky-it-body{min-width:0;flex:1}
+.sky-it-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.sky-it-sub{font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sky-it-act{display:flex;align-items:center;gap:3px;margin-top:4px}
+.sky-it-act button{background:none;border:1px solid var(--border);color:var(--text2);font-size:11px;min-width:24px;height:22px;border-radius:3px;cursor:pointer;padding:0 4px}
+.sky-it-act button:hover{border-color:var(--accent);color:var(--accent)}
+.sky-it-act input[type=range]{flex:1;min-width:40px;accent-color:var(--accent)}
+.sky-it-act .sky-del.confirm{border-color:var(--danger);color:var(--danger);font-size:10px}
+.sky-main{flex:1;position:relative;min-width:0}
+.sky-aladin{position:absolute!important;inset:0;width:100%;height:100%}
+.sky-status{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:30;max-width:min(560px,90%);background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:7px 12px;font-size:11px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.sky-status.err{border-color:var(--danger);color:var(--danger)}
+.sky-status.warn{border-color:var(--warning);color:var(--warning)}
+.sky-status.ok{border-color:var(--green);color:var(--green)}
+.sky-bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:5px;overflow:hidden}
+.sky-bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
+.sky-info{position:absolute;left:10px;bottom:34px;z-index:20;font-size:11px;color:var(--text);background:rgba(7,8,15,.75);padding:4px 8px;border-radius:4px;pointer-events:none;max-width:70%}
+.sky-info:empty{display:none}
+.sky-fovrow{position:absolute;right:10px;bottom:34px;z-index:20;display:flex;gap:8px;align-items:center;font-size:11px;background:rgba(7,8,15,.8);padding:5px 10px;border-radius:4px;border:1px solid var(--border)}
+.sky-fovrow input{width:120px;accent-color:var(--accent)}
+.sky-place{position:absolute;top:10px;right:10px;z-index:25;width:330px;background:var(--bg2);border:1px solid var(--accent);border-radius:6px;padding:12px;font-size:11px;box-shadow:0 6px 30px rgba(0,0,0,.6)}
+.sky-pl-title{font-size:12px;margin-bottom:8px;color:var(--accent)}
+.sky-pl-title b{color:#fff}
+.sky-pl-grid{display:grid;grid-template-columns:78px 1fr;gap:6px 8px;align-items:center}
+.sky-pl-grid>span{color:var(--text2);font-size:10px;letter-spacing:.5px}
+.sky-pl-grid input[type=range]{accent-color:var(--accent)}
+.sky-pl-nudge{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.sky-pl-nudge .sky-mini{margin-left:0}
+.sky-openbtn{background:var(--bg3);border:1px solid var(--accent);color:var(--accent);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer;letter-spacing:1px}
+.sky-openbtn:hover{background:rgba(79,195,247,.1)}
+@media (max-width:760px){
+  .sky-body{flex-direction:column-reverse}
+  .sky-side{width:auto;max-height:42vh;border-right:none;border-top:1px solid var(--border)}
+  .sky-place{left:8px;right:8px;width:auto;top:auto;bottom:8px}
+  .sky-top{padding:6px 8px;gap:6px}
+  #skyGoto{width:120px!important}
+}
+/*/SKY:css*/
 </style>
 </head>
 <body>
@@ -215,10 +284,11 @@ tbody tr:last-child td{border-bottom:none;}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.6.9</div>
+      <div class="subtitle" id="mainSubtitle">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.0</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
-      <button id="themeToggle" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Tema değiştir">☀️</button>
+      <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
+      <!--/SKY:btn--><button id="themeToggle" onclick="toggleTheme()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer" title="Tema değiştir">☀️</button>
       <button id="langToggle" onclick="toggleLang()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer;letter-spacing:1px" title="Switch language / Dil değiştir">🇬🇧 EN</button>
     </div>
   </header>
@@ -407,7 +477,7 @@ tbody tr:last-child td{border-bottom:none;}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.6.9
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; v0.7.0
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -601,7 +671,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.9');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.0');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -976,7 +1046,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.6.9';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.0';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1818,5 +1888,1074 @@ if('serviceWorker' in navigator){
   });
 }
 </script>
+<!--SKY:html-->
+<!-- ═══ GÖKYÜZÜM (Sky view) ═══ -->
+<div id="skyView" class="sky-view" aria-hidden="true">
+  <div class="sky-top">
+    <div class="sky-title">🌌 <span data-tr="GÖKYÜZÜM" data-en="MY SKY">GÖKYÜZÜM</span></div>
+    <input id="skyGoto" class="sky-in" style="width:180px" data-trp="Git: M 81, NGC 7000…" data-enp="Go to: M 81, NGC 7000…" placeholder="Git: M 81, NGC 7000…" onkeydown="if(event.key==='Enter')SKY.goto(this.value)">
+    <select id="skySurvey" class="sky-in" onchange="SKY.setSurvey(this.value)" data-trt="Arka plan gökyüzü taraması" data-ent="Background sky survey">
+      <option value="P/DSS2/color">DSS2 color</option>
+      <option value="P/Mellinger/color">Mellinger (tüm gökyüzü)</option>
+      <option value="P/PanSTARRS/DR1/color-z-zg-g">Pan-STARRS DR1</option>
+      <option value="CDS/P/DESI-Legacy-Surveys/DR10/color">DESI Legacy DR10</option>
+      <option value="P/2MASS/color">2MASS (IR)</option>
+      <option value="P/Finkbeiner">Hα (Finkbeiner)</option>
+      <option value="P/DSS2/red">DSS2 red</option>
+    </select>
+    <select id="skyProj" class="sky-in" onchange="SKY.setProjection(this.value)" data-trt="Projeksiyon" data-ent="Projection">
+      <option value="SIN">SIN (küre)</option><option value="TAN">TAN</option><option value="STG">STG</option><option value="ZEA">ZEA</option><option value="AIT">Aitoff</option><option value="MOL">Mollweide</option>
+    </select>
+    <select id="skyFrame" class="sky-in" onchange="SKY.setFrame(this.value)"><option value="ICRS">ICRS</option><option value="ICRSd">ICRS (°)</option><option value="GAL">Galactic</option></select>
+    <label class="sky-chk"><input type="checkbox" id="skyGrid" onchange="SKY.setGrid(this.checked)"><span data-tr="Izgara" data-en="Grid">Izgara</span></label>
+    <label class="sky-chk"><input type="checkbox" id="skyAtlas" onchange="SKY.setAtlas(this.checked)"><span data-tr="Atlas hedefleri" data-en="Atlas targets">Atlas hedefleri</span></label>
+    <label class="sky-chk"><input type="checkbox" id="skyFp" onchange="SKY.setFootprints(this.checked)"><span data-tr="Çerçeveler" data-en="Footprints">Çerçeveler</span></label>
+    <label class="sky-chk"><input type="checkbox" id="skyFovChk" onchange="SKY.setFov(this.checked)"><span data-tr="Kadraj" data-en="FOV">Kadraj</span></label>
+    <button class="sky-close" onclick="SKY.close()" data-trt="Kapat (Esc)" data-ent="Close (Esc)" title="Kapat (Esc)">✕</button>
+  </div>
+  <div class="sky-body">
+    <aside class="sky-side">
+      <label id="skyDrop" class="sky-drop" for="skyFile">
+        <div style="font-size:22px">⤓</div>
+        <div data-tr="FITS / XISF / JPG bırak<br><small>ya da tıkla ve seç</small>" data-en="Drop FITS / XISF / JPG<br><small>or click to choose</small>">FITS / XISF / JPG bırak<br><small>ya da tıkla ve seç</small></div>
+      </label>
+      <input type="file" id="skyFile" multiple accept=".fits,.fit,.fts,.xisf,.jpg,.jpeg,.png,.webp" style="display:none">
+      <details class="sky-opts">
+        <summary data-tr="İçe aktarma ayarları" data-en="Import settings">İçe aktarma ayarları</summary>
+        <div class="sky-row"><span data-tr="Maks. boyut" data-en="Max size">Maks. boyut</span>
+          <select id="skyMax" class="sky-in" onchange="SKY.setOpt('maxDim',+this.value)"><option value="1600">1600 px</option><option value="2400">2400 px</option><option value="3000">3000 px</option><option value="4096">4096 px</option></select></div>
+        <div class="sky-row"><span data-tr="Germe" data-en="Stretch">Germe</span>
+          <select id="skyStretch" class="sky-in" onchange="SKY.setOpt('stretch',this.value)">
+            <option value="auto" data-tr="Otomatik (lineer ise STF)" data-en="Auto (STF if linear)">Otomatik (lineer ise STF)</option>
+            <option value="stf" data-tr="Her zaman STF" data-en="Always STF">Her zaman STF</option>
+            <option value="none" data-tr="Yok (işlenmiş görüntü)" data-en="None (processed image)">Yok (işlenmiş görüntü)</option></select></div>
+        <label class="sky-row sky-chk"><input type="checkbox" id="skyLinked" onchange="SKY.setOpt('linked',this.checked)"><span data-tr="RGB kanalları bağlı ger" data-en="Linked RGB stretch">RGB kanalları bağlı ger</span></label>
+        <div class="sky-hint" data-tr="Ayarlar yeni eklenen dosyalara uygulanır. Orijinal dosyaya dokunulmaz; küçültülmüş kopya bu tarayıcıda saklanır." data-en="Settings apply to newly added files. Originals are untouched; a downsized copy is kept in this browser.">Ayarlar yeni eklenen dosyalara uygulanır.</div>
+      </details>
+      <div class="sky-listhead"><span id="skyCount"></span>
+        <span><button class="sky-mini" onclick="SKY.showAll(true)" data-tr="Hepsi" data-en="All">Hepsi</button><button class="sky-mini" onclick="SKY.showAll(false)" data-tr="Hiçbiri" data-en="None">Hiçbiri</button></span></div>
+      <div id="skyList" class="sky-list"></div>
+    </aside>
+    <main class="sky-main">
+      <div id="skyAladin" class="sky-aladin"></div>
+      <div id="skyStatus" class="sky-status" style="display:none"></div>
+      <div id="skyFovRow" class="sky-fovrow" style="display:none">
+        <span id="skyFovInfo"></span>
+        <span data-tr="Açı" data-en="Angle">Açı</span>
+        <input type="range" id="skyFovRot" min="-180" max="180" step="1" value="0" oninput="SKY.setFovRot(this.value)"><span id="skyFovRotV">0°</span>
+      </div>
+      <div id="skyInfo" class="sky-info"></div>
+
+      <!-- Elle yerleştirme paneli -->
+      <div id="skyPlace" class="sky-place" style="display:none">
+        <div class="sky-pl-title">✎ <span data-tr="Elle yerleştir" data-en="Manual placement">Elle yerleştir</span>: <b id="skyPlName"></b></div>
+        <div class="sky-pl-grid">
+          <span data-tr="Obje" data-en="Object">Obje</span>
+          <div style="display:flex;gap:4px"><input id="skyPlObj" class="sky-in" style="flex:1" placeholder="M 63" onkeydown="if(event.key==='Enter')SKY.placeResolve()"><button class="sky-mini" onclick="SKY.placeResolve()" data-tr="Bul" data-en="Find">Bul</button></div>
+          <span>RA</span><input id="skyPlRA" class="sky-in" oninput="SKY.placePreview()">
+          <span>Dec</span><input id="skyPlDec" class="sky-in" oninput="SKY.placePreview()">
+          <span data-tr="Ölçek ″/px" data-en="Scale ″/px">Ölçek ″/px</span><input id="skyPlScale" class="sky-in" type="number" step="0.001" oninput="SKY.placePreview()">
+          <span data-tr="Açı (PA)" data-en="Angle (PA)">Açı (PA)</span>
+          <div style="display:flex;gap:6px;align-items:center"><input type="range" id="skyPlRot" min="-180" max="180" step="0.1" style="flex:1" oninput="SKY.placeRot(this.value)"><input id="skyPlRotN" class="sky-in" style="width:64px" type="number" step="0.1" oninput="SKY.placeRot(this.value)"></div>
+          <span data-tr="Opaklık" data-en="Opacity">Opaklık</span><input type="range" id="skyPlOp" min="0.1" max="1" step="0.05" value="0.7" oninput="SKY.placePreview()">
+          <span></span><label class="sky-chk"><input type="checkbox" id="skyPlFlip" onchange="SKY.placePreview()"><span data-tr="Ayna (yatay çevir)" data-en="Mirror (flip horizontally)">Ayna (yatay çevir)</span></label>
+        </div>
+        <div class="sky-pl-nudge">
+          <button class="sky-mini" onclick="SKY.placeNudge(1,0)" data-trt="Doğuya" data-ent="East">◀ D</button>
+          <button class="sky-mini" onclick="SKY.placeNudge(0,1)" data-trt="Kuzeye" data-ent="North">▲ K</button>
+          <button class="sky-mini" onclick="SKY.placeNudge(0,-1)" data-trt="Güneye" data-ent="South">▼ G</button>
+          <button class="sky-mini" onclick="SKY.placeNudge(-1,0)" data-trt="Batıya" data-ent="West">B ▶</button>
+          <button class="sky-mini" onclick="SKY.placeFromView()" data-tr="Merkez = görünüm" data-en="Center = view">Merkez = görünüm</button>
+        </div>
+        <div id="skyPlMsg" class="sky-hint" data-tr="Hedefi ekranın ortasına getirip «Merkez = görünüm»e bas. Sonra yön düğmeleri, açı ve ölçekle yıldızları oturt." data-en="Bring the target to the screen centre and press «Center = view». Then use the arrows, angle and scale until the stars line up."></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+          <button class="sky-mini" onclick="SKY.placeCancel()" data-tr="Vazgeç" data-en="Cancel">Vazgeç</button>
+          <button class="sky-save" onclick="SKY.placeSave()" data-tr="Kaydet" data-en="Save">Kaydet</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<!--/SKY:html-->
+<!--SKY:js-->
+<script type="text/js-worker" id="skyWorkerSrc">
+// ─── Gökyüzüm worker: FITS / XISF okuyucu, WCS çıkarımı, küçültme, STF germe ───
+'use strict';
+
+// ---------- yardımcılar ----------
+const td = new TextDecoder('latin1');
+const tdu = new TextDecoder('utf-8');
+
+function post(type, data, transfer) { self.postMessage(Object.assign({ type }, data), transfer || []); }
+function progress(id, msg, pct) { post('progress', { id, msg, pct }); }
+
+// ---------- FITS ----------
+function parseFitsCard(card) {
+  const key = card.slice(0, 8).trim();
+  if (card[8] !== '=' || card[9] !== ' ') return { key, value: null, raw: card };
+  let rest = card.slice(10);
+  let value, comment = '';
+  const t = rest.trimStart();
+  if (t.startsWith("'")) {
+    let i = 1, s = '';
+    while (i < t.length) {
+      if (t[i] === "'") { if (t[i + 1] === "'") { s += "'"; i += 2; continue; } break; }
+      s += t[i++];
+    }
+    value = s.replace(/\s+$/, '');
+    const c = t.indexOf('/', i); if (c >= 0) comment = t.slice(c + 1).trim();
+  } else {
+    const c = t.indexOf('/');
+    let v = (c >= 0 ? t.slice(0, c) : t).trim();
+    comment = c >= 0 ? t.slice(c + 1).trim() : '';
+    if (v === 'T') value = true; else if (v === 'F') value = false;
+    else if (v === '') value = null;
+    else { const n = Number(v.replace(/D/i, 'E')); value = isNaN(n) ? v : n; }
+  }
+  return { key, value, comment };
+}
+
+async function readFitsHeader(file) {
+  const kw = {}; const cards = [];
+  let off = 0, done = false;
+  while (!done) {
+    if (off >= file.size) throw new Error('FITS başlığı bitmeden dosya bitti');
+    const buf = await file.slice(off, off + 2880 * 10).arrayBuffer();
+    const s = td.decode(buf);
+    for (let b = 0; b + 2880 <= s.length; b += 2880) {
+      for (let i = 0; i < 36; i++) {
+        const card = s.substr(b + i * 80, 80);
+        const k = card.slice(0, 8).trim();
+        off += 80;
+        if (k === 'END') { done = true; break; }
+        const c = parseFitsCard(card);
+        if (c.value !== null && c.value !== undefined && !(c.key in kw)) kw[c.key] = c.value;
+        cards.push(c);
+      }
+      if (done) { off = Math.ceil(off / 2880) * 2880; break; }
+    }
+    if (!done && s.length < 2880 * 10) throw new Error('Geçersiz FITS başlığı');
+  }
+  if (kw.SIMPLE !== true) throw new Error('SIMPLE=T bulunamadı, FITS değil');
+  return { kw, dataStart: off };
+}
+
+async function readFits(file, opt, id) {
+  const { kw, dataStart } = await readFitsHeader(file);
+  const naxis = kw.NAXIS | 0;
+  const W = kw.NAXIS1 | 0, H = kw.NAXIS2 | 0, C = naxis >= 3 ? (kw.NAXIS3 | 0) : 1;
+  const meta = metaFromFits(kw);
+  let wcs = wcsFromKeywords(kw, W || kw.IMAGEW, H || kw.IMAGEH);
+  if (naxis < 2 || !W || !H) {
+    // Sadece başlık (örn. astrometry.net wcs.fits)
+    return { headerOnly: true, kw, meta, wcs, width: kw.IMAGEW || 0, height: kw.IMAGEH || 0 };
+  }
+  const bitpix = kw.BITPIX, bz = kw.BZERO || 0, bs = kw.BSCALE === undefined ? 1 : kw.BSCALE;
+  const bpp = Math.abs(bitpix) / 8;
+  const planeBytes = W * H * bpp;
+  const channels = Math.min(C, 3);
+  const topDown = String(kw.ROWORDER || '').toUpperCase() === 'TOP-DOWN';
+  const planes = [];
+  for (let c = 0; c < channels; c++) {
+    progress(id, 'Okunuyor… kanal ' + (c + 1) + '/' + channels, 10 + 30 * c / channels);
+    const buf = await file.slice(dataStart + c * planeBytes, dataStart + (c + 1) * planeBytes).arrayBuffer();
+    const dv = new DataView(buf);
+    const n = W * H; const out = new Float32Array(n);
+    switch (bitpix) {
+      case 8: { const u = new Uint8Array(buf); for (let i = 0; i < n; i++) out[i] = u[i] * bs + bz; break; }
+      case 16: for (let i = 0; i < n; i++) out[i] = dv.getInt16(i * 2, false) * bs + bz; break;
+      case 32: for (let i = 0; i < n; i++) out[i] = dv.getInt32(i * 4, false) * bs + bz; break;
+      case -32: for (let i = 0; i < n; i++) out[i] = dv.getFloat32(i * 4, false) * bs + bz; break;
+      case -64: for (let i = 0; i < n; i++) out[i] = dv.getFloat64(i * 8, false) * bs + bz; break;
+      default: throw new Error('Desteklenmeyen BITPIX ' + bitpix);
+    }
+    planes.push(out);
+  }
+  // FITS'te satır 0 = alt (y=1). TOP-DOWN olanlarda satır 0 = üst.
+  // İçeride hep "satır 0 = üst" tutuyoruz.
+  if (!topDown) for (const p of planes) flipRows(p, W, H);
+  let range = null;
+  if (bitpix === 16 && bz === 32768) range = [0, 65535];
+  else if (bitpix === 8) range = [0, 255];
+  else if (bitpix === 16) range = [-32768, 32767];
+  // TOP-DOWN ise WCS de üstten sayılmış olabilir (APP), not düşüyoruz
+  return { kw, meta, wcs, width: W, height: H, planes, range, topDown };
+}
+
+function flipRows(p, W, H) {
+  const tmp = new Float32Array(W);
+  for (let y = 0; y < (H >> 1); y++) {
+    const a = y * W, b = (H - 1 - y) * W;
+    tmp.set(p.subarray(a, a + W)); p.copyWithin(a, b, b + W); p.set(tmp, b);
+  }
+}
+
+function metaFromFits(kw) {
+  return {
+    object: kw.OBJECT || '', filter: kw.FILTER || '', exptime: kw.EXPTIME || kw.EXPOSURE || null,
+    dateObs: kw['DATE-OBS'] || '', telescope: kw.TELESCOP || '', instrument: kw.INSTRUME || '',
+    focal: kw.FOCALLEN || null, pixsize: kw.XPIXSZ || kw.PIXSIZE1 || null, xbin: kw.XBINNING || 1,
+    ra: numOrSexa(kw.RA, kw.OBJCTRA, true), dec: numOrSexa(kw.DEC, kw.OBJCTDEC, false),
+    software: kw.SOFTWARE || kw.CREATOR || kw.PROGRAM || ''
+  };
+}
+function numOrSexa(num, sexa, isRA) {
+  if (typeof num === 'number' && isFinite(num)) return num;
+  if (typeof sexa === 'string' && sexa.trim()) {
+    const p = sexa.trim().split(/[\s:hdm°'"]+/).filter(Boolean).map(Number);
+    if (p.length >= 2 && p.every(isFinite)) {
+      const sg = /^\s*-/.test(sexa) ? -1 : 1;
+      const v = Math.abs(p[0]) + (p[1] || 0) / 60 + (p[2] || 0) / 3600;
+      return sg * v * (isRA ? 15 : 1);
+    }
+  }
+  return null;
+}
+
+// FITS anahtar kelimelerinden doğrusal WCS (TAN vb.)
+function wcsFromKeywords(kw, W, H) {
+  if (!kw.CTYPE1 || !kw.CTYPE2 || kw.CRVAL1 === undefined || kw.CRVAL2 === undefined) return null;
+  let cd;
+  if (kw.CD1_1 !== undefined || kw.CD2_2 !== undefined) {
+    cd = [[kw.CD1_1 || 0, kw.CD1_2 || 0], [kw.CD2_1 || 0, kw.CD2_2 || 0]];
+  } else if (kw.CDELT1 !== undefined) {
+    const c1 = kw.CDELT1, c2 = kw.CDELT2;
+    if (kw.PC1_1 !== undefined) {
+      cd = [[c1 * kw.PC1_1, c1 * (kw.PC1_2 || 0)], [c2 * (kw.PC2_1 || 0), c2 * kw.PC2_2]];
+    } else {
+      const r = (kw.CROTA2 || kw.CROTA1 || 0) * Math.PI / 180;
+      cd = [[c1 * Math.cos(r), -c2 * Math.sin(r)], [c1 * Math.sin(r), c2 * Math.cos(r)]];
+    }
+  } else return null;
+  const w = {
+    NAXIS: 2, NAXIS1: W, NAXIS2: H,
+    CTYPE1: String(kw.CTYPE1).replace(/-SIP$/, ''), CTYPE2: String(kw.CTYPE2).replace(/-SIP$/, ''),
+    CRPIX1: kw.CRPIX1, CRPIX2: kw.CRPIX2, CRVAL1: kw.CRVAL1, CRVAL2: kw.CRVAL2,
+    CD1_1: cd[0][0], CD1_2: cd[0][1], CD2_1: cd[1][0], CD2_2: cd[1][1],
+    RADESYS: kw.RADESYS || 'ICRS', EQUINOX: kw.EQUINOX || 2000
+  };
+  if (kw.LONPOLE !== undefined) w.LONPOLE = kw.LONPOLE;
+  // SIP varsa (doğrusal kısmı kullanıyoruz; bindirme için yeterli)
+  if (/-SIP$/.test(kw.CTYPE1)) w._sip = true;
+  w._source = 'FITS';
+  return w;
+}
+
+// ---------- XISF ----------
+async function readXisf(file, opt, id) {
+  const head = await file.slice(0, 16).arrayBuffer();
+  const sig = td.decode(new Uint8Array(head, 0, 8));
+  if (sig !== 'XISF0100') throw new Error('XISF imzası bulunamadı');
+  const hlen = new DataView(head).getUint32(8, true);
+  const xml = tdu.decode(await file.slice(16, 16 + hlen).arrayBuffer());
+  const doc = new DOMParserLite(xml);
+  const img = doc.first('Image');
+  if (!img) throw new Error('XISF içinde Image yok');
+  const geo = img.attrs.geometry.split(':').map(Number);
+  const W = geo[0], H = geo[1], C = geo[geo.length - 1];
+  const fmt = img.attrs.sampleFormat;
+  const bounds = img.attrs.bounds ? img.attrs.bounds.split(':').map(Number) : null;
+  const storage = img.attrs.pixelStorage || 'Planar';
+  const byteOrder = img.attrs.byteOrder || 'little';
+  // Anahtar kelimeler ve özellikler
+  const kw = {};
+  for (const k of img.children('FITSKeyword')) {
+    const c = parseFitsCard((k.attrs.name + '        ').slice(0, 8) + '= ' + k.attrs.value);
+    if (c.value !== null && !(c.key in kw)) kw[c.key] = c.value;
+  }
+  const props = {};
+  for (const p of img.children('Property')) props[p.attrs.id] = await xisfPropValue(p, file);
+  const meta = metaFromFits(kw);
+  const pv = k => props[k];
+  meta.object = pv('Observation:Object:Name') || meta.object;
+  meta.filter = pv('Instrument:Filter:Name') || meta.filter;
+  meta.exptime = pv('Instrument:ExposureTime') || pv('Instrument:FrameExposureTime') || meta.exptime;
+  meta.telescope = pv('Instrument:Telescope:Name') || meta.telescope;
+  meta.instrument = pv('Instrument:Camera:Name') || meta.instrument;
+  if (pv('Instrument:Telescope:FocalLength')) meta.focal = pv('Instrument:Telescope:FocalLength') * 1000;
+  meta.pixsize = pv('Instrument:Sensor:XPixelSize') || meta.pixsize;
+  if (pv('Observation:Center:RA') != null) meta.ra = pv('Observation:Center:RA');
+  if (pv('Observation:Center:Dec') != null) meta.dec = pv('Observation:Center:Dec');
+  if (pv('Observation:Time:Start')) meta.dateObs = String(pv('Observation:Time:Start'));
+  meta.software = 'PixInsight';
+  let wcs = wcsFromXisfProps(props, W, H) || wcsFromKeywords(kw, W, H);
+
+  // Piksel verisi
+  const loc = img.attrs.location.split(':');
+  if (loc[0] !== 'attachment') throw new Error('Sadece attachment konumlu XISF destekleniyor');
+  const pos = +loc[1], size = +loc[2];
+  progress(id, 'Okunuyor…', 10);
+  let buf = await file.slice(pos, pos + size).arrayBuffer();
+  if (img.attrs.compression) buf = await xisfDecompress(buf, img.attrs.compression);
+  if (byteOrder !== 'little') throw new Error('big-endian XISF desteklenmiyor');
+  const n = W * H; const channels = Math.min(C, 3);
+  const bpsMap = { UInt8: 1, UInt16: 2, UInt32: 4, Float32: 4, Float64: 8 };
+  const bps = bpsMap[fmt]; if (!bps) throw new Error('Desteklenmeyen örnek biçimi ' + fmt);
+  const planes = [];
+  const typed = (b, o, len) => {
+    switch (fmt) {
+      case 'UInt8': return new Uint8Array(b, o, len);
+      case 'UInt16': return new Uint16Array(b, o, len);
+      case 'UInt32': return new Uint32Array(b, o, len);
+      case 'Float32': return new Float32Array(b, o, len);
+      case 'Float64': return new Float64Array(b, o, len);
+    }
+  };
+  if (storage === 'Planar') {
+    for (let c = 0; c < channels; c++) {
+      // Kopyasız görünüm (Float32) ya da tek seferlik dönüşüm
+      planes.push(fmt === 'Float32' ? new Float32Array(buf, c * n * 4, n) : Float32Array.from(typed(buf, c * n * bps, n)));
+    }
+  } else {
+    const all = typed(buf, 0, n * C);
+    for (let c = 0; c < channels; c++) { const o = new Float32Array(n); for (let i = 0; i < n; i++) o[i] = all[i * C + c]; planes.push(o); }
+  }
+  let range = null;
+  if (fmt === 'UInt8') range = [0, 255]; else if (fmt === 'UInt16') range = [0, 65535]; else if (fmt === 'UInt32') range = [0, 4294967295];
+  else range = bounds || [0, 1];
+  return { kw, props, meta, wcs, width: W, height: H, planes, range };
+}
+
+async function xisfPropValue(p, file) {
+  const t = p.attrs.type || '';
+  if (p.attrs.value !== undefined) {
+    if (/^(Float|Int|UInt)/.test(t)) return Number(p.attrs.value);
+    if (t === 'Boolean') return p.attrs.value === 'true' || p.attrs.value === '1';
+    return p.attrs.value;
+  }
+  const loc = p.attrs.location || '';
+  let bytes = null;
+  if (loc.startsWith('inline:base64')) {
+    const s = atob(p.text.replace(/\s+/g, ''));
+    bytes = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
+  } else if (loc.startsWith('inline:hex')) {
+    const h = p.text.replace(/\s+/g, ''); bytes = new Uint8Array(h.length / 2);
+    for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(h.substr(i * 2, 2), 16);
+  } else if (loc.startsWith('attachment:') && /^(F64|F32)(Vector|Matrix)$/.test(t) && (+p.attrs.length || 0) <= 16) {
+    const [, a, b] = loc.split(':'); bytes = new Uint8Array(await file.slice(+a, +a + +b).arrayBuffer());
+  } else if (t === 'String' || t === 'TimePoint' || !t) {
+    return p.text;
+  } else return null;
+  if (/^F64(Vector|Matrix)$/.test(t)) return Array.from(new Float64Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)));
+  if (/^F32(Vector|Matrix)$/.test(t)) return Array.from(new Float32Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)));
+  return null;
+}
+
+// PixInsight ImageSolver çözümü → FITS WCS (doğrusal kısım)
+function wcsFromXisfProps(props, W, H) {
+  const P = 'PCL:AstrometricSolution:';
+  const rc = props[P + 'ReferenceCelestialCoordinates'];
+  const ri = props[P + 'ReferenceImageCoordinates'];
+  const L = props[P + 'LinearTransformationMatrix'];
+  if (!rc || !ri || !L || L.length < 4) return null;
+  const proj = { Gnomonic: 'TAN', Stereographic: 'STG', Orthographic: 'SIN', ZenithalEqualArea: 'ZEA', ZenithalEqualDistant: 'ARC', Mercator: 'MER', HammerAitoff: 'AIT', PlateCarree: 'CAR' }[props[P + 'ProjectionSystem'] || 'Gnomonic'] || 'TAN';
+  const w = {
+    NAXIS: 2, NAXIS1: W, NAXIS2: H,
+    CTYPE1: 'RA---' + proj, CTYPE2: 'DEC--' + proj,
+    CRVAL1: rc[0], CRVAL2: rc[1],
+    // PI: başlangıç sol-üst köşe, y aşağı → FITS: piksel merkezi 1, y yukarı
+    CRPIX1: ri[0] + 0.5, CRPIX2: H - ri[1] + 0.5,
+    CD1_1: L[0], CD1_2: -L[1], CD2_1: L[2], CD2_2: -L[3],
+    RADESYS: 'ICRS', EQUINOX: 2000, _source: 'PixInsight ImageSolver'
+  };
+  const pole = props[P + 'CelestialPoleNativeCoordinates'];
+  if (pole && pole[0] !== 180) w.LONPOLE = pole[0];
+  return w;
+}
+
+async function xisfDecompress(buf, spec) {
+  const [codec, usize, isize] = spec.split(':');
+  const shuffled = codec.endsWith('+sh');
+  const base = codec.replace('+sh', '');
+  let out;
+  if (base === 'zlib') {
+    const ds = new DecompressionStream('deflate');
+    out = await new Response(new Blob([buf]).stream().pipeThrough(ds)).arrayBuffer();
+  } else if (base === 'lz4' || base === 'lz4hc') {
+    out = lz4Block(new Uint8Array(buf), +usize).buffer;
+  } else throw new Error(base + ' sıkıştırması desteklenmiyor — PixInsight\'ta sıkıştırmasız ya da zlib/LZ4 ile kaydet');
+  if (shuffled) out = unshuffle(new Uint8Array(out), +isize).buffer;
+  return out;
+}
+function lz4Block(src, usize) {
+  const dst = new Uint8Array(usize); let s = 0, d = 0;
+  while (s < src.length) {
+    const tok = src[s++]; let lit = tok >> 4;
+    if (lit === 15) { let b; do { b = src[s++]; lit += b; } while (b === 255); }
+    dst.set(src.subarray(s, s + lit), d); s += lit; d += lit;
+    if (s >= src.length) break;
+    const off = src[s] | (src[s + 1] << 8); s += 2;
+    let ml = tok & 15;
+    if (ml === 15) { let b; do { b = src[s++]; ml += b; } while (b === 255); }
+    ml += 4; let m = d - off;
+    for (let i = 0; i < ml; i++) dst[d++] = dst[m++];
+  }
+  return dst;
+}
+function unshuffle(a, item) {
+  const n = Math.floor(a.length / item), out = new Uint8Array(a.length);
+  for (let b = 0; b < item; b++) for (let i = 0; i < n; i++) out[i * item + b] = a[b * n + i];
+  out.set(a.subarray(n * item), n * item);
+  return out;
+}
+
+// Küçük XML ayrıştırıcı (worker'da DOMParser yok)
+class DOMParserLite {
+  constructor(xml) {
+    this.root = { name: '#root', attrs: {}, kids: [], text: '' };
+    const stack = [this.root];
+    const re = /<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<\/([\w:.-]+)\s*>|<([\w:.-]+)((?:\s+[\w:.-]+\s*=\s*"[^"]*")*)\s*(\/?)>|([^<]+)/g;
+    let m;
+    while ((m = re.exec(xml))) {
+      if (m[1]) { stack.pop(); }
+      else if (m[2]) {
+        const el = { name: m[2], attrs: {}, kids: [], text: '' };
+        const ar = /([\w:.-]+)\s*=\s*"([^"]*)"/g; let a;
+        while ((a = ar.exec(m[3] || ''))) el.attrs[a[1]] = unesc(a[2]);
+        stack[stack.length - 1].kids.push(el);
+        if (!m[4]) stack.push(el);
+      } else if (m[5]) { stack[stack.length - 1].text += unesc(m[5]); }
+    }
+    const wrap = el => ({
+      attrs: el.attrs, text: el.text.trim(),
+      children: n => el.kids.filter(k => k.name === n).map(wrap),
+    });
+    this._find = (el, n) => { for (const k of el.kids) { if (k.name === n) return k; const r = this._find(k, n); if (r) return r; } return null; };
+    this.first = n => { const e = this._find(this.root, n); return e ? wrap(e) : null; };
+  }
+}
+function unesc(s) { return s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&'); }
+
+// ---------- küçültme + germe ----------
+function binPlanes(planes, W, H, b) {
+  if (b <= 1) return { planes, w: W, h: H };
+  const w = Math.floor(W / b), h = Math.floor(H / b), inv = 1 / (b * b);
+  const out = planes.map(p => {
+    const o = new Float32Array(w * h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        let s = 0;
+        for (let dy = 0; dy < b; dy++) { const r = (y * b + dy) * W + x * b; for (let dx = 0; dx < b; dx++) s += p[r + dx]; }
+        o[y * w + x] = s * inv;
+      }
+    }
+    return o;
+  });
+  return { planes: out, w, h };
+}
+
+function sampleStats(p) {
+  const n = p.length, step = Math.max(1, Math.floor(n / 400000));
+  const s = []; for (let i = 0; i < n; i += step) { const v = p[i]; if (isFinite(v)) s.push(v); }
+  s.sort((a, b) => a - b);
+  const med = s[s.length >> 1];
+  const dev = s.map(v => Math.abs(v - med)).sort((a, b) => a - b);
+  return { med, mad: dev[dev.length >> 1], lo: s[Math.floor(s.length * 0.0005)], hi: s[Math.floor(s.length * 0.9995)], max: s[s.length - 1], min: s[0] };
+}
+const mtf = (m, x) => (x <= 0 ? 0 : x >= 1 ? 1 : x === m ? 0.5 : ((m - 1) * x) / ((2 * m - 1) * x - m));
+
+function render(planes, w, h, range, stretchMode, linked) {
+  // normalize [0,1]
+  let lo = range ? range[0] : null, hi = range ? range[1] : null;
+  if (lo === null) {
+    const st = planes.map(sampleStats);
+    lo = Math.min(...st.map(s => s.min)); hi = Math.max(...st.map(s => s.max));
+  }
+  const sc = 1 / ((hi - lo) || 1);
+  for (const p of planes) for (let i = 0; i < p.length; i++) { const v = (p[i] - lo) * sc; p[i] = v < 0 ? 0 : v > 1 ? 1 : (v === v ? v : 0); }
+  const stats = planes.map(sampleStats);
+  let mode = stretchMode;
+  if (mode === 'auto') mode = Math.max(...stats.map(s => s.med)) < 0.12 ? 'stf' : 'none';
+  const params = stats.map(s => {
+    if (mode !== 'stf') return null;
+    const c0 = Math.max(0, Math.min(1, s.med - 2.8 * 1.4826 * s.mad));
+    const m = mtf(0.25, s.med - c0);
+    return { c0, m };
+  });
+  if (mode === 'stf' && linked && planes.length === 3) {
+    const c0 = params.reduce((a, p) => a + p.c0, 0) / 3, m = params.reduce((a, p) => a + p.m, 0) / 3;
+    for (let i = 0; i < 3; i++) params[i] = { c0, m };
+  }
+  const rgba = new Uint8ClampedArray(w * h * 4);
+  const ch = planes.length;
+  for (let c = 0; c < 3; c++) {
+    const p = planes[Math.min(c, ch - 1)], pr = params[Math.min(c, ch - 1)];
+    // LUT ile hızlı germe
+    if (pr) {
+      const N = 65536, lut = new Uint8ClampedArray(N), k = 1 / (1 - pr.c0);
+      for (let i = 0; i < N; i++) { const x = i / (N - 1); lut[i] = Math.round(255 * mtf(pr.m, (x - pr.c0) * k)); }
+      for (let i = 0; i < w * h; i++) rgba[i * 4 + c] = lut[(p[i] * 65535) | 0];
+    } else {
+      for (let i = 0; i < w * h; i++) rgba[i * 4 + c] = p[i] * 255;
+    }
+  }
+  for (let i = 0; i < w * h; i++) rgba[i * 4 + 3] = 255;
+  return { rgba, mode };
+}
+
+function scaleWcs(wcs, b, w, h, H) {
+  if (!wcs) return null;
+  const o = Object.assign({}, wcs);
+  // Binleme üstten başlıyor; artan alt satırlar (FITS'te düşük y) atılıyor
+  const rem = H - h * b;
+  o.CRPIX1 = (wcs.CRPIX1 - 0.5) / b + 0.5;
+  o.CRPIX2 = (wcs.CRPIX2 - 0.5 - rem) / b + 0.5;
+  for (const k of ['CD1_1', 'CD1_2', 'CD2_1', 'CD2_2']) o[k] = wcs[k] * b;
+  o.NAXIS1 = w; o.NAXIS2 = h;
+  return o;
+}
+
+async function encode(rgba, w, h, maxThumb) {
+  const cv = new OffscreenCanvas(w, h);
+  cv.getContext('2d').putImageData(new ImageData(rgba, w, h), 0, 0);
+  const blob = await cv.convertToBlob({ type: 'image/jpeg', quality: 0.9 });
+  const ts = Math.min(1, maxThumb / Math.max(w, h));
+  const tc = new OffscreenCanvas(Math.max(1, Math.round(w * ts)), Math.max(1, Math.round(h * ts)));
+  const tx = tc.getContext('2d'); tx.imageSmoothingQuality = 'high';
+  tx.drawImage(cv, 0, 0, tc.width, tc.height);
+  const thumb = await tc.convertToBlob({ type: 'image/jpeg', quality: 0.8 });
+  return { blob, thumb };
+}
+
+// ---------- ana akış ----------
+self.onmessage = async (e) => {
+  const { id, file, opt } = e.data;
+  try {
+    const name = file.name.toLowerCase();
+    const isX = name.endsWith('.xisf');
+    progress(id, 'Başlık okunuyor…', 2);
+    const r = isX ? await readXisf(file, opt, id) : await readFits(file, opt, id);
+    if (r.headerOnly) { post('done', { id, headerOnly: true, wcs: r.wcs, meta: r.meta, width: r.width, height: r.height }); return; }
+    const b = Math.max(1, Math.ceil(Math.max(r.width, r.height) / (opt.maxDim || 3000)));
+    progress(id, 'Küçültülüyor (' + b + 'x)…', 45);
+    const bp = binPlanes(r.planes, r.width, r.height, b);
+    r.planes = null;
+    progress(id, 'Geriliyor…', 65);
+    const { rgba, mode } = render(bp.planes, bp.w, bp.h, r.range, opt.stretch || 'auto', !!opt.linked);
+    progress(id, 'Kodlanıyor…', 85);
+    const { blob, thumb } = await encode(rgba, bp.w, bp.h, 320);
+    const wcs = scaleWcs(r.wcs, b, bp.w, bp.h, r.height);
+    post('done', { id, blob, thumb, wcs, meta: r.meta, width: bp.w, height: bp.h, origW: r.width, origH: r.height, bin: b, stretch: mode, topDown: !!r.topDown });
+  } catch (err) {
+    post('error', { id, message: String(err && err.message || err) });
+  }
+};
+
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+//  GÖKYÜZÜM — kendi plate solve edilmiş fotoğraflarını gökyüzüne yerleştir
+//  Aladin Lite v3 (CDS) üzerinde çalışır. Görüntüler tarayıcıda (IndexedDB) saklanır.
+// ═══════════════════════════════════════════════════════════════════════════
+const SKY = (() => {
+  const ALADIN_URL = 'https://cdn.jsdelivr.net/npm/aladin-lite@3.8.2/dist/aladin.js';
+  const T = (tr, en) => (typeof _lang !== 'undefined' && _lang === 'EN') ? en : tr;
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const D2R = Math.PI / 180, R2D = 180 / Math.PI;
+
+  let A = null, aladin = null, ready = null;
+  let items = [];               // {id,name,created,width,height,wcs,meta,blob,thumb,visible,opacity,...}
+  const urls = new Map();       // id → blob url
+  const layers = new Set();     // yüklü katman adları
+  let worker = null, jobSeq = 0; const jobs = new Map();
+  let fpOverlay = null, fpCatalog = null, atlasCat = null, fovOverlay = null;
+  let placing = null;           // manuel yerleştirme durumu
+  let selectedId = null;
+
+  // ─── Ayarlar (tarayıcıda) ───
+  const SETKEY = 'sky_settings';
+  const defaults = { survey: 'P/DSS2/color', projection: 'SIN', maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
+  let S = Object.assign({}, defaults);
+  try { Object.assign(S, JSON.parse(localStorage.getItem(SETKEY) || '{}')); } catch (e) { }
+  const saveS = () => { try { localStorage.setItem(SETKEY, JSON.stringify(S)); } catch (e) { } };
+
+  // ─── IndexedDB ───
+  const DBN = 'astroSkyGallery', STORE = 'images';
+  let dbp = null;
+  function db() {
+    if (dbp) return dbp;
+    dbp = new Promise((res, rej) => {
+      const r = indexedDB.open(DBN, 1);
+      r.onupgradeneeded = () => r.result.createObjectStore(STORE, { keyPath: 'id' });
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    });
+    return dbp;
+  }
+  async function dbAll() { const d = await db(); return new Promise((res, rej) => { const q = d.transaction(STORE).objectStore(STORE).getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }); }
+  async function dbPut(it) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction(STORE, 'readwrite'); t.objectStore(STORE).put(it); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+  async function dbDel(id) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction(STORE, 'readwrite'); t.objectStore(STORE).delete(id); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+
+  // ─── Worker ───
+  function getWorker() {
+    if (worker) return worker;
+    const src = $('skyWorkerSrc').textContent;
+    worker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+    worker.onmessage = e => {
+      const m = e.data, j = jobs.get(m.id); if (!j) return;
+      if (m.type === 'progress') j.onProgress && j.onProgress(m.msg, m.pct);
+      else if (m.type === 'done') { jobs.delete(m.id); j.resolve(m); }
+      else if (m.type === 'error') { jobs.delete(m.id); j.reject(new Error(m.message)); }
+    };
+    return worker;
+  }
+  function processFile(file, onProgress) {
+    return new Promise((resolve, reject) => {
+      const id = ++jobSeq; jobs.set(id, { resolve, reject, onProgress });
+      getWorker().postMessage({ id, file, opt: { maxDim: +S.maxDim, stretch: S.stretch, linked: S.linked } });
+    });
+  }
+
+  // ─── WCS matematiği (TAN; diğer projeksiyonlarda yaklaşık) ───
+  function pix2sky(w, x, y) {
+    const dx = x - w.CRPIX1, dy = y - w.CRPIX2;
+    const xi = (w.CD1_1 * dx + w.CD1_2 * dy) * D2R, eta = (w.CD2_1 * dx + w.CD2_2 * dy) * D2R;
+    const a0 = w.CRVAL1 * D2R, d0 = w.CRVAL2 * D2R;
+    const rho = Math.hypot(xi, eta);
+    if (rho === 0) return [w.CRVAL1, w.CRVAL2];
+    const c = Math.atan(rho), sc = Math.sin(c), cc = Math.cos(c);
+    const dec = Math.asin(cc * Math.sin(d0) + eta * sc * Math.cos(d0) / rho);
+    const ra = a0 + Math.atan2(xi * sc, rho * Math.cos(d0) * cc - eta * Math.sin(d0) * sc);
+    return [((ra * R2D) % 360 + 360) % 360, dec * R2D];
+  }
+  const pixScale = w => Math.sqrt(Math.abs(w.CD1_1 * w.CD2_2 - w.CD1_2 * w.CD2_1)) * 3600; // "/px
+  function corners(w) { const W = w.NAXIS1, H = w.NAXIS2; return [[0.5, 0.5], [W + 0.5, 0.5], [W + 0.5, H + 0.5], [0.5, H + 0.5]].map(p => pix2sky(w, p[0], p[1])); }
+  function center(w) { return pix2sky(w, (w.NAXIS1 + 1) / 2, (w.NAXIS2 + 1) / 2); }
+  function fovDeg(w) { return Math.max(w.NAXIS1, w.NAXIS2) * pixScale(w) / 3600; }
+  // Kuzey yönü açısı (doğuya doğru, derece) — "PA"
+  function posAngle(w) {
+    const det = w.CD1_1 * w.CD2_2 - w.CD1_2 * w.CD2_1;
+    const flip = det > 0; // ayna görüntü
+    return { pa: ((Math.atan2(flip ? -w.CD1_2 : w.CD1_2, w.CD2_2) * R2D) % 360 + 360) % 360, flip };
+  }
+  function makeWcs(raDeg, decDeg, scaleArcsec, rotDeg, flip, W, H) {
+    const s = scaleArcsec / 3600, t = rotDeg * D2R, f = flip ? -1 : 1;
+    return {
+      NAXIS: 2, NAXIS1: W, NAXIS2: H, CTYPE1: 'RA---TAN', CTYPE2: 'DEC--TAN',
+      CRPIX1: (W + 1) / 2, CRPIX2: (H + 1) / 2, CRVAL1: raDeg, CRVAL2: decDeg,
+      CD1_1: -s * Math.cos(t) * f, CD1_2: s * Math.sin(t), CD2_1: s * Math.sin(t) * f, CD2_2: s * Math.cos(t),
+      RADESYS: 'ICRS', EQUINOX: 2000, _source: T('Elle yerleştirildi', 'Placed manually')
+    };
+  }
+  const fmtRA = d => { d = ((d % 360) + 360) % 360; const h = d / 15, hh = Math.floor(h), m = (h - hh) * 60, mm = Math.floor(m), ss = (m - mm) * 60; return hh + 'h' + String(mm).padStart(2, '0') + 'm' + ss.toFixed(1).padStart(4, '0') + 's'; };
+  const fmtDec = d => { const s = d < 0 ? '−' : '+'; d = Math.abs(d); const dd = Math.floor(d), m = (d - dd) * 60, mm = Math.floor(m), ss = (m - mm) * 60; return s + dd + '°' + String(mm).padStart(2, '0') + '′' + ss.toFixed(0).padStart(2, '0') + '″'; };
+  function parseCoord(str, isRA) {
+    str = String(str).trim(); if (!str) return null;
+    if (/^[+-]?\d+(\.\d+)?$/.test(str)) return +str; // ondalık derece
+    const sg = /^\s*[-−]/.test(str) ? -1 : 1;
+    const p = str.replace(/[−-]/, '').split(/[^\d.]+/).filter(Boolean).map(Number);
+    if (!p.length) return null;
+    const v = p[0] + (p[1] || 0) / 60 + (p[2] || 0) / 3600;
+    return sg * v * (isRA ? 15 : 1);
+  }
+
+  // ─── Aladin yükleme ───
+  function loadAladin() {
+    if (ready) return ready;
+    ready = (async () => {
+      const mod = await import(ALADIN_URL);
+      A = mod.default; await A.init;
+      aladin = A.aladin('#skyAladin', {
+        survey: S.survey, projection: S.projection, cooFrame: S.frame, fov: 70, target: '05 35 17 -05 23 28',
+        showCooGrid: S.grid, showReticle: false, showProjectionControl: false, showFrame: true,
+        showZoomControl: true, showFullscreenControl: false, showLayersControl: true, showGotoControl: false,
+        showSimbadPointerControl: true, showShareControl: false, showContextMenu: true, showCooGridControl: false,
+        showStatusBar: true
+      });
+      fpOverlay = A.graphicOverlay({ color: '#ffcb6b', lineWidth: 1.5, name: T('Fotoğraf çerçeveleri', 'Photo footprints') });
+      aladin.addOverlay(fpOverlay);
+      fpCatalog = A.catalog({ name: T('Fotoğraflarım', 'My photos'), sourceSize: 14, color: '#ffcb6b', shape: 'square', displayLabel: true, labelColumn: 'label', labelColor: '#ffcb6b', labelFont: '12px Space Mono, monospace', onClick: 'showPopup' });
+      aladin.addCatalog(fpCatalog);
+      fovOverlay = A.graphicOverlay({ color: '#4fc3f7', lineWidth: 2, name: T('Kadraj', 'FOV') });
+      aladin.addOverlay(fovOverlay);
+      buildAtlasCatalog();
+      aladin.on('objectClicked', o => {
+        if (o && o.data && o.data._skyId) { select(o.data._skyId, true); }
+      });
+      aladin.on('positionChanged', () => { if (S.fov) drawFov(); if (placing) updatePlaceCenterHint(); });
+      aladin.on('zoomChanged', () => { if (S.fov) drawFov(); atlasLabels(); });
+      return aladin;
+    })();
+    ready.catch(e => { window.__skyErr = e && (e.stack || e.message || e); ready = null; });
+    return ready;
+  }
+
+  function buildAtlasCatalog() {
+    if (typeof CAT === 'undefined') return;
+    atlasCat = A.catalog({ name: T('Atlas hedefleri', 'Atlas targets'), sourceSize: 10, color: '#c792ea', shape: 'circle', displayLabel: true, labelColumn: 'name', labelColor: '#c792ea', labelFont: '11px Space Mono, monospace' });
+    const src = [];
+    const all = CAT.concat(typeof _extraObjects !== 'undefined' ? _extraObjects.map(o => [o.name, o.common, o.type, o.ra, o.dec, o.size, o.mag]) : []);
+    const seen = [];
+    for (const c of all) {
+      if (c[2] === 'Gezegen') continue;
+      const ra = c[3] * 15, dec = c[4];
+      // Aynı objenin iki adı (M 82 / NGC 3034) üst üste binmesin
+      if (seen.some(p => Math.abs(p[1] - dec) < 0.02 && Math.abs(p[0] - ra) * Math.cos(dec * D2R) < 0.02)) continue;
+      seen.push([ra, dec]);
+      src.push(A.source(ra, dec, { name: c[0], common: c[1] || '', type: c[2], size: c[5] + "'", mag: c[6] }));
+    }
+    atlasCat.addSources(src);
+    aladin.addCatalog(atlasCat);
+    if (!S.atlas) atlasCat.hide();
+    atlasLabels();
+  }
+  // Geniş açıda etiket kalabalığı olmasın: 20°'den dar görüşte isimleri göster
+  function atlasLabels() {
+    if (!atlasCat || !aladin) return;
+    const on = aladin.getFov()[0] < 20;
+    if (atlasCat.displayLabel !== on) { atlasCat.displayLabel = on; atlasCat.reportChange(); }
+  }
+
+  // ─── Görüntü katmanları ───
+  const layerName = it => 'sky_' + it.id;
+  function blobUrl(it) { if (!urls.has(it.id)) urls.set(it.id, URL.createObjectURL(it.blob)); return urls.get(it.id); }
+  function wcsForAladin(w) { const o = {}; for (const k in w) if (k[0] !== '_') o[k] = w[k]; return o; }
+  function showLayer(it, wcsOverride) {
+    if (!aladin || !it.wcs && !wcsOverride) return Promise.resolve();
+    const nm = layerName(it);
+    const img = aladin.createImageFITS(blobUrl(it), { name: it.name, imgFormat: 'jpeg', wcs: wcsForAladin(wcsOverride || it.wcs) }, () => { }, e => console.warn('Sky layer', e));
+    const r = aladin.setOverlayImageLayer(img, nm);
+    layers.add(nm);
+    return Promise.resolve(img.query || r).then(() => { try { img.setOpacity(it.opacity == null ? 1 : it.opacity); } catch (e) { } return img; });
+  }
+  function hideLayer(it) { const nm = layerName(it); if (layers.has(nm)) { try { aladin.removeImageLayer(nm); } catch (e) { } layers.delete(nm); } }
+  function setOpacity(it, v) { it.opacity = v; try { const l = aladin.getOverlayImageLayer(layerName(it)); l && l.setOpacity(v); } catch (e) { } }
+
+  function drawFootprints() {
+    if (!fpOverlay) return;
+    fpOverlay.removeAll(); fpCatalog.removeAll();
+    if (!S.footprints) return;
+    const src = [];
+    for (const it of items) {
+      if (!it.wcs) continue;
+      const c = corners(it.wcs);
+      fpOverlay.add(A.polygon(c, { color: it.id === selectedId ? '#4fc3f7' : '#ffcb6b', lineWidth: it.id === selectedId ? 2.5 : 1.5 }));
+      const top = c.reduce((a, b) => (b[1] > a[1] ? b : a));
+      const cc = center(it.wcs);
+      src.push(A.source(cc[0], cc[1], { label: it.meta && it.meta.object || it.name, _skyId: it.id, [T('Dosya', 'File')]: it.name, [T('Filtre', 'Filter')]: it.meta && it.meta.filter || '', [T('Tarih', 'Date')]: (it.meta && it.meta.dateObs || '').slice(0, 10) }));
+    }
+    fpCatalog.addSources(src);
+  }
+
+  // ─── Kurulum kadrajı (FOV) ───
+  function drawFov() {
+    if (!fovOverlay) return;
+    fovOverlay.removeAll();
+    if (!S.fov) return;
+    const st = (typeof getSetup === 'function' && getSetup()) || (typeof setups !== 'undefined' && setups[0]);
+    if (!st || !st.focalLength || !st.sensorW) { $('skyFovInfo').textContent = T('Kurulum seç (odak + sensör gerekli)', 'Select a setup (focal + sensor needed)'); return; }
+    const fw = 2 * Math.atan(st.sensorW / (2 * st.focalLength)) * R2D, fh = 2 * Math.atan(st.sensorH / (2 * st.focalLength)) * R2D;
+    const [ra, dec] = aladin.getRaDec();
+    const W = 1000, H = Math.round(1000 * fh / fw);
+    const w = makeWcs(ra, dec, fw * 3600 / W, S.fovRot, false, W, H);
+    fovOverlay.add(A.polygon(corners(w)));
+    // kuzey işareti
+    const n1 = pix2sky(w, (W + 1) / 2, H + 0.5), n2 = pix2sky(w, (W + 1) / 2, H + 0.5 + H * 0.12);
+    fovOverlay.add(A.polyline([n1, n2]));
+    $('skyFovInfo').textContent = st.name + ' · ' + (fw * 60).toFixed(0) + '′×' + (fh * 60).toFixed(0) + '′';
+  }
+
+  // ─── Galeri listesi ───
+  function renderList() {
+    const el = $('skyList');
+    $('skyCount').textContent = items.length ? items.length + ' ' + T('görüntü', 'images') : '';
+    if (!items.length) {
+      el.innerHTML = '<div class="sky-empty">' + T('Henüz görüntü yok.<br>Plate solve edilmiş <b>XISF</b> ya da <b>FITS</b> dosyalarını yukarıya bırak.<br><br>Çözümsüz dosyaları (APP, ASIAIR) veya <b>JPG</b>\'leri de bırakabilirsin — elle yerleştirirsin.', 'No images yet.<br>Drop plate‑solved <b>XISF</b> or <b>FITS</b> files above.<br><br>Unsolved files or <b>JPG</b>s can be placed manually.') + '</div>';
+      return;
+    }
+    const sorted = items.slice().sort((a, b) => (b.created || 0) - (a.created || 0));
+    el.innerHTML = sorted.map(it => {
+      const m = it.meta || {};
+      const sub = [m.filter, m.exptime ? (Math.round(m.exptime) + 's') : '', (m.dateObs || '').slice(0, 10)].filter(Boolean).join(' · ');
+      const w = it.wcs;
+      const info = w ? (pixScale(w) / (it.bin || 1)).toFixed(2) + '″/px · ' + (fovDeg(w) * 60).toFixed(0) + '′' : '<span style="color:var(--warning)">' + T('Konum yok — yerleştir', 'No position — place it') + '</span>';
+      return '<div class="sky-item' + (it.id === selectedId ? ' sel' : '') + '" data-id="' + it.id + '">'
+        + '<img class="sky-th" src="' + (it._thumbUrl || '') + '" onclick="SKY.select(\'' + it.id + '\',true)">'
+        + '<div class="sky-it-body"><div class="sky-it-name" title="' + esc(it.name) + '" onclick="SKY.select(\'' + it.id + '\',true)">' + esc(m.object || it.name) + '</div>'
+        + '<div class="sky-it-sub">' + esc(sub || it.name) + '</div><div class="sky-it-sub">' + info + '</div>'
+        + '<div class="sky-it-act">'
+        + '<button title="' + T('Göster/gizle', 'Show/hide') + '" onclick="SKY.toggle(\'' + it.id + '\')">' + (it.visible && w ? '👁' : '◌') + '</button>'
+        + (w ? '<button title="' + T('Görüntüye git', 'Go to image') + '" onclick="SKY.select(\'' + it.id + '\',true)">⌖</button>' : '')
+        + '<button title="' + T('Elle yerleştir / düzelt', 'Place / adjust manually') + '" onclick="SKY.place(\'' + it.id + '\')">✎</button>'
+        + '<input type="range" min="0" max="1" step="0.05" value="' + (it.opacity == null ? 1 : it.opacity) + '" title="' + T('Opaklık', 'Opacity') + '" oninput="SKY.opacity(\'' + it.id + '\',this.value)">'
+        + '<button title="' + T('Galeriden kaldır', 'Remove from gallery') + '" class="sky-del" onclick="SKY.remove(\'' + it.id + '\')">✕</button>'
+        + '</div></div></div>';
+    }).join('');
+  }
+
+  // ─── Dosya alma ───
+  const isRaster = n => /\.(jpe?g|png|webp|gif|bmp|avif)$/i.test(n);
+  const isAstro = n => /\.(fits?|fts|xisf)$/i.test(n);
+  const stem = n => n.replace(/\.[^.]+$/, '').toLowerCase();
+
+  async function addFiles(fileList) {
+    const files = Array.from(fileList).filter(f => isRaster(f.name) || isAstro(f.name));
+    const skipped = Array.from(fileList).length - files.length;
+    if (!files.length) { status(T('Desteklenen dosya yok (FITS, XISF, JPG, PNG)', 'No supported files (FITS, XISF, JPG, PNG)'), 'warn'); return; }
+    await loadAladin().catch(e => { status(T('Aladin yüklenemedi — internet bağlantısı gerekli. ', 'Could not load Aladin — internet needed. ') + e.message, 'err'); throw e; });
+    const rasters = files.filter(f => isRaster(f.name)), astros = files.filter(f => isAstro(f.name));
+    // JPG ile aynı adlı FITS/XISF → WCS kaynağı olarak eşleştir
+    const pairs = new Map();
+    for (const r of rasters) {
+      let m = astros.find(a => stem(a.name) === stem(r.name));
+      if (!m && rasters.length === 1 && astros.length === 1) m = astros[0];
+      if (m) pairs.set(r, m);
+    }
+    const donors = new Set(pairs.values());
+    let lastId = null, n = 0;
+    for (const f of astros) {
+      if (donors.has(f)) continue; // JPG'nin WCS kaynağı, ayrıca eklenmez
+      n++; status(T('İşleniyor', 'Processing') + ' ' + n + ': ' + f.name, 'info', 0);
+      try {
+        const r = await processFile(f, (msg, pct) => status(f.name + ' — ' + msg, 'info', pct));
+        if (r.headerOnly) { status(f.name + ': ' + T('sadece başlık (görüntü yok) — bir JPG ile birlikte bırak', 'header only — drop together with a JPG'), 'warn'); continue; }
+        lastId = await store(f.name, r);
+      } catch (e) { status(f.name + ': ' + e.message, 'err'); console.error(e); }
+    }
+    for (const r of rasters) {
+      n++; status(T('İşleniyor', 'Processing') + ' ' + n + ': ' + r.name, 'info', 0);
+      try {
+        const bmp = await createImageBitmap(r);
+        let wcs = null, meta = { object: '', software: '' }, note = '';
+        const donor = pairs.get(r);
+        if (donor) {
+          const d = await processFile(donor, (msg, pct) => status(donor.name + ' — WCS ' + msg, 'info', pct));
+          if (d.wcs) {
+            const srcW = d.headerOnly ? d.width : d.origW, srcH = d.headerOnly ? d.height : d.origH;
+            const full = d.headerOnly ? d.wcs : unbin(d.wcs, d.bin, srcH);
+            if (srcW && Math.abs(srcW / srcH - bmp.width / bmp.height) > 0.01) note = T(' (en-boy oranı farklı — kırpılmış olabilir, kontrol et)', ' (aspect differs — may be cropped, check it)');
+            wcs = rescaleWcs(full, srcW, srcH, bmp.width, bmp.height);
+            meta = d.meta || meta;
+          }
+        }
+        const { blob, thumb, w, h, bin } = await rasterToJpeg(bmp);
+        const wcsS = wcs ? rescaleWcs(wcs, bmp.width, bmp.height, w, h) : null;
+        lastId = await store(r.name, { blob, thumb, wcs: wcsS, meta, width: w, height: h, origW: bmp.width, origH: bmp.height, bin, stretch: 'jpg' });
+        if (note) status(r.name + note, 'warn');
+      } catch (e) { status(r.name + ': ' + e.message, 'err'); console.error(e); }
+    }
+    renderList(); drawFootprints();
+    const last = items.find(i => i.id === lastId);
+    if (last) { if (last.wcs) select(last.id, true); else place(last.id); }
+    status(T('Hazır.', 'Done.') + (skipped ? ' ' + skipped + T(' dosya atlandı', ' files skipped') : ''), 'ok');
+  }
+  function unbin(w, b, H) { // worker çıktısını tam çözünürlüğe geri çevir
+    if (!b || b === 1) return w;
+    const o = Object.assign({}, w); const h = w.NAXIS2, rem = H - h * b;
+    o.CRPIX1 = (w.CRPIX1 - 0.5) * b + 0.5; o.CRPIX2 = (w.CRPIX2 - 0.5) * b + 0.5 + rem;
+    for (const k of ['CD1_1', 'CD1_2', 'CD2_1', 'CD2_2']) o[k] = w[k] / b;
+    o.NAXIS1 = w.NAXIS1 * b; o.NAXIS2 = H; return o;
+  }
+  function rescaleWcs(w, W0, H0, W1, H1) { // aynı kadraj, farklı piksel boyutu
+    const sx = W1 / W0, sy = H1 / H0, o = Object.assign({}, w);
+    o.CRPIX1 = (w.CRPIX1 - 0.5) * sx + 0.5; o.CRPIX2 = (w.CRPIX2 - 0.5) * sy + 0.5;
+    o.CD1_1 = w.CD1_1 / sx; o.CD2_1 = w.CD2_1 / sx; o.CD1_2 = w.CD1_2 / sy; o.CD2_2 = w.CD2_2 / sy;
+    o.NAXIS1 = W1; o.NAXIS2 = H1; return o;
+  }
+  async function rasterToJpeg(bmp) {
+    const max = +S.maxDim, k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const w = Math.round(bmp.width * k), h = Math.round(bmp.height * k);
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const cx = cv.getContext('2d'); cx.imageSmoothingQuality = 'high'; cx.drawImage(bmp, 0, 0, w, h);
+    const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', 0.9));
+    const ts = Math.min(1, 320 / Math.max(w, h)); const tc = document.createElement('canvas'); tc.width = Math.round(w * ts); tc.height = Math.round(h * ts);
+    tc.getContext('2d').drawImage(cv, 0, 0, tc.width, tc.height);
+    const thumb = await new Promise(r => tc.toBlob(r, 'image/jpeg', 0.8));
+    return { blob, thumb, w, h, bin: bmp.width / w };
+  }
+  async function store(name, r) {
+    const it = {
+      id: 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, created: Date.now(),
+      width: r.width, height: r.height, origW: r.origW, origH: r.origH, bin: r.bin, stretch: r.stretch,
+      wcs: r.wcs || null, meta: r.meta || {}, blob: r.blob, thumb: r.thumb, visible: true, opacity: 1
+    };
+    it._thumbUrl = URL.createObjectURL(it.thumb);
+    await dbPut(strip(it)).catch(e => status(T('Kaydedilemedi (depolama dolu olabilir): ', 'Could not save (storage full?): ') + e.message, 'err'));
+    items.push(it);
+    if (it.wcs) await showLayer(it);
+    return it.id;
+  }
+  const strip = it => { const o = {}; for (const k in it) if (k[0] !== '_') o[k] = it[k]; return o; };
+
+  // ─── Seçim / görünürlük ───
+  function select(id, go) {
+    selectedId = id; const it = items.find(i => i.id === id); if (!it) return;
+    renderList(); drawFootprints();
+    if (go && it.wcs && aladin) {
+      const c = center(it.wcs); aladin.gotoRaDec(c[0], c[1]); aladin.setFoV(fovDeg(it.wcs) * 1.4);
+      const pa = posAngle(it.wcs);
+      $('skyInfo').innerHTML = '<b>' + esc(it.meta.object || it.name) + '</b> · ' + fmtRA(c[0]) + ' ' + fmtDec(c[1]) + ' · PA ' + pa.pa.toFixed(1) + '°' + (pa.flip ? ' (' + T('ayna', 'mirrored') + ')' : '') + ' · ' + (pixScale(it.wcs) / (it.bin || 1)).toFixed(2) + '″/px · ' + esc(it.wcs._source || '');
+      const el = document.querySelector('.sky-item[data-id="' + id + '"]'); el && el.scrollIntoView({ block: 'nearest' });
+    }
+  }
+  async function toggle(id) {
+    const it = items.find(i => i.id === id); if (!it || !it.wcs) { place(id); return; }
+    it.visible = !it.visible; if (it.visible) await showLayer(it); else hideLayer(it);
+    dbPut(strip(it)); renderList();
+  }
+  let opT = null;
+  function opacity(id, v) { const it = items.find(i => i.id === id); if (!it) return; setOpacity(it, +v); clearTimeout(opT); opT = setTimeout(() => dbPut(strip(it)), 400); }
+  async function remove(id) {
+    const it = items.find(i => i.id === id); if (!it) return;
+    const b = document.querySelector('.sky-item[data-id="' + id + '"] .sky-del');
+    if (b && !b.classList.contains('confirm')) { b.classList.add('confirm'); b.textContent = T('Sil?', 'Delete?'); setTimeout(() => { if (b.isConnected) { b.classList.remove('confirm'); b.textContent = '✕'; } }, 2500); return; }
+    hideLayer(it); await dbDel(id); items = items.filter(i => i.id !== id);
+    if (urls.has(id)) { URL.revokeObjectURL(urls.get(id)); urls.delete(id); }
+    if (selectedId === id) selectedId = null;
+    renderList(); drawFootprints();
+  }
+  async function showAll(v) { for (const it of items) { if (!it.wcs) continue; it.visible = v; if (v) await showLayer(it); else hideLayer(it); dbPut(strip(it)); } renderList(); }
+
+  // ─── Elle yerleştirme ───
+  function place(id) {
+    const it = items.find(i => i.id === id); if (!it || !aladin) return;
+    hideLayer(it);
+    let ra, dec, scale, rot = 0, flip = false;
+    if (it.wcs) {
+      const c = center(it.wcs); ra = c[0]; dec = c[1]; scale = pixScale(it.wcs); const pa = posAngle(it.wcs); rot = pa.pa > 180 ? pa.pa - 360 : pa.pa; flip = pa.flip;
+    } else {
+      const m = it.meta || {};
+      const vc = aladin.getRaDec();
+      ra = m.ra != null ? m.ra : vc[0]; dec = m.dec != null ? m.dec : vc[1];
+      const b = it.bin || 1;
+      if (m.focal && m.pixsize) scale = 206.265 * m.pixsize * (m.xbin || 1) / m.focal * b;
+      else {
+        const st = (typeof getSetup === 'function' && getSetup()) || null;
+        if (st && st.focalLength && st.sensorW) scale = (st.sensorW / st.focalLength) * R2D * 3600 / (it.origW || it.width) * b;
+        else scale = 1.5 * b;
+      }
+    }
+    placing = { id, ra, dec, scale, rot, flip, orig: it.wcs };
+    $('skyPlace').style.display = 'block';
+    $('skyPlName').textContent = (it.meta && it.meta.object) || it.name;
+    $('skyPlRA').value = fmtRA(ra); $('skyPlDec').value = fmtDec(dec);
+    $('skyPlScale').value = (scale / (it.bin || 1)).toFixed(3);
+    $('skyPlRot').value = rot.toFixed(1); $('skyPlRotN').value = rot.toFixed(1); $('skyPlFlip').checked = flip;
+    $('skyPlObj').value = (it.meta && it.meta.object) || '';
+    aladin.gotoRaDec(ra, dec); aladin.setFoV(Math.max(it.width, it.height) * scale / 3600 * 1.6);
+    placePreview();
+  }
+  function readPlace() {
+    const it = items.find(i => i.id === placing.id);
+    const ra = parseCoord($('skyPlRA').value, true), dec = parseCoord($('skyPlDec').value, false);
+    if (ra != null) placing.ra = ra; if (dec != null) placing.dec = dec;
+    placing.scale = (+$('skyPlScale').value || 1) * (it.bin || 1);
+    placing.rot = +$('skyPlRotN').value || 0; placing.flip = $('skyPlFlip').checked;
+    return makeWcs(placing.ra, placing.dec, placing.scale, placing.rot, placing.flip, it.width, it.height);
+  }
+  let plT = null;
+  function placePreview() {
+    clearTimeout(plT);
+    plT = setTimeout(() => { if (!placing) return; const it = items.find(i => i.id === placing.id); const w = readPlace(); hideLayer(it); showLayer(Object.assign({}, it, { opacity: +$('skyPlOp').value }), w); }, 120);
+  }
+  function placeRot(v) { $('skyPlRotN').value = (+v).toFixed(1); $('skyPlRot').value = v; placePreview(); }
+  function placeNudge(dx, dy) { // ekran yönünde küçük kaydırma (görüntü genişliğinin %0.5'i)
+    const it = items.find(i => i.id === placing.id); readPlace();
+    const step = Math.max(it.width, it.height) * placing.scale / 3600 * 0.005;
+    placing.dec += dy * step; placing.ra += dx * step / Math.max(0.05, Math.cos(placing.dec * D2R));
+    $('skyPlRA').value = fmtRA(placing.ra); $('skyPlDec').value = fmtDec(placing.dec); placePreview();
+  }
+  function placeFromView() { const [ra, dec] = aladin.getRaDec(); $('skyPlRA').value = fmtRA(ra); $('skyPlDec').value = fmtDec(dec); placePreview(); }
+  function updatePlaceCenterHint() { }
+  async function placeResolve() {
+    const name = $('skyPlObj').value.trim(); if (!name) return;
+    $('skyPlMsg').textContent = T('Aranıyor…', 'Searching…');
+    let f = null;
+    try { f = (typeof tryNED === 'function' && await tryNED(name)) || (typeof trySIMBAD === 'function' && await trySIMBAD(name)); } catch (e) { }
+    if (f) { $('skyPlRA').value = fmtRA(f.ra * 15); $('skyPlDec').value = fmtDec(f.dec); $('skyPlMsg').textContent = '✓ ' + f.id; aladin.gotoRaDec(f.ra * 15, f.dec); placePreview(); }
+    else $('skyPlMsg').textContent = T('Bulunamadı', 'Not found');
+  }
+  async function placeSave() {
+    const it = items.find(i => i.id === placing.id); const w = readPlace();
+    it.wcs = w; it.visible = true; it.opacity = +$('skyPlOp').value;
+    if ($('skyPlObj').value.trim()) it.meta = Object.assign({}, it.meta, { object: $('skyPlObj').value.trim() });
+    await dbPut(strip(it)); placeClose(true);
+    await showLayer(it); renderList(); drawFootprints(); select(it.id, false);
+  }
+  function placeCancel() { const it = items.find(i => i.id === placing.id); placeClose(false); if (it && it.wcs && it.visible) showLayer(it); }
+  function placeClose() { const it = placing && items.find(i => i.id === placing.id); if (it) hideLayer(it); placing = null; $('skyPlace').style.display = 'none'; }
+
+  // ─── Durum çubuğu ───
+  let stT = null;
+  function status(msg, kind, pct) {
+    const el = $('skyStatus'); el.className = 'sky-status ' + (kind || 'info'); el.style.display = 'block';
+    el.innerHTML = esc(msg) + (pct != null && kind === 'info' ? '<div class="sky-bar"><i style="width:' + Math.max(2, pct) + '%"></i></div>' : '');
+    clearTimeout(stT); if (kind === 'ok') stT = setTimeout(() => { el.style.display = 'none'; }, 4000);
+  }
+
+  // ─── Görünüm ayarları ───
+  function setSurvey(v) { S.survey = v; saveS(); aladin && aladin.setImageSurvey(v); }
+  function setProjection(v) { S.projection = v; saveS(); aladin && aladin.setProjection(v); }
+  function setFrame(v) { S.frame = v; saveS(); aladin && aladin.setFrame(v); }
+  function setGrid(v) { S.grid = v; saveS(); aladin && (v ? aladin.showCooGrid() : aladin.hideCooGrid()); }
+  function setAtlas(v) { S.atlas = v; saveS(); atlasCat && (v ? atlasCat.show() : atlasCat.hide()); }
+  function setFootprints(v) { S.footprints = v; saveS(); drawFootprints(); }
+  function setFov(v) { S.fov = v; saveS(); $('skyFovRow').style.display = v ? 'flex' : 'none'; drawFov(); }
+  function setFovRot(v) { S.fovRot = +v; saveS(); $('skyFovRotV').textContent = (+v).toFixed(0) + '°'; drawFov(); }
+  function setOpt(k, v) { S[k] = v; saveS(); }
+  async function goto(q) {
+    q = String(q || '').trim(); if (!q || !aladin) return;
+    const hit = items.find(i => ((i.meta && i.meta.object) || i.name).toLowerCase().replace(/\s/g, '') === q.toLowerCase().replace(/\s/g, ''));
+    if (hit && hit.wcs) { select(hit.id, true); return; }
+    aladin.gotoObject(q, { error: () => status(T('Bulunamadı: ', 'Not found: ') + q, 'warn') });
+  }
+
+  // ─── Aç / kapat ───
+  async function open() {
+    $('skyView').classList.add('open'); document.body.classList.add('sky-open');
+    applyLabels();
+    try { await loadAladin(); } catch (e) { status(T('Aladin Lite yüklenemedi. Bu bölüm internet bağlantısı gerektirir.', 'Could not load Aladin Lite. This section needs an internet connection.') + ' (' + e.message + ')', 'err'); return; }
+    if (!items.length) {
+      const all = await dbAll().catch(() => []);
+      items = all.map(it => Object.assign(it, { _thumbUrl: it.thumb ? URL.createObjectURL(it.thumb) : '' }));
+      for (const it of items) if (it.wcs && it.visible) await showLayer(it);
+      const last = items.filter(i => i.wcs).sort((a, b) => (b.created || 0) - (a.created || 0))[0];
+      if (last) select(last.id, true);
+    }
+    renderList(); drawFootprints(); drawFov();
+  }
+  function close() { $('skyView').classList.remove('open'); document.body.classList.remove('sky-open'); if (placing) placeCancel(); }
+
+  function applyLabels() {
+    const q = (s, f) => document.querySelectorAll(s).forEach(f);
+    q('[data-tr]', el => { el.innerHTML = T(el.dataset.tr, el.dataset.en); });
+    q('[data-trt]', el => { el.title = T(el.dataset.trt, el.dataset.ent); });
+    q('[data-trp]', el => { el.placeholder = T(el.dataset.trp, el.dataset.enp); });
+    // ayarları kontrollere yansıt
+    $('skySurvey').value = S.survey; $('skyProj').value = S.projection; $('skyFrame').value = S.frame;
+    $('skyGrid').checked = S.grid; $('skyAtlas').checked = S.atlas; $('skyFp').checked = S.footprints; $('skyFovChk').checked = S.fov;
+    $('skyMax').value = S.maxDim; $('skyStretch').value = S.stretch; $('skyLinked').checked = S.linked;
+    $('skyFovRot').value = S.fovRot; $('skyFovRotV').textContent = S.fovRot + '°'; $('skyFovRow').style.display = S.fov ? 'flex' : 'none';
+    renderList();
+  }
+
+  // Sürükle-bırak
+  function initDrop() {
+    const z = $('skyDrop'), v = $('skyView');
+    ['dragenter', 'dragover'].forEach(ev => v.addEventListener(ev, e => { e.preventDefault(); z.classList.add('hover'); }));
+    ['dragleave', 'drop'].forEach(ev => v.addEventListener(ev, e => { e.preventDefault(); if (ev === 'drop' || e.target === v) z.classList.remove('hover'); }));
+    v.addEventListener('drop', e => { z.classList.remove('hover'); if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
+    $('skyFile').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('skyView').classList.contains('open')) { if (placing) placeCancel(); else close(); } });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initDrop); else initDrop();
+
+  return {
+    open, close, addFiles, select, toggle, opacity, remove, place, showAll, goto,
+    placePreview, placeRot, placeNudge, placeFromView, placeResolve, placeSave, placeCancel,
+    setSurvey, setProjection, setFrame, setGrid, setAtlas, setFootprints, setFov, setFovRot, setOpt, applyLabels,
+    _debug: () => ({ aladin, items, S, pix2sky, makeWcs })
+  };
+})();
+
+// Dil değişince Gökyüzüm etiketlerini de güncelle
+(function () {
+  if (typeof toggleLang !== 'function') return;
+  const orig = toggleLang;
+  window.toggleLang = function () { orig.apply(this, arguments); try { SKY.applyLabels(); } catch (e) { } };
+})();
+
+</script>
+<!--/SKY:js-->
 </body>
 </html>
