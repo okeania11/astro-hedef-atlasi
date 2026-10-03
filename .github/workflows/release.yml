@@ -4,7 +4,7 @@ name: Sürüm notları
 on:
   push:
     branches: [main]
-    paths: [CHANGELOG.md]
+    paths: [CHANGELOG.md, index.html, .github/workflows/release.yml]
   workflow_dispatch:
 permissions:
   contents: write
@@ -30,4 +30,21 @@ jobs:
             flag=--latest=false; [ "$v" = "$latest" ] && flag=--latest
             gh release create "$v" --target "$sha" --title "$title" --notes-file notes.md $flag
             echo "$v yayınlandı ($sha)"
+          done
+      - name: İndirilebilir tek dosyayı (AstroHedefAtlasi.html) sürümlere ekle
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          latest=$(grep -m1 -oP '^## \Kv[0-9.]+' CHANGELOG.md)
+          for v in $(grep -oP '^## \Kv[0-9.]+' CHANGELOG.md); do
+            has=$(gh release view "$v" --json assets --jq '[.assets[].name]|index("AstroHedefAtlasi.html")' 2>/dev/null || echo null)
+            # en son sürümde her zaman güncel dosya olsun; eskilerde yoksa etiketteki halini ekle
+            if [ "$v" = "$latest" ]; then
+              cp index.html AstroHedefAtlasi.html
+              gh release upload "$v" AstroHedefAtlasi.html --clobber
+            elif [ "$has" = "null" ]; then
+              git show "$v:index.html" > AstroHedefAtlasi.html
+              gh release upload "$v" AstroHedefAtlasi.html
+            fi
           done
