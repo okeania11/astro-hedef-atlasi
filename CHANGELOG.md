@@ -1,5 +1,8 @@
 # Yenilikler / Changelog
 
+## v0.7.6 — 3 Ekim 2026
+- Gökyüzüm: ufkun altında kalan kendi fotoğrafların artık zeminin arkasında kaybolmuyor; zeminin üstünde soluk halka ve adıyla görünüyor. Üst çubuktaki "Altındaki fotoğraflarım" kutucuğuyla kapatılabilir.
+
 ## v0.7.5 — 2 Ekim 2026
 - Katalogdaki yaklaşık 300 objenin koordinatı SIMBAD ile düzeltildi (ör. NGC 1022 17° kaymıştı; küçük resimleri boş çıkan objeler artık doğru).
 - Tabloda "En Yüksek / Tepe Nokta" yerine her obje için NINA tarzı küçük gece eğrisi: meridyen, yerel ufuk, alacakaranlık ve objenin şu anki yeri. Tıklayınca büyüyor.

@@ -305,6 +305,7 @@ body.sky-open{overflow:hidden}
 }
 
 .sky-ground{position:absolute;left:0;top:0;pointer-events:none;image-rendering:auto}
+.sky-below{position:absolute;left:0;top:0;pointer-events:none}
 .sky-status{padding-right:30px}
 .sky-status-x{position:absolute;top:4px;right:6px;background:none;border:none;color:inherit;cursor:pointer;font-size:12px;opacity:.7}
 .sky-status-x:hover{opacity:1}
@@ -319,7 +320,7 @@ body.sky-open{overflow:hidden}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle" onclick="showNews()" style="cursor:pointer" title="Yenilikler">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.5</div>
+      <div class="subtitle" id="mainSubtitle" onclick="showNews()" style="cursor:pointer" title="Yenilikler">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.6</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
@@ -538,7 +539,7 @@ body.sky-open{overflow:hidden}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; <a href="#" onclick="showNews();return false" style="color:inherit" title="Yenilikler">v0.7.5</a>
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; <a href="#" onclick="showNews();return false" style="color:inherit" title="Yenilikler">v0.7.6</a>
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -732,7 +733,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.5');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.6');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -1107,7 +1108,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.5';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.6';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1520,7 +1521,7 @@ function showCurveBig(name){
   m.classList.add('open');
 }
 // ─── Yenilikler (CHANGELOG.md tek kaynak) ─────────────────────────────────────
-const APP_VER='0.7.5';
+const APP_VER='0.7.6';
 function esc(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 async function showNews(){
   const m=document.getElementById('newsModal'),b=document.getElementById('newsBody');m.classList.add('open');
@@ -2078,6 +2079,7 @@ if('serviceWorker' in navigator){
     <label class="sky-chk"><input type="checkbox" id="skyHz" onchange="SKY.setHorizon(this.checked)"><span data-tr="Ufuk" data-en="Horizon">Ufuk</span></label>
     <label class="sky-chk" data-trt="Ufku ekranda yatay tut (Stellarium gibi)" data-ent="Keep the horizon level (like Stellarium)"><input type="checkbox" id="skyHzUp" onchange="SKY.setHorizonUp(this.checked)"><span data-tr="Ufku düz tut" data-en="Level horizon">Ufku düz tut</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyGround" onchange="SKY.setGround(this.checked)"><span data-tr="Ufkun altını kapat" data-en="Hide below horizon">Ufkun altını kapat</span></label>
+    <label class="sky-chk" title="Ufkun altında kalan kendi fotoğraflarını zeminin üstünde soluk göster" data-trt="Ufkun altında kalan kendi fotoğraflarını zeminin üstünde soluk göster" data-ent="Show my photos that are below the horizon, faded, above the ground"><input type="checkbox" id="skyBelow" onchange="SKY.setShowBelow(this.checked)"><span data-tr="Altındaki fotoğraflarım" data-en="My photos below">Altındaki fotoğraflarım</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyCon" onchange="SKY.setConstellations(this.checked)"><span data-tr="Takımyıldızlar" data-en="Constellations">Takımyıldızlar</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyPlanets" onchange="SKY.setPlanets(this.checked)"><span data-tr="Gezegenler" data-en="Planets">Gezegenler</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyAltaz" onchange="SKY.setAltaz(this.checked)"><span data-tr="Alt-Az" data-en="Alt-Az">Alt-Az</span></label>
@@ -2917,7 +2919,7 @@ const SKY = (() => {
 
   // ─── Ayarlar (tarayıcıda) ───
   const SETKEY = 'sky_settings';
-  const defaults = { v: 2, constellations: true, lookAz: 90, ground: true, planets: true, survey: 'P/DSS2/color', projection: 'STG', horizon: true, horizonUp: true, altaz: false, maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
+  const defaults = { v: 2, constellations: true, lookAz: 90, ground: true, showBelow: true, planets: true, survey: 'P/DSS2/color', projection: 'STG', horizon: true, horizonUp: true, altaz: false, maxDim: 3000, stretch: 'auto', linked: false, grid: false, atlas: true, footprints: true, fov: false, fovRot: 0, frame: 'ICRS' };
   let S = Object.assign({}, defaults);
   let stored = {};
   try { stored = JSON.parse(localStorage.getItem(SETKEY) || '{}') || {}; Object.assign(S, stored); } catch (e) { }
@@ -3114,16 +3116,19 @@ const SKY = (() => {
   async function drawFootprints() {
     if (!fpOverlay) return;
     const seq = ++fpSeq, date = now(), L = loc();
-    const src = [], polys = [];
+    const src = [], polys = [], rings = [];
     for (const it of items) {
       if (!it.wcs) continue;
       const cc = center(it.wcs);
       if (S.footprints) polys.push(A.polygon(corners(it.wcs), { color: it.id === selectedId ? '#4fc3f7' : '#ffcb6b', lineWidth: it.id === selectedId ? 2.5 : 1.5 }));
       const below = S.horizon && radec2altaz(cc[0], cc[1], date, L)[0] < 0;
       const cv = await ring(it, below, it.id === selectedId);
-      src.push(A.source(cc[0], cc[1], { label: it.meta && it.meta.object || it.name, _skyId: it.id, _ring: cv }));
+      const label = it.meta && it.meta.object || it.name;
+      src.push(A.source(cc[0], cc[1], { label, _skyId: it.id, _ring: cv }));
+      rings.push({ ra: cc[0], dec: cc[1], cv, label, below });
     }
     if (seq !== fpSeq) return; // daha yeni bir çizim başladı
+    ringInfo = rings; drawBelow();
     fpOverlay.removeAll(); fpCatalog.removeAll();
     polys.forEach(p => fpOverlay.add(p));
     fpCatalog.addSources(src);
@@ -3685,6 +3690,7 @@ const SKY = (() => {
     groundCv.style.width = (gw * step) + 'px'; groundCv.style.height = (gh * step) + 'px';
     groundCv.style.left = (-step / 2) + 'px'; groundCv.style.top = (-step / 2) + 'px';
     const g = groundCv.getContext('2d'); g.clearRect(0, 0, gw, gh);
+    drawBelow();
     if (!S.horizon || !S.ground) return;
     const im = g.createImageData(gw, gh), d = now(), L = loc(), prof = hzProfile();
     const lst = lstDeg(d, L.lon), sl = Math.sin(L.lat * D2R), cl = Math.cos(L.lat * D2R);
@@ -3701,6 +3707,26 @@ const SKY = (() => {
     }
     g.putImageData(im, 0, 0);
   }
+  // Ufkun altında kalan kendi fotoğraflarım zeminin üstünde soluk görünsün (kaybolmasın)
+  let belowCv = null, ringInfo = [];
+  function drawBelow() {
+    if (!groundCv || !aladin) return;
+    const host = document.getElementById('skyAladin'), W = host.clientWidth, H = host.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (!belowCv) { belowCv = document.createElement('canvas'); belowCv.className = 'sky-below'; groundCv.after(belowCv); }
+    if (belowCv.width !== Math.round(W * dpr) || belowCv.height !== Math.round(H * dpr)) { belowCv.width = Math.round(W * dpr); belowCv.height = Math.round(H * dpr); belowCv.style.width = W + 'px'; belowCv.style.height = H + 'px'; }
+    const g = belowCv.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, belowCv.width, belowCv.height);
+    if (!S.horizon || !S.ground || S.showBelow === false) return;
+    g.scale(dpr, dpr); g.font = '12px Space Mono, monospace'; g.textBaseline = 'middle';
+    for (const r of ringInfo) {
+      if (!r.below) continue;
+      let p; try { p = aladin.world2pix(r.ra, r.dec); } catch (e) { p = null; }
+      if (!p || !isFinite(p[0]) || p[0] < -30 || p[1] < -30 || p[0] > W + 30 || p[1] > H + 30) continue;
+      g.globalAlpha = 0.9; g.drawImage(r.cv, p[0] - r.cv.width / 2, p[1] - r.cv.height / 2);
+      g.globalAlpha = 0.75; g.fillStyle = '#c8ccd8'; g.fillText(r.label, p[0] + 24, p[1]);
+    }
+    g.globalAlpha = 1;
+  }
+  function setShowBelow(v) { S.showBelow = v; saveS(); drawBelow(); }
   function setGround(v) { S.ground = v; saveS(); drawGround(); }
 
   // ═══ Galeriyi dosyaya kaydet / dosyadan geri yükle ═══
@@ -3905,7 +3931,7 @@ const SKY = (() => {
   function timeNow() { timeOffset = 0; $('skyTimeSl').value = 0; refreshTime(); }
   function setHorizon(v) { S.horizon = v; saveS(); syncHzUi(); refreshTime(); drawGround(); if (!v && aladin) aladin.setRotation(0); }
   // Ufuk kapalıyken zemin ve ufka bağlı seçenekler de kapalı görünsün
-  function syncHzUi() { ['skyGround', 'skyHzUp', 'skyAltaz'].forEach(id => { const el = $(id); if (el) { el.disabled = !S.horizon; el.parentElement.style.opacity = S.horizon ? '' : '.45'; } }); }
+  function syncHzUi() { ['skyGround', 'skyBelow', 'skyHzUp', 'skyAltaz'].forEach(id => { const el = $(id); if (el) { el.disabled = !S.horizon; el.parentElement.style.opacity = S.horizon ? '' : '.45'; } }); }
   function setHorizonUp(v) { S.horizonUp = v; saveS(); if (v) orient(); else if (aladin) aladin.setRotation(0); }
   function setAltaz(v) { S.altaz = v; saveS(); drawHorizon(); }
   // Konum
@@ -4016,7 +4042,7 @@ const SKY = (() => {
     $('skySurvey').value = S.survey; $('skyProj').value = S.projection; $('skyFrame').value = S.frame;
     $('skyGrid').checked = S.grid; $('skyAtlas').checked = S.atlas; $('skyFp').checked = S.footprints; $('skyFovChk').checked = S.fov;
     $('skyMax').value = S.maxDim; $('skyStretch').value = S.stretch; $('skyLinked').checked = S.linked;
-    $('skyCon').checked = S.constellations !== false; $('skyGround').checked = S.ground; $('skyPlanets').checked = S.planets;
+    $('skyCon').checked = S.constellations !== false; $('skyGround').checked = S.ground; if ($('skyBelow')) $('skyBelow').checked = S.showBelow !== false; $('skyPlanets').checked = S.planets;
     $('skyHz').checked = S.horizon; syncHzUi(); $('skyHzUp').checked = S.horizonUp; $('skyAltaz').checked = S.altaz;
     if (aladin) refreshTime();
     $('skyFovRot').value = S.fovRot; $('skyFovRotV').textContent = S.fovRot + '°'; $('skyFovRow').style.display = S.fov ? 'flex' : 'none';
@@ -4041,7 +4067,7 @@ const SKY = (() => {
     placePreview, placeRot, placeNudge, placeFromView, placeResolve, placeSave, placeCancel,
     solve: solveItem, placeSolve, verify, scaleTouched: () => { if (placing) placing.scaleTouched = true; },
     statusHide, exportGallery, card: showCard, cardVerify, cardRename, cardClose, cardZoom, cardToggle, cardGo, lightClose, look, timeShift, timeNow, locEdit, locApply, locGeo, clearHz,
-    setHorizon, setHorizonUp, setAltaz, setGround, setPlanets, setConstellations,
+    setHorizon, setHorizonUp, setAltaz, setGround, setShowBelow, setPlanets, setConstellations,
     setSurvey, setProjection, setFrame, setGrid, setAtlas, setFootprints, setFov, setFovRot, setOpt, applyLabels,
     _debug: () => ({ aladin, items, S, pix2sky, makeWcs, altaz2radec, radec2altaz, now, fetchCat, lumOf, runSolve, autoSolve })
   };
