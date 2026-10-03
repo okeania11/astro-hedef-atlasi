@@ -1,5 +1,8 @@
 # Yenilikler / Changelog
 
+## v0.7.7 — 3 Ekim 2026
+- Gökyüzüm: "Lion" adlı dosyalar artık Aslan Bulutsusu (Sh2-132) olarak aranıyor; önceden CDS bu adı Eskimo Bulutsusu’na (NGC 2392, "Lion Face") çözüyordu. Türkçe adlar da eklendi: Aslan, Lale, Kelebek, Kalp, Istakoz, Ruh.
+
 ## v0.7.6 — 3 Ekim 2026
 - Gökyüzüm: ufkun altında kalan kendi fotoğrafların artık zeminin arkasında kaybolmuyor; zeminin üstünde soluk halka ve adıyla görünüyor. Üst çubuktaki "Altındaki fotoğraflarım" kutucuğuyla kapatılabilir.
 

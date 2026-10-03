@@ -320,7 +320,7 @@ body.sky-open{overflow:hidden}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle" onclick="showNews()" style="cursor:pointer" title="Yenilikler">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.6</div>
+      <div class="subtitle" id="mainSubtitle" onclick="showNews()" style="cursor:pointer" title="Yenilikler">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.7</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
@@ -539,7 +539,7 @@ body.sky-open{overflow:hidden}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; <a href="#" onclick="showNews();return false" style="color:inherit" title="Yenilikler">v0.7.6</a>
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; <a href="#" onclick="showNews();return false" style="color:inherit" title="Yenilikler">v0.7.7</a>
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -733,7 +733,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.6');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.7');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -1108,7 +1108,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.6';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.7';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1521,7 +1521,7 @@ function showCurveBig(name){
   m.classList.add('open');
 }
 // ─── Yenilikler (CHANGELOG.md tek kaynak) ─────────────────────────────────────
-const APP_VER='0.7.6';
+const APP_VER='0.7.7';
 function esc(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 async function showNews(){
   const m=document.getElementById('newsModal'),b=document.getElementById('newsBody');m.classList.add('open');
@@ -3464,7 +3464,7 @@ const SKY = (() => {
     ['ghost of cassiopeia', ['IC 63']], ['gamma cas', ['IC 63']], ['dumbbell', ['M 27']], ['ring', ['M 57']], ['owl', ['M 97']], ['helix', ['NGC 7293']],
     ['cats eye', ['NGC 6543']], ['thors helmet', ['NGC 2359']], ['thor', ['NGC 2359']], ['seagull', ['IC 2177']], ['monkey', ['NGC 2174']], ['spaghetti', ['Sh2-240']],
     ['fireworks', ['NGC 6946']], ['sunflower', ['M 63']], ['black eye', ['M 64']], ['phantom', ['M 74']], ['sculptor', ['NGC 253']], ['silver dollar', ['NGC 253']],
-    ['leo triplet', ['M 66']], ['markarian', ['M 86']], ['pleiades', ['M 45']], ['dolphin', ['Sh2-308']], ['shark', ['LDN 1235']], ['squid', ['Ou 4']], ['flying bat', ['Sh2-129']],
+    ['leo triplet', ['M 66']], ['markarian', ['M 86']], ['pleiades', ['M 45']], ['dolphin', ['Sh2-308']], ['shark', ['LDN 1235']], ['squid', ['Ou 4']], ['flying bat', ['Sh2-129']], ['lion', ['Sh2-132']], ['aslan', ['Sh2-132']], ['lale', ['Sh2-101']], ['kelebek', ['IC 1318']], ['butterfly', ['IC 1318']], ['valentina', ['IC 1805']], ['kalp', ['IC 1805']], ['istakoz', ['Sh2-157']], ['ruh', ['IC 1848']], ['eskimo', ['NGC 2392']], ['clown', ['NGC 2392']], ['ldn 889', ['IC 1318']], ['sadr', ['IC 1318']],
     ['fish head', ['IC 1795']], ['pac man', ['NGC 281']], ['crab', ['M 1']], ['sombrero', ['M 104']], ['needle', ['NGC 4565']], ['cocoon galaxy', ['NGC 4490']],
     ['running chicken', ['IC 2944']], ['prawn', ['IC 4628']], ['cat paw', ['NGC 6334']], ['cats paw', ['NGC 6334']], ['carina', ['NGC 3372']], ['tarantula', ['NGC 2070']],
     ['witch head', ['IC 2118']], ['bernard loop', ['Sh2-276']], ['barnard loop', ['Sh2-276']], ['angelfish', ['Sh2-264']], ['meathook', ['NGC 2442']], ['wolf rayet', ['NGC 6888']],
