@@ -320,7 +320,7 @@ body.sky-open{overflow:hidden}
   <header style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="logo">ASTRO HEDEF ATLASI <span>— Astro Target Planner</span></div>
-      <div class="subtitle" id="mainSubtitle" onclick="showNews()" style="cursor:pointer" title="Yenilikler">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.7</div>
+      <div class="subtitle" id="mainSubtitle" onclick="showNews()" style="cursor:pointer" title="Yenilikler">Astrofotoğraf Gece Planı &nbsp;·&nbsp; v0.7.8</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:2px;flex-shrink:0;margin-left:12px">
       <!--SKY:btn--><button class="sky-openbtn" onclick="SKY.open()" data-tr="🌌 Gökyüzüm" data-en="🌌 My Sky" data-trt="Kendi fotoğraflarını gökyüzü atlasında gör" data-ent="See your own photos on the sky atlas" title="Kendi fotoğraflarını gökyüzü atlasında gör">🌌 Gökyüzüm</button>
@@ -539,7 +539,7 @@ body.sky-open{overflow:hidden}
 
   <footer style="position:relative;z-index:1;text-align:center;padding:20px 20px 28px;border-top:1px solid var(--border);margin-top:4px;">
   <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase">
-    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; <a href="#" onclick="showNews();return false" style="color:inherit" title="Yenilikler">v0.7.7</a>
+    Astro Hedef Atlası &nbsp;·&nbsp; Astro Target Planner &nbsp;·&nbsp; <a href="#" onclick="showNews();return false" style="color:inherit" title="Yenilikler">v0.7.8</a>
   </div>
   <div style="font-size:11px;color:var(--text2);margin-top:5px;font-family:'Space Mono',monospace;">
     <span class="footer-design">Tasarım &amp; konsept:</span> <span style="color:var(--accent)">Okan Doğu</span> &nbsp;·&nbsp; <span class="footer-city">Antalya, Türkiye</span>
@@ -733,7 +733,7 @@ function applyLang(){
   try{const btns=document.querySelectorAll('#simbadModal .modal-actions button');if(btns[0])btns[0].textContent=L('addObjCancel');if(btns[1])btns[1].textContent=L('addObjSearch');if(btns[2])btns[2].textContent=L('addObjAdd');}catch(e){}
   set(s('downloadText'),el=>el.innerHTML=L('downloadText'));
   set(s('downloadBtn'),el=>el.innerHTML=L('downloadBtn'));
-  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.7');
+  set(s('mainSubtitle'),el=>el.textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.8');
   set(q('.topbar label'),el=>el.textContent=L('locationLabel'));
   set(q('.bortle-wrap label'),el=>el.textContent=L('bortleLabel'));
   set(q('#locationSelect option[value="Özel"]'),el=>el.textContent=L('customOpt'));
@@ -1108,7 +1108,7 @@ function loadLocation(){try{const l=JSON.parse(localStorage.getItem('astro_locat
 function saveLocation(name,lat,lon){OBS_LAT=lat;OBS_LON=lon;OBS_NAME=name;try{localStorage.setItem('astro_location',JSON.stringify({name,lat,lon}));}catch(e){}updateSubtitle();}
 function onLocationChange(name){if(name==='Özel'){document.getElementById('customCoords').style.display='flex';}else{document.getElementById('customCoords').style.display='none';const p=LOC_PRESETS[name];if(p)saveLocation(name,p.lat,p.lon);}}
 function applyCustomCoords(){const lat=parseFloat(document.getElementById('customLat').value);const lon=parseFloat(document.getElementById('customLon').value);if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90){alert('Geçerli koordinat girin.');return;}saveLocation('Özel',lat,lon);}
-function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.7';}
+function updateSubtitle(){document.getElementById('mainSubtitle').textContent=L('subtitle')+' — '+OBS_NAME+' · Bortle '+OBS_BORTLE+' · v0.7.8';}
 
 // ─── Bortle ───────────────────────────────────────────────────────────────────
 const BORTLE_DESCS=['','Mükemmel karanlık gökyüzü','Gerçek karanlık','Kırsal gökyüzü','Kırsal/kentsel geçiş — iyi','Kırsal/kentsel geçiş','Parlak kırsal','Kentsel/kırsal geçiş','Şehir gökyüzü','Şehir merkezi'];
@@ -1521,7 +1521,7 @@ function showCurveBig(name){
   m.classList.add('open');
 }
 // ─── Yenilikler (CHANGELOG.md tek kaynak) ─────────────────────────────────────
-const APP_VER='0.7.7';
+const APP_VER='0.7.8';
 function esc(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 async function showNews(){
   const m=document.getElementById('newsModal'),b=document.getElementById('newsBody');m.classList.add('open');
@@ -3023,6 +3023,10 @@ const SKY = (() => {
       aladin.addOverlay(fpOverlay);
       hzOverlay = A.graphicOverlay({ color: '#89ddff', lineWidth: 2, name: T('Ufuk', 'Horizon') });
       aladin.addOverlay(hzOverlay);
+      // Aladin'in katman panelinden (Stack) "Ufuk" gizlenirse/gösterilirse bizim Ufuk ayarı da onu izlesin (zemin dahil)
+      { const oh = hzOverlay.hide.bind(hzOverlay), os = hzOverlay.show.bind(hzOverlay);
+        hzOverlay.hide = function () { oh(); if (S.horizon && !hzSync) { hzSync = true; const c = $('skyHz'); if (c) c.checked = false; setHorizon(false); hzSync = false; } };
+        hzOverlay.show = function () { os(); if (!S.horizon && !hzSync) { hzSync = true; const c = $('skyHz'); if (c) c.checked = true; setHorizon(true); hzSync = false; } }; }
       cardCat = A.catalog({ name: T('Yönler', 'Directions'), sourceSize: 30, shape: s => s.data._cv });
       aladin.addCatalog(cardCat);
       // Fotoğraflar: küçük resimli halkalar
@@ -3929,7 +3933,12 @@ const SKY = (() => {
   }
   function timeShift(min) { timeOffset = +min; refreshTime(); }
   function timeNow() { timeOffset = 0; $('skyTimeSl').value = 0; refreshTime(); }
-  function setHorizon(v) { S.horizon = v; saveS(); syncHzUi(); refreshTime(); drawGround(); if (!v && aladin) aladin.setRotation(0); }
+  let hzSync = false;
+  function setHorizon(v) {
+    S.horizon = v; saveS(); syncHzUi(); refreshTime(); drawGround(); if (!v && aladin) aladin.setRotation(0);
+    // katman panelinden gizlenmiş ufku, kutucukla tekrar açınca görünür yap
+    if (v && hzOverlay && hzOverlay.isShowing === false && !hzSync) { hzSync = true; hzOverlay.show(); hzSync = false; }
+  }
   // Ufuk kapalıyken zemin ve ufka bağlı seçenekler de kapalı görünsün
   function syncHzUi() { ['skyGround', 'skyBelow', 'skyHzUp', 'skyAltaz'].forEach(id => { const el = $(id); if (el) { el.disabled = !S.horizon; el.parentElement.style.opacity = S.horizon ? '' : '.45'; } }); }
   function setHorizonUp(v) { S.horizonUp = v; saveS(); if (v) orient(); else if (aladin) aladin.setRotation(0); }

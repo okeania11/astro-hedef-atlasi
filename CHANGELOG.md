@@ -1,5 +1,8 @@
 # Yenilikler / Changelog
 
+## v0.7.8 — 3 Ekim 2026
+- Gökyüzüm: Ufuk, katman panelinden (Stack → Ufuk göz simgesi) kapatılınca zemin de kalkıyor ve üstteki Ufuk kutucuğu da kapanıyor; ikisi artık birlikte çalışıyor.
+
 ## v0.7.7 — 3 Ekim 2026
 - Gökyüzüm: "Lion" adlı dosyalar artık Aslan Bulutsusu (Sh2-132) olarak aranıyor; önceden CDS bu adı Eskimo Bulutsusu’na (NGC 2392, "Lion Face") çözüyordu. Türkçe adlar da eklendi: Aslan, Lale, Kelebek, Kalp, Istakoz, Ruh.
 
