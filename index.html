@@ -368,7 +368,7 @@ body.sky-open{overflow:hidden}
   <!-- Kontroller -->
   <div class="controls">
     <div class="field"><label>Tarih</label><input type="date" id="dateInput"></div>
-    <div class="field"><label>Gözlem Başlangıcı</label><input type="time" id="startTime" value="21:00"></div>
+    <div class="field"><label>Gözlem Başlangıcı</label><div style="display:flex;gap:6px"><input type="time" id="startTime" value="18:00" style="flex:1"><button type="button" onclick="setStartToNow()" title="Mevcut saati gözlem başlangıcı yap" style="background:var(--bg3);border:1px solid var(--accent);color:var(--accent);font-family:'Space Mono',monospace;font-size:11px;padding:0 10px;border-radius:4px;cursor:pointer;white-space:nowrap">Şu an</button></div></div>
     <div class="field"><label>Ufuk Dosyası (.hrz, .txt) <span style="color:var(--accent3);font-weight:400">— opsiyonel</span></label>
       <input type="file" id="hznFile" accept=".hrz,.hzn,.txt" style="display:none">
       <label for="hznFile" id="hznLabel" style="display:block;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;padding:10px 12px;border-radius:4px;cursor:pointer;text-align:center">📁 Dosya Seç</label>
@@ -384,7 +384,7 @@ body.sky-open{overflow:hidden}
       <div style="display:flex;align-items:center;gap:10px"><button class="btn-sm" id="ufukToggle" onclick="toggleUfuk()" title="Ana ufuk grafiğini aç/kapat">▸ Grafik</button><div class="section-label" style="margin:0">Ufuk Profili — Obje Konumları</div></div>
       <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text2)">
         <span>Saat:</span>
-        <input type="range" id="timeSlider" min="0" max="600" value="0" step="10" style="width:140px" oninput="onTimeSlider(this.value)">
+        <input type="range" id="timeSlider" min="0" max="780" value="0" step="10" style="width:140px" oninput="onTimeSlider(this.value)">
         <span id="timeSliderLabel" style="font-family:'Space Mono',monospace;color:var(--accent);min-width:42px">—</span>
       </div>
     </div>
@@ -1255,7 +1255,7 @@ function calculate(){
   const dv=document.getElementById('dateInput').value;if(!dv){showMsg(L('noDate'),'warn');return;}
   const setup=getSetup();if(!setup){showMsg(L('noSetup'),'warn');return;}
   const[sh,sm]=document.getElementById('startTime').value.split(':').map(Number);
-  const obsS=sh-TZ+sm/60,obsE=obsS+10;
+  const obsS=sh-TZ+sm/60,obsE=obsS+13;
   const d0=new Date(dv+'T00:00:00Z');
   currentDateUTC0h=d0;currentObsStartUTC=obsS;selectedObj=null;_canvasSetup=false;
   _curveCache={};_sunArr=null;
@@ -1440,7 +1440,13 @@ function drawUfuk(){
 function ufukOpen(){try{return localStorage.getItem('ufuk_open')==='1';}catch(e){return false;}}
 function syncUfukUi(){const o=ufukOpen();document.getElementById('ufukBody').style.display=o?'':'none';const b=document.getElementById('ufukToggle');if(b)b.textContent=(o?'▾ ':'▸ ')+(_lang==='TR'?'Grafik':'Chart');}
 function toggleUfuk(){try{localStorage.setItem('ufuk_open',ufukOpen()?'0':'1');}catch(e){}syncUfukUi();if(ufukOpen()&&currentDateUTC0h)drawUfuk();}
-function onTimeSlider(val){if(!currentDateUTC0h)return;_markLive=false;const utcH=currentObsStartUTC+parseInt(val)/60;_markUTC=utcH;document.getElementById('timeSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);if(ufukOpen())drawFrame(utcH);refreshSparks();}
+function setStartToNow(){
+  const d=new Date();
+  const hh=String(d.getHours()).padStart(2,'0');
+  const mm=String(d.getMinutes()).padStart(2,'0');
+  document.getElementById('startTime').value=hh+':'+mm;
+}
+function onTimeSlider(val){if(!currentDateUTC0h)return;_markLive=false;const utcH=currentObsStartUTC+parseInt(val)/60;_markUTC=utcH;document.getElementById('timeSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);if(ufukOpen())drawFrame(utcH);refreshSparks();}const slVal=Math.round((nowH-currentObsStartUTC)*60/10)*10;const sl=document.getElementById('timeSlider');sl.value=slVal;onTimeSlider(slVal);}
 
 // ─── Obje gece eğrileri (NINA tarzı) ─────────────────────────────────────────
 let _curveCache={},_sunArr=null,_markUTC=null,_markLive=false;
@@ -1448,14 +1454,14 @@ const CURVE_STEP=0.25; // saat
 function curveOf(r){
   if(_curveCache[r.name])return _curveCache[r.name];
   const out=[],j0=jd(currentDateUTC0h);
-  for(let t=currentObsStartUTC;t<=currentObsStartUTC+10+1e-6;t+=CURVE_STEP){
+  for(let t=currentObsStartUTC;t<=currentObsStartUTC+13+1e-6;t+=CURVE_STEP){
     const p=aa(r.ra,r.dec,j0+t/24,OBS_LAT,OBS_LON);out.push({t,alt:p.alt,az:p.az,hz:hAlt(p.az)});
   }
   return _curveCache[r.name]=out;
 }
 function sunArr(){
   if(_sunArr)return _sunArr;const j0=jd(currentDateUTC0h),a=[];
-  for(let t=currentObsStartUTC;t<=currentObsStartUTC+10+1e-6;t+=CURVE_STEP)a.push(sunAlt(j0+t/24,OBS_LAT,OBS_LON));
+  for(let t=currentObsStartUTC;t<=currentObsStartUTC+13+1e-6;t+=CURVE_STEP)a.push(sunAlt(j0+t/24,OBS_LAT,OBS_LON));
   return _sunArr=a;
 }
 function markNow(){
@@ -1518,7 +1524,7 @@ function showCurveBig(name){
   // "Şu an"ı yeniden değerlendir: gece penceresindeysek canlı, değilse kaydırıcıdaki saat
   if(currentDateUTC0h){
     const nowH=(Date.now()-currentDateUTC0h.getTime())/3600000;
-    if(nowH>=currentObsStartUTC&&nowH<=currentObsStartUTC+10){_markLive=true;_markUTC=nowH;}
+    if(nowH>=currentObsStartUTC&&nowH<=currentObsStartUTC+13){_markLive=true;_markUTC=nowH;}
   }
   const nm=getCommonName(r.name)||r.common;
   m.querySelector('.curve-name').textContent=r.name+(nm?' — '+nm:'');
@@ -1588,7 +1594,7 @@ function drawFrame(utcHour){
     if(obj){
       const color=TYPE_COLOR[obj.type]||'#fff';
       let prevX=null,prevY=null,prevAbove=null,prevAz=null;
-      for(let t=currentObsStartUTC;t<=currentObsStartUTC+10;t+=15/60){
+      for(let t=currentObsStartUTC;t<=currentObsStartUTC+13;t+=15/60){
         const jt=jd(currentDateUTC0h)+t/24;
         const pos=aa(obj.ra,obj.dec,jt,OBS_LAT,OBS_LON);
         const above=pos.alt>hAlt(pos.az);
@@ -2020,7 +2026,7 @@ function addSimbadObj(){
   const setup=getSetup();
   const mi=_moonCache?_moonCache.mi:50;
   const mp=_moonCache?mPos(jd(currentDateUTC0h)+0.5):{ra:0,dec:0};
-  const obsS=currentObsStartUTC,obsE=obsS+10;
+  const obsS=currentObsStartUTC,obsE=obsS+13;
   const d0=currentDateUTC0h;
   let mx=-90,vm=0,pl=null;
   for(let t=obsS;t<=obsE;t+=10/60){
