@@ -518,6 +518,11 @@ body.sky-open{overflow:hidden}
     <div class="modal" style="max-width:690px;text-align:center" onclick="event.stopPropagation()">
       <h3 class="curve-name" style="margin-bottom:10px"></h3>
       <div class="curve-host"></div>
+      <div style="margin-top:10px;display:flex;gap:10px;align-items:center;padding:0 10px">
+        <span style="font-family:'Space Mono',monospace;color:var(--text2);font-size:11px">Saat:</span>
+        <input type="range" id="curveSlider" min="0" max="780" value="0" step="10" style="flex:1" oninput="onCurveSlider(this.value)">
+        <span id="curveSliderLabel" style="font-family:'Space Mono',monospace;color:var(--accent);min-width:42px;font-size:12px">—</span>
+      </div>
       <div style="margin-top:8px;font-size:11px;color:var(--text2);line-height:1.6">Mavi: ufkun üstünde · gri: ufkun/engelin altında · kahverengi: yerel ufuk profili · sarı kesikli: meridyen (en yüksek an) · kesikli yatay: 30° · bantlar: alacakaranlık · <span style="color:#69ff8a">●</span> şu an / kaydırıcı saati</div>
       <div class="modal-actions" style="justify-content:center">
         <button class="btn-cancel" onclick="closeCurve()">Kapat</button>
@@ -1521,15 +1526,23 @@ function refreshSparks(){
 function showCurveBig(name){
   const r=results.find(x=>x.name===name);if(!r)return;
   const m=document.getElementById('curveModal');m._r=r;
-  // "Şu an"ı yeniden değerlendir: gece penceresindeysek canlı, değilse kaydırıcıdaki saat
-  if(currentDateUTC0h){
-    const nowH=(Date.now()-currentDateUTC0h.getTime())/3600000;
-    if(nowH>=currentObsStartUTC&&nowH<=currentObsStartUTC+13){_markLive=true;_markUTC=nowH;}
-  }
   const nm=getCommonName(r.name)||r.common;
   m.querySelector('.curve-name').textContent=r.name+(nm?' — '+nm:'');
+  // Grafik slider'ını ana slider ile senkronize et
+  const mainSl=document.getElementById('timeSlider');
+  const cs=document.getElementById('curveSlider');
+  if(mainSl&&cs){cs.value=mainSl.value;document.getElementById('curveSliderLabel').textContent=fmtH(((currentObsStartUTC+parseInt(cs.value)/60+TZ)%24+24)%24);}
   m.querySelector('.curve-host').innerHTML=curveSVG(r,Math.min(640,window.innerWidth-60),300,true);
   m.classList.add('open');
+}
+function onCurveSlider(val){
+  // Ana slider'ı da güncelle, grafiği yeniden çiz
+  const mainSl=document.getElementById('timeSlider');
+  if(mainSl){mainSl.value=val;onTimeSlider(val);}
+  const utcH=currentObsStartUTC+parseInt(val)/60;
+  document.getElementById('curveSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);
+  const m=document.getElementById('curveModal');
+  if(m&&m._r)m.querySelector('.curve-host').innerHTML=curveSVG(m._r,Math.min(640,window.innerWidth-60),300,true);
 }
 // ─── Yenilikler (CHANGELOG.md tek kaynak) ─────────────────────────────────────
 const APP_VER='0.7.8';
