@@ -1515,6 +1515,11 @@ function refreshSparks(){
 function showCurveBig(name){
   const r=results.find(x=>x.name===name);if(!r)return;
   const m=document.getElementById('curveModal');m._r=r;
+  // "Şu an"ı yeniden değerlendir: gece penceresindeysek canlı, değilse kaydırıcıdaki saat
+  if(currentDateUTC0h){
+    const nowH=(Date.now()-currentDateUTC0h.getTime())/3600000;
+    if(nowH>=currentObsStartUTC&&nowH<=currentObsStartUTC+10){_markLive=true;_markUTC=nowH;}
+  }
   const nm=getCommonName(r.name)||r.common;
   m.querySelector('.curve-name').textContent=r.name+(nm?' — '+nm:'');
   m.querySelector('.curve-host').innerHTML=curveSVG(r,Math.min(640,window.innerWidth-60),300,true);
