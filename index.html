@@ -1459,10 +1459,13 @@ function sunArr(){
   return _sunArr=a;
 }
 function markNow(){
-  // Bugünün gecesi açıksa "şu an"; değilse kaydırıcıdaki saat
+  // Her zaman mevcut gerçek saati (bu gece penceresindeyse) öncelikli kullan
   if(!currentDateUTC0h)return null;
   const nowH=(Date.now()-currentDateUTC0h.getTime())/3600000;
-  if(_markLive&&nowH>=currentObsStartUTC&&nowH<=currentObsStartUTC+10)return nowH;
+  if(nowH>=currentObsStartUTC&&nowH<=currentObsStartUTC+10)return nowH;
+  // Değilse kaydırıcıdaki saat
+  const sl=document.getElementById('timeSlider');
+  if(sl){const slUtc=currentObsStartUTC+parseInt(sl.value)/60;return slUtc;}
   return _markUTC;
 }
 function interpAt(c,t){
