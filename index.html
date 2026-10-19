@@ -219,7 +219,7 @@ body.sky-open{overflow:hidden}
 .sky-in:focus{border-color:var(--accent)}
 .sky-chk{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);cursor:pointer;user-select:none;white-space:nowrap}
 .sky-chk input{accent-color:var(--accent)}
-.sky-close{margin-left:auto;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:14px;width:32px;height:30px;border-radius:4px;cursor:pointer}
+.sky-close{margin-left:auto;background:var(--bg3);border:1px solid var(--accent);color:var(--accent);font-size:12px;font-family:'Space Mono',monospace;font-weight:700;padding:7px 14px;height:32px;border-radius:4px;cursor:pointer;letter-spacing:0.5px}
 .sky-close:hover{border-color:var(--danger);color:var(--danger)}
 .sky-body{flex:1;display:flex;min-height:0}
 .sky-side{width:310px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;padding:10px;background:var(--bg2);border-right:1px solid var(--border);min-height:0}
@@ -2087,7 +2087,7 @@ if('serviceWorker' in navigator){
     <label class="sky-chk"><input type="checkbox" id="skyAtlas" onchange="SKY.setAtlas(this.checked)"><span data-tr="Atlas hedefleri" data-en="Atlas targets">Atlas hedefleri</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyFp" onchange="SKY.setFootprints(this.checked)"><span data-tr="Çerçeveler" data-en="Footprints">Çerçeveler</span></label>
     <label class="sky-chk"><input type="checkbox" id="skyFovChk" onchange="SKY.setFov(this.checked)"><span data-tr="Kadraj" data-en="FOV">Kadraj</span></label>
-    <button class="sky-close" onclick="SKY.close()" data-trt="Kapat (Esc)" data-ent="Close (Esc)" title="Kapat (Esc)">✕</button>
+    <button class="sky-close" onclick="SKY.close()" data-tr="← Hedef Atlası" data-en="← Target Atlas" data-trt="Ana sayfaya dön (Esc)" data-ent="Back to main (Esc)" title="Ana sayfaya dön (Esc)">← Hedef Atlası</button>
   </div>
   <div class="sky-body">
     <aside class="sky-side">
@@ -2194,7 +2194,7 @@ if('serviceWorker' in navigator){
     </main>
   </div>
   <div id="skyLight" class="sky-light" style="display:none" onclick="if(event.target===this)SKY.lightClose()">
-    <button class="sky-close sky-light-x" onclick="SKY.lightClose()">✕</button>
+    <button class="sky-light-x" onclick="SKY.lightClose()">✕</button>
     <div class="sky-light-wrap" onclick="if(event.target===this)SKY.lightClose()"><img id="skyLightImg" alt="" onclick="this.classList.toggle('full')"></div>
     <div id="skyLightCap" class="sky-light-cap"></div>
   </div>
