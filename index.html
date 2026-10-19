@@ -1446,7 +1446,7 @@ function setStartToNow(){
   const mm=String(d.getMinutes()).padStart(2,'0');
   document.getElementById('startTime').value=hh+':'+mm;
 }
-function onTimeSlider(val){if(!currentDateUTC0h)return;_markLive=false;const utcH=currentObsStartUTC+parseInt(val)/60;_markUTC=utcH;document.getElementById('timeSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);if(ufukOpen())drawFrame(utcH);refreshSparks();}const slVal=Math.round((nowH-currentObsStartUTC)*60/10)*10;const sl=document.getElementById('timeSlider');sl.value=slVal;onTimeSlider(slVal);}
+function onTimeSlider(val){if(!currentDateUTC0h)return;_markLive=false;const utcH=currentObsStartUTC+parseInt(val)/60;_markUTC=utcH;document.getElementById('timeSliderLabel').textContent=fmtH(((utcH+TZ)%24+24)%24);if(ufukOpen())drawFrame(utcH);refreshSparks();}
 
 // ─── Obje gece eğrileri (NINA tarzı) ─────────────────────────────────────────
 let _curveCache={},_sunArr=null,_markUTC=null,_markLive=false;
