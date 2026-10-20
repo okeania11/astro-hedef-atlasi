@@ -1,5 +1,13 @@
 # Yenilikler / Changelog
 
+## v0.7.9 — 20 Ekim 2026
+- Gözlem Başlangıcı varsayılan saati 21:00 → 18:00; gece penceresi 10 saatten 13 saate çıktı (18:00 → 07:00).
+- "Şu an" düğmesi: Gözlem Başlangıcı alanının yanına tek tıkla mevcut saati yazan düğme eklendi.
+- Gece eğrisi büyük penceresine kendi kaydırıcısı eklendi; ana kaydırıcıyla senkron çalışıyor.
+- Gece eğrisi üstündeki "şu an" noktası artık kaydırıcıdaki saati gösteriyor; başlangıçta 21:00'da donmuyor.
+- Gökyüzüm'den ana sayfaya belirgin "← Ana Sayfaya Dönüş" düğmesi.
+- Kurulum düzenlerken kendi filtrenizi ekleme kutusunun bozukluğu giderildi.
+
 ## v0.7.8 — 3 Ekim 2026
 - Gökyüzüm: Ufuk, katman panelinden (Stack → Ufuk göz simgesi) kapatılınca zemin de kalkıyor ve üstteki Ufuk kutucuğu da kapanıyor; ikisi artık birlikte çalışıyor.
 
